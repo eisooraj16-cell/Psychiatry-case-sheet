@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>Chapter 02 — Chief Complaints</title>
+<style>
+/* ===== AMOLED DARK THEME ===== */
+:root {
+  --bg: #000000;
+  --card: #0A0A0A;
+  --card2: #111111;
+  --border: #1A1A1A;
+  --border2: #2A2A2A;
+  --text: #E8E8E8;
+  --text2: #B0B0B0;
+  --text3: #888888;
+  --accent: #4ECDC4;
+  --accent2: #3DBDB5;
+  --accent3: #2A9D94;
+  --danger: #FF6B6B;
+  --warn: #FFD166;
+  --success: #06D6A0;
+  --info: #118AB2;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, textarea, select { font-size: 16px; }
+
+/* ===== LAYOUT ===== */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px calc(120px + env(safe-area-inset-bottom)) 16px;
+}
+
+header {
+  text-align: center;
+  padding: 24px 0 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+header h1 { font-size: 1.4rem; margin: 0 0 4px; font-weight: 700; letter-spacing: 0.5px; }
+header .subtitle { font-size: 0.85rem; color: var(--text3); }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  min-height: 56px;
+  user-select: none;
+  transition: background 0.2s;
+}
+.card-header:active { background: var(--border2); }
+.card-header h2 { font-size: 1.05rem; margin: 0; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.card-header .badge {
+  background: var(--accent3);
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.card-header .chevron {
+  font-size: 0.9rem;
+  color: var(--text3);
+  transition: transform 0.25s;
+  min-width: 52px;
+  text-align: right;
+}
+.card-header.open .chevron { transform: rotate(180deg); }
+
+.card-body {
+  padding: 16px;
+  display: none;
+}
+.card-body.open { display: block; }
+
+/* ===== INSTRUCTION BOX ===== */
+.instruction-box {
+  background: linear-gradient(135deg, rgba(78,205,196,0.08), rgba(17,138,178,0.06));
+  border-left: 3px solid var(--accent);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+.instruction-box h4 { margin: 0 0 6px; font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+.instruction-box ul { margin: 6px 0 0; padding-left: 18px; color: var(--text2); }
+.instruction-box li { margin-bottom: 4px; }
+
+/* ===== FIELD HINT (visible guidance above textarea) ===== */
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text3);
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* ===== HELP PANEL (expandable ℹ️) ===== */
+.help-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  min-width: 32px; min-height: 32px;
+  border-radius: 50%;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  color: var(--accent);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.help-panel {
+  display: none;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 0.88rem;
+  color: var(--text2);
+}
+.help-panel.open { display: block; }
+.help-panel h5 { margin: 0 0 6px; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; }
+.help-panel .phrase { background: rgba(78,205,196,0.1); padding: 8px 10px; border-radius: 6px; margin: 6px 0; color: var(--text); font-style: italic; border-left: 2px solid var(--accent3); }
+
+/* ===== FORM ELEMENTS ===== */
+.field-group { margin-bottom: 18px; }
+.field-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Textarea spec per requirements */
+textarea {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 56px;
+  line-height: 1.6;
+}
+textarea:focus { border-color: var(--accent); }
+textarea::placeholder { color: #777777; opacity: 1; }
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus { border-color: var(--accent); }
+
+/* ===== OPTION CHIPS ===== */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  min-height: 52px;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  transition: border-color 0.2s, background 0.2s;
+}
+.option-chip:active { background: var(--border); }
+.option-chip.checked { border-color: var(--accent); background: rgba(78,205,196,0.08); }
+.option-chip input { accent-color: var(--accent); width: 20px; height: 20px; min-width: 20px; min-height: 20px; }
+.option-chip label { font-size: 0.9rem; cursor: pointer; flex: 1; overflow-wrap: break-word; }
+
+/* ===== COMPLAINT CLUSTERS ===== */
+.cluster-card {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.cluster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+.cluster-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  background: var(--accent3);
+  color: #000;
+  white-space: nowrap;
+}
+.cluster-actions { display: flex; gap: 6px; }
+.cluster-btn {
+  width: 40px; height: 40px;
+  min-width: 40px; min-height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cluster-btn:active { background: var(--border2); color: var(--text); }
+.cluster-btn.danger { color: var(--danger); border-color: rgba(255,107,107,0.3); }
+.cluster-num { font-size: 0.75rem; color: var(--text3); font-weight: 600; min-width: 28px; }
+
+/* ===== TEMPLATE PANEL ===== */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.template-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  cursor: pointer;
+  min-height: 52px;
+}
+.template-item:active { background: var(--border); }
+.template-item input { width: 20px; height: 20px; min-width: 20px; accent-color: var(--accent); }
+.template-item label { font-size: 0.82rem; cursor: pointer; line-height: 1.3; flex: 1; overflow-wrap: break-word; }
+.template-item .t-preview { font-size: 0.7rem; color: var(--text3); margin-top: 2px; display: block; }
+.template-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  min-height: 52px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  flex: 1;
+}
+.btn:active { transform: scale(0.98); opacity: 0.85; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border2); }
+.btn-danger { background: rgba(255,107,107,0.15); color: var(--danger); border: 1px solid rgba(255,107,107,0.3); }
+.btn-ghost { background: transparent; color: var(--text3); border: 1px solid var(--border); }
+.btn-small { padding: 8px 14px; min-height: 40px; font-size: 0.82rem; flex: none; }
+
+/* ===== LIVE SUMMARY ===== */
+.summary-box {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.summary-box h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.summary-locked { font-size: 0.7rem; color: var(--warn); margin-left: 8px; }
+.summary-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+/* ===== QUICK REFERENCE ===== */
+.qr-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.qr-header {
+  padding: 14px 16px;
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+}
+.qr-header h3 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+.qr-body {
+  padding: 16px;
+  display: none;
+  font-size: 0.88rem;
+}
+.qr-body.open { display: block; }
+
+/* ===== DATA TABLE ===== */
+.data-table-wrap { overflow-x: auto; }
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 8px;
+}
+.ref-table th {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+.ref-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+}
+.ref-table tr:last-child td { border-bottom: none; }
+
+/* ===== PITFALLS ===== */
+.pitfall-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.pitfall-item:last-child { border-bottom: none; }
+.pitfall-item input { width: 22px; height: 22px; min-width: 22px; accent-color: var(--success); margin-top: 2px; }
+.pitfall-item label { font-size: 0.88rem; color: var(--text2); line-height: 1.5; cursor: pointer; }
+.pitfall-item.checked label { color: var(--text); text-decoration: line-through; opacity: 0.6; }
+
+/* ===== STICKY BOTTOM BAR ===== */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.98), rgba(10,10,10,0.95));
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+}
+.sticky-bar .btn { flex: 1; font-size: 0.85rem; padding: 12px 14px; min-height: 48px; }
+.saved-indicator {
+  position: fixed;
+  top: 10px;
+  right: 12px;
+  font-size: 0.7rem;
+  color: var(--text3);
+  background: rgba(0,0,0,0.8);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  z-index: 1001;
+  backdrop-filter: blur(4px);
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+.modal-box h3 { margin: 0 0 12px; font-size: 1.1rem; }
+.modal-body { font-size: 0.9rem; color: var(--text2); line-height: 1.6; }
+.modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+/* ===== PRINT ===== */
+@media print {
+  body { background: #fff; color: #000; font-size: 11pt; overflow-x: visible; }
+  .container { max-width: 100%; padding: 0; }
+  .card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 14px; }
+  .card-header { background: #f5f5f5; border-bottom: 1px solid #ccc; }
+  .card-body { display: block !important; padding: 12px; }
+  .instruction-box { background: #f0fdfa; border-left: 3px solid #0d9488; }
+  .field-hint { background: #f8f8f8; border-color: #ccc; color: #555; }
+  .help-toggle, .help-panel, .sticky-bar, .saved-indicator,
+  .btn, .cluster-actions, .template-panel, .qr-panel,
+  .modal-overlay, .chevron, .summary-actions { display: none !important; }
+  textarea, input, select {
+    background: #fff; border: 1px solid #ccc; color: #000;
+    overflow: visible !important; height: auto !important;
+    min-height: auto !important; white-space: pre-wrap;
+  }
+  textarea { resize: none; }
+  .cluster-card { border: 1px solid #ccc; break-inside: avoid; }
+  .option-chip.checked { border-color: #0d9488; background: #f0fdfa; }
+  .summary-box { border: 1px solid #ccc; }
+  h1, h2, h3 { color: #000; }
+  a { text-decoration: none; color: #000; }
+  .no-print { display: none !important; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .grid-2 { grid-template-columns: 1fr !important; }
+}
+
+/* ===== UTILITIES ===== */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.text-center { text-align: center; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mb-2 { margin-bottom: 8px; }
+.small { font-size: 0.8rem; color: var(--text3); }
+.warning-text { color: var(--warn); font-size: 0.8rem; }
+.success-text { color: var(--success); font-size: 0.8rem; }
+.discrepancy-banner {
+  background: rgba(255,209,102,0.08);
+  border: 1px solid rgba(255,209,102,0.25);
+  color: var(--warn);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="saved-indicator" id="savedIndicator">Ready</div>
+
+<div class="container">
+
+<header>
+  <h1>Chapter 02 — Chief Complaints</h1>
+  <div class="subtitle">The Adult Psychiatry History-Taking Compendium</div>
+</header>
+
+<!-- ===== QUICK REFERENCE PANELS ===== -->
+<div class="qr-panel" data-id="qr-mnemonic">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h3>Quick Reference: V-CODE-F Mnemonic</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="qr-body">
+    <p style="margin:0 0 10px; color:var(--text);"><strong>V-CODE-F</strong> — six letters, six documentation items.</p>
+    <div class="data-table-wrap">
+      <table class="ref-table">
+        <tr><th>Letter</th><th>Item</th><th>Action</th></tr>
+        <tr><td><strong>V</strong></td><td>Verbatim</td><td>Record in the patient&#8217;s own words; no psychiatric translation</td></tr>
+        <tr><td><strong>C</strong></td><td>Chronological</td><td>Earliest complaint first, most recent last</td></tr>
+        <tr><td><strong>O</strong></td><td>Onset</td><td>Acute / Subacute / Insidious</td></tr>
+        <tr><td><strong>D</strong></td><td>Duration</td><td>&#8220;since X, increased since Y&#8221;</td></tr>
+        <tr><td><strong>E</strong></td><td>Elevation (Informant)</td><td>Parallel informant list where it differs</td></tr>
+        <tr><td><strong>F</strong></td><td>Functional impact</td><td>Brief note only; detail belongs to HOPI</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="qr-panel" data-id="qr-vernacular">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h3>Quick Reference: Indian Vernacular Glossary</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="qr-body">
+    <div class="data-table-wrap">
+      <table class="ref-table">
+        <tr><th>Term</th><th>Language</th><th>Clinical Gloss</th></tr>
+        <tr><td>Bejaar / bejar</td><td>Hindi/Kannada</td><td>Distressed, troubled, disturbed. Generic for depression, anxiety, mixed distress.</td></tr>
+        <tr><td>Ghabrahat</td><td>Hindi</td><td>Unease, palpitations, anxiety, impending doom. Autonomic anxiety / panic register.</td></tr>
+        <tr><td>Tension</td><td>Hindi/Generic</td><td>Generic distress; depression, anxiety, interpersonal stress interchangeably.</td></tr>
+        <tr><td>Dimaag garam / dimaag kharab</td><td>Hindi</td><td>&#8220;Head hot&#8221; / &#8220;head spoiled&#8221;; irritability, anger, sometimes psychosis.</td></tr>
+        <tr><td>Pet mein gola</td><td>Hindi</td><td>&#8220;Ball in the stomach&#8221;; idiom of somatic anxiety with abdominal sensations.</td></tr>
+        <tr><td>Hawa lagna</td><td>Hindi</td><td>&#8220;Air has touched&#8221;; possession states and dissociative presentations.</td></tr>
+        <tr><td>Jee ghabrata hai</td><td>Hindi</td><td>&#8220;Heart-mind is uneasy&#8221;; generic distress register.</td></tr>
+        <tr><td>Neend nahin aati</td><td>Hindi</td><td>&#8220;Sleep does not come&#8221;; standard phrase for insomnia.</td></tr>
+        <tr><td>Chidchidahat</td><td>Hindi</td><td>Irritability.</td></tr>
+        <tr><td>Udaasi</td><td>Hindi</td><td>Sadness.</td></tr>
+        <tr><td>Akelapan</td><td>Hindi</td><td>Loneliness.</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="qr-panel" data-id="qr-phrasings">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h3>Quick Reference: Sample Phrasings</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="qr-body">
+    <p style="margin:0 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Opening Prompt (H1)</p>
+    <div class="phrase">&#8220;What has brought you to see us today? Please tell me in your own words, and take your time.&#8221;</div>
+
+    <p style="margin:12px 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Three Alternatives (H2)</p>
+    <div class="phrase">&#8220;What do your family members say is the problem?&#8221;</div>
+    <div class="phrase">&#8220;What has changed for you recently that made you come here today?&#8221;</div>
+    <div class="phrase">&#8220;What do you think should be different, if anything could be better, what would it be?&#8221;</div>
+
+    <p style="margin:12px 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Duration Anchoring (H3)</p>
+    <div class="phrase">&#8220;When did you first notice this? Can you give me a rough idea, weeks, months, years? And has it been the same all the way through, or has it got worse at some point?&#8221;</div>
+
+    <p style="margin:12px 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Chronological Walk-Forward (H4)</p>
+    <div class="phrase">&#8220;Of the things you&#8217;ve just told me, which one started first? When did that begin? And after that, what came next?&#8221;</div>
+
+    <p style="margin:12px 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Informant Parallel (H5)</p>
+    <div class="phrase">&#8220;I&#8217;d like to ask [informant] the same question now, to hear things from a different perspective. [To informant] What do you think has been going on? What are you most worried about?&#8221;</div>
+
+    <p style="margin:12px 0 6px; color:var(--accent); font-size:0.75rem; text-transform:uppercase; font-weight:600;">Transition to HOPI (H6)</p>
+    <div class="phrase">&#8220;Thank you. I&#8217;d like now to hear more about each of these, starting with the one you said came first. Can you tell me about that in more detail, what was the first thing you noticed, and what happened next?&#8221;</div>
+  </div>
+</div>
+
+<!-- ===== TEMPLATE INSERTION PANEL ===== -->
+<div class="card" id="cardTpl" data-id="card-tpl">
+  <div class="card-header open" onclick="toggleCard(this)">
+    <h2><span class="badge">Template</span> Complaint Templates</h2>
+    <span class="chevron" style="transform:rotate(180deg)">&#9662;</span>
+  </div>
+  <div class="card-body open">
+    <div class="instruction-box">
+      <h4>How to use</h4>
+      <ul>
+        <li>Select one or more disorder templates to insert verbatim complaint clusters.</li>
+        <li>Templates append to existing complaints by default. Check &#8220;Clear first&#8221; to replace.</li>
+        <li>Re-order clusters in Section A3 after inserting multiple templates.</li>
+        <li>All inserted text is editable &#8212; templates are scaffolds, not locked data.</li>
+      </ul>
+    </div>
+
+    <div class="field-label">Select Template(s)</div>
+    <div class="template-grid" id="templateGrid"></div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-top:14px;">
+      <label class="option-chip" style="flex:none; padding:10px 14px; min-height:44px;" id="clearFirstChip">
+        <input type="checkbox" id="clearBeforeInsert" data-key="clearBeforeInsert" onchange="updateChipVisualsFor(this)">
+        <label for="clearBeforeInsert" style="font-size:0.85rem; white-space:nowrap;">Clear existing first</label>
+      </label>
+    </div>
+
+    <div class="template-actions">
+      <button class="btn btn-secondary btn-small" onclick="previewTemplates()">Preview Selected</button>
+      <button class="btn btn-primary" onclick="insertTemplates()">Insert into Form</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LIVE AUTO-SUMMARY ===== -->
+<div class="summary-box" id="summaryBox">
+  <h3>
+    Live Documentation Preview
+    <span class="summary-locked" id="summaryLocked" style="display:none;">(manual edit &#8212; auto-sync paused)</span>
+  </h3>
+  <div class="field-hint" id="summaryHint">Chief complaints summary auto-builds as you fill the form. You may edit directly below &#8212; editing pauses auto-sync.</div>
+  <textarea id="summaryText" data-key="summaryText" data-manual-edit="false"
+    placeholder="Chief complaints summary..."
+    oninput="resizeTextarea(this); markSummaryManual(); triggerSave();"
+  ></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-secondary btn-small" onclick="copySummary()">&#128203; Copy Summary</button>
+    <button class="btn btn-ghost btn-small" id="resyncBtn" style="display:none;" onclick="resyncSummary()">&#8634; Re-sync Auto</button>
+  </div>
+</div>
+
+<!-- ===== SECTION A1: PATIENT VERBATIM ===== -->
+<div class="card" id="cardA1" data-id="card-a1">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A1</span> Patient Verbatim Complaints</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>The verbatim record is the foundation of every downstream section. Translation into psychiatric vocabulary happens in formulation (Chapter 12), not here.</li>
+        <li>Indian vernacular carries clinical information that no psychiatric translation preserves.</li>
+      </ul>
+      <h4 style="margin-top:8px;">How to document</h4>
+      <ul>
+        <li>Record exactly what the patient said, in her own language register.</li>
+        <li>Preserve vernacular terms with a brief parenthetical gloss if needed.</li>
+        <li>The patient&#8217;s denial or silence is itself a clinical finding &#8212; document it verbatim.</li>
+      </ul>
+      <h4 style="margin-top:8px;">Pitfalls</h4>
+      <ul>
+        <li>Never translate &#8220;bejaar&#8221; into &#8220;depression&#8221; at this stage.</li>
+        <li>Do not skip the patient&#8217;s account even in severe cases.</li>
+      </ul>
+    </div>
+
+    <div class="field-label">
+      Patient Complaint Clusters
+      <button class="help-toggle" onclick="toggleHelp(this)">&#9432;</button>
+    </div>
+    <div class="help-panel">
+      <h5>Vernacular Capture</h5>
+      <p>Keep the patient&#8217;s exact words. If she says &#8220;I cannot sleep and my head is heavy&#8221;, that is what the file records &#8212; not &#8220;insomnia and headache&#8221;.</p>
+      <h5 style="margin-top:10px;">Patient Denies Complaints</h5>
+      <p>Document the denial itself: &#8220;Patient denies any complaints; states &#8216;I am better than ever&#8217;&#8221;. This is clinical data, not an omission.</p>
+    </div>
+
+    <div id="patientClusters"></div>
+    <button class="btn btn-ghost btn-small" style="margin-top:8px; width:100%;" onclick="addCluster()">+ Add Complaint Cluster</button>
+  </div>
+</div>
+
+<!-- ===== SECTION A2: INFORMANT VERBATIM ===== -->
+<div class="card" id="cardA2" data-id="card-a2">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A2</span> Informant Verbatim Complaints</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>The informant&#8217;s parallel list is not optional when an informant is present.</li>
+        <li>The divergence between patient and informant accounts is itself a diagnostic instrument (see Section D).</li>
+        <li>Do not merge the two lists &#8212; preserve both as parallel records.</li>
+      </ul>
+      <h4 style="margin-top:8px;">How to elicit</h4>
+      <ul>
+        <li>Deliver the same open question to the informant separately.</li>
+        <li>Ideal intake: interview informant together for opening, then separately if the patient&#8217;s account may be constrained.</li>
+      </ul>
+    </div>
+
+    <div class="field-label">
+      Informant Complaint Clusters
+      <button class="help-toggle" onclick="toggleHelp(this)">&#9432;</button>
+    </div>
+    <div class="help-panel">
+      <h5>Informant Opener (H5)</h5>
+      <div class="phrase">&#8220;I&#8217;d like to ask [informant] the same question now, to hear things from a different perspective. [To informant] What do you think has been going on? What are you most worried about?&#8221;</div>
+      <h5 style="margin-top:10px;">When Patient Cannot Give Account</h5>
+      <p>In mania, psychosis with limited insight, severe depression, or dementia &#8212; the informant becomes the primary source. The patient&#8217;s account (or denial) is still documented as a separate finding.</p>
+    </div>
+
+    <div id="informantClusters"></div>
+    <button class="btn btn-ghost btn-small" style="margin-top:8px; width:100%;" onclick="addCluster()">+ Add Informant Cluster</button>
+  </div>
+</div>
+
+<!-- ===== SECTION A3: CHRONOLOGICAL ORDER ===== -->
+<div class="card" id="cardA3" data-id="card-a3">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A3</span> Chronological Order</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>The earliest chief complaint is the anchor for the entire HOPI narrative (Chapter 03 &#167;C4).</li>
+        <li>Without a clearly identified earliest complaint, HOPI chronology collapses.</li>
+        <li>The patient reflexively starts with what is most distressing today; your job is to reorder.</li>
+      </ul>
+      <h4 style="margin-top:8px;">How to elicit</h4>
+      <ul>
+        <li>After the initial list, walk the patient backward: &#8220;Of these, which one started first?&#8221;</li>
+        <li>Then walk forward: &#8220;And after that started, what came next?&#8221;</li>
+      </ul>
+    </div>
+
+    <div class="field-label">
+      Complaint Timeline
+      <button class="help-toggle" onclick="toggleHelp(this)">&#9432;</button>
+    </div>
+    <div class="help-panel">
+      <h5>Chronological Walk-Forward (H4)</h5>
+      <div class="phrase">&#8220;Of the things you&#8217;ve just told me, which one started first? When did you first notice it? And after that, what came next?&#8221;</div>
+      <p style="margin-top:8px;">Reorder the clusters below so the earliest complaint is at the top (position 1). The HOPI will anchor to this first complaint.</p>
+    </div>
+
+    <div id="timelineClusters"></div>
+
+    <label class="option-chip" id="chronoConfirmChip" onclick="toggleCheckboxItem(this)">
+      <input type="checkbox" id="chronoConfirm" data-key="chronoConfirm" onchange="updateChipVisualsFor(this); triggerSave();">
+      <label for="chronoConfirm">I confirm complaints are listed in chronological order (earliest first)</label>
+    </label>
+  </div>
+</div>
+
+<!-- ===== SECTION A4: DURATION ===== -->
+<div class="card" id="cardA4" data-id="card-a4">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A4</span> Duration of Each Complaint</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>A complaint without a duration is a symptom without a timeline and is not usable in HOPI.</li>
+        <li>The &#8220;since X, increased since Y&#8221; format captures both chronicity and recent escalation.</li>
+      </ul>
+      <h4 style="margin-top:8px;">Convention</h4>
+      <ul>
+        <li>Stable complaint: &#8220;since 2 years&#8221;</li>
+        <li>Escalated complaint: &#8220;since 2 years, increased since 6 months&#8221;</li>
+      </ul>
+    </div>
+
+    <div class="field-label">
+      Duration Tagging
+      <button class="help-toggle" onclick="toggleHelp(this)">&#9432;</button>
+    </div>
+    <div class="help-panel">
+      <h5>Duration Anchoring Probe (H3)</h5>
+      <div class="phrase">&#8220;When did you first notice that? Can you give me a rough idea, weeks, months, years? And has it been the same all the way through, or has it got worse at some point?&#8221;</div>
+    </div>
+
+    <div id="durationClusters"></div>
+  </div>
+</div>
+
+<!-- ===== SECTION A5: MODE OF ONSET ===== -->
+<div class="card" id="cardA5" data-id="card-a5">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A5</span> Mode of Onset</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>Onset acuity is a major differential discriminator (delirium vs dementia, mania vs depression).</li>
+        <li>Acute = hours to days; Subacute = days to weeks; Insidious = weeks to months to years.</li>
+      </ul>
+    </div>
+    <div id="onsetClusters"></div>
+  </div>
+</div>
+
+<!-- ===== SECTION A6: COURSE ===== -->
+<div class="card" id="cardA6" data-id="card-a6">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A6</span> Course</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>Temporal pattern helps distinguish episodic disorders (bipolar, panic) from continuous disorders (dysthymia, GAD).</li>
+        <li>Progressive course points toward neurocognitive or neurodegenerative processes.</li>
+      </ul>
+    </div>
+    <div id="courseClusters"></div>
+  </div>
+</div>
+
+<!-- ===== SECTION A7: FUNCTIONAL IMPAIRMENT ===== -->
+<div class="card" id="cardA7" data-id="card-a7">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">A7</span> Functional Impairment</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>Brief summary only here. Detailed impact on occupation, relationships, self-care, and risk belongs to HOPI (Chapter 03).</li>
+        <li>Examples: &#8220;stopped going to work&#8221;, &#8220;stopped cooking&#8221;, &#8220;stopped leaving the house&#8221;.</li>
+      </ul>
+      <h4 style="margin-top:8px;">Pitfall</h4>
+      <ul>
+        <li>Over-documenting functional impact at the CC stage collapses the structure of the case file.</li>
+      </ul>
+    </div>
+    <div id="functionalClusters"></div>
+  </div>
+</div>
+
+<!-- ===== SECTION D: PATIENT-INFORMANT DISCREPANCY ===== -->
+<div class="card" id="cardD" data-id="card-d">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">D</span> Discrepancy as Diagnostic Instrument</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Why it matters</h4>
+      <ul>
+        <li>The direction of the discrepancy maps onto specific diagnostic categories.</li>
+        <li>The divergence is a finding, not a nuisance &#8212; do not merge the two lists into one.</li>
+      </ul>
+      <h4 style="margin-top:8px;">How to document</h4>
+      <ul>
+        <li>Document the discrepancy explicitly: &#8220;Patient reports &#8216;...&#8217;; Informant reports &#8216;...&#8217;&#8221;.</li>
+        <li>Both lists go into the case file as two parallel records.</li>
+      </ul>
+    </div>
+
+    <div class="field-label">Characteristic Discrepancy Pattern</div>
+    <select id="discrepancyPattern" data-key="discrepancyPattern"
+      onchange="updateDiscrepancyNote(); triggerSave();"
+      style="min-height:52px; margin-bottom:10px;">
+      <option value="">-- Select pattern (if applicable) --</option>
+      <option value="D1">D1 &#8212; Psychosis: patient reports symptoms as real; informant reports behavioural decline</option>
+      <option value="D2">D2 &#8212; Mania: patient denies illness; informant carries the case</option>
+      <option value="D3">D3 &#8212; Depression: patient minimises; informant describes alarm</option>
+      <option value="D4">D4 &#8212; Alcohol SUD: patient minimises quantity/consequences; informant reports crisis</option>
+      <option value="D5">D5 &#8212; Anorexia Nervosa: patient ego-syntonic body image distortion; family alarm</option>
+      <option value="D6">D6 &#8212; Dementia: patient confabulates normality; informant reports progressive decline</option>
+      <option value="D7">D7 &#8212; BPD: accounts differ in framing (crisis vs chronic pattern); both contain truth</option>
+      <option value="D8">D8 &#8212; Delirium: patient disoriented/unable to give account; informant reports acute change</option>
+    </select>
+
+    <div class="discrepancy-banner" id="discrepancyNote" style="display:none;"></div>
+
+    <div class="field-label" style="margin-top:16px;">Discrepancy Analysis (free text)</div>
+    <div class="field-hint">Document the explicit discrepancy here. Example format: &#8220;Patient reports &#8216;I am fine, I don&#8217;t know why I am here&#8217;; Informant reports four nights without sleep, pressured speech, indiscriminate spending...&#8221;</div>
+    <textarea data-key="discrepancyText" placeholder="Type discrepancy analysis here..."
+      oninput="resizeTextarea(this); triggerSave();"
+    ></textarea>
+  </div>
+</div>
+
+<!-- ===== SECTION E: DOCUMENTATION CONVENTION ===== -->
+<div class="card" id="cardE" data-id="card-e">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">E</span> Documentation Convention / Final Preview</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Standard Format (OCD Bharti style)</h4>
+      <ul>
+        <li>Grouped by theme. Related complaints into a single line.</li>
+        <li>Duration at the end of each group: &#8220;since X, increased since Y&#8221;.</li>
+        <li>Verbatim where possible.</li>
+        <li>Patient complaints first; informant block second where it differs.</li>
+      </ul>
+    </div>
+
+    <div class="field-label">Patient Complaints Block</div>
+    <div class="field-hint">This auto-populates from your clusters above. You may edit directly. Group by theme, put duration at end of each group, preserve verbatim language.</div>
+    <textarea data-key="docPatientBlock" placeholder="Patient complaints block..."
+      oninput="resizeTextarea(this); triggerSave();"
+      style="margin-bottom:14px;"></textarea>
+
+    <div class="field-label">Informant Complaints Block (if differs)</div>
+    <div class="field-hint">Record informant complaints that differ meaningfully from the patient&#8217;s account. Precede with &#8220;On informant account:&#8221; or &#8220;According to [relationship]:&#8221;</div>
+    <textarea data-key="docInformantBlock" placeholder="Informant complaints block..."
+      oninput="resizeTextarea(this); triggerSave();"
+      style="margin-bottom:14px;"></textarea>
+
+    <div class="field-label">Additional Free Notes</div>
+    <textarea data-key="docFreeNotes" placeholder="Additional notes..."
+      oninput="resizeTextarea(this); triggerSave();"
+    ></textarea>
+  </div>
+</div>
+
+<!-- ===== SECTION F: DISORDER-SPECIFIC TAILORING REF ===== -->
+<div class="card" id="cardF" data-id="card-f">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">F</span> Disorder-Specific Tailoring Reference</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Reference Only</h4>
+      <ul>
+        <li>Use the template panel at the top of this form to insert any of these patterns directly into your documentation.</li>
+        <li>These blocks show typical patient complaints, typical informant complaints, divergence, and duration signatures.</li>
+      </ul>
+    </div>
+    <div id="disorderRefList"></div>
+  </div>
+</div>
+
+<!-- ===== SECTION G: PITFALLS & EXAM TRAPS ===== -->
+<div class="card" id="cardG" data-id="card-g">
+  <div class="card-header" onclick="toggleCard(this)">
+    <h2><span class="badge">G</span> Pitfalls &amp; Exam Traps Self-Check</h2>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Before finalising your chief complaints</h4>
+      <ul>
+        <li>Tick each item once you have verified it in your documentation.</li>
+        <li>An unchecked item is a potential trap in the exam or viva.</li>
+      </ul>
+    </div>
+    <div id="pitfallsList">
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p1" data-key="p1" onchange="triggerSave();">
+        <label for="p1">I have NOT translated patient vernacular into psychiatric vocabulary (e.g., &#8220;bejaar&#8221; &#8594; &#8220;depression&#8221;).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p2" data-key="p2" onchange="triggerSave();">
+        <label for="p2">I have recorded the informant&#8217;s parallel list when an informant is present (not optional).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p3" data-key="p3" onchange="triggerSave();">
+        <label for="p3">Complaints are listed in chronological order (earliest first), not in the order the patient mentioned them.</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p4" data-key="p4" onchange="triggerSave();">
+        <label for="p4">Every complaint has a duration tagged (&#8220;since X, increased since Y&#8221;).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p5" data-key="p5" onchange="triggerSave();">
+        <label for="p5">I have NOT skipped the patient&#8217;s account entirely even in severe cases &#8212; silence/denial is documented.</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p6" data-key="p6" onchange="triggerSave();">
+        <label for="p6">I have NOT treated the CC list as a complete symptom inventory (HOPI carries the detail).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p7" data-key="p7" onchange="triggerSave();">
+        <label for="p7">Patient vernacular is preserved verbatim (not paraphrased into clinical language).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p8" data-key="p8" onchange="triggerSave();">
+        <label for="p8">I have documented the patient-informant discrepancy explicitly (not merged into one list).</label>
+      </div>
+      <div class="pitfall-item" onclick="togglePitfallItem(this)">
+        <input type="checkbox" id="p9" data-key="p9" onchange="triggerSave();">
+        <label for="p9">Functional impact is brief only (detailed impact belongs to HOPI, Chapter 03).</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal-box">
+    <h3>Template Preview</h3>
+    <div class="modal-body" id="previewBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmInsert()">Insert into Form</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <h3>Clear All Data?</h3>
+    <div class="modal-body">This will create a timestamped backup, then clear all form fields. This action cannot be undone.</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmClear()">Clear &amp; Backup</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="restoreModal">
+  <div class="modal-box">
+    <h3>Restore Previous Session?</h3>
+    <div class="modal-body" id="restoreBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="declineRestore()">Start Fresh</button>
+      <button class="btn btn-primary" onclick="acceptRestore()">Restore Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STICKY BOTTOM BAR ===== -->
+<div class="sticky-bar">
+  <button class="btn btn-secondary" onclick="window.print()">&#128424; Export PDF</button>
+  <button class="btn btn-primary" onclick="copySummary()">&#128203; Copy Summary</button>
+  <button class="btn btn-danger" style="flex:0.6;" onclick="showClearConfirm()">&#128465; Clear</button>
+</div>
+
+<script>
+/* ===== TEMPLATE DATA: 13 DISORDERS ===== */
+const TEMPLATES = [
+  {
+    id: "SZ", name: "Schizophrenia / FEP",
+    preview: "People are after me...",
+    patient: "People are after me. They are talking about me. I can hear voices at night. I cannot trust anyone.",
+    informant: "He has become withdrawn, stopped going to college, has not been sleeping, talks to himself, muttering, suspicious of the neighbours, stopped eating with the family.",
+    duration: "since 6 months, increased since 6 weeks",
+    onset: "insidious", course: "progressive",
+    functional: ["occupation","relationships","selfcare"],
+    functionalNote: "Stopped going to college, stopped eating with family, suspicious of neighbours.",
+    discrepancy: "D1", divergence: "Patient's complaints are positive symptoms experienced as real; informant's complaints are behavioural and functional decline."
+  },
+  {
+    id: "MAN", name: "Mania / Bipolar I",
+    preview: "I am fine, better than ever...",
+    patient: "I am fine. I am better than I have been in years. I don't know why they brought me here.",
+    informant: "She has not slept for four nights, talking non-stop, making grand plans, spending money indiscriminately, irritable when crossed, sexually disinhibited, hyperactive.",
+    duration: "since 1 week, increased since 3 days",
+    onset: "acute", course: "continuous",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "Spending money indiscriminately, not sleeping, irritable and aggressive.",
+    discrepancy: "D2", divergence: "Total discrepancy. Patient's denial is itself the clinical finding."
+  },
+  {
+    id: "BPDEP", name: "Bipolar Depression",
+    preview: "I am sad, I have no energy...",
+    patient: "I am sad. I cannot do anything. I have no energy. I feel guilty about everything.",
+    informant: "She has stopped working, stopped eating, cries all day, says she does not want to live.",
+    duration: "since 2 months",
+    onset: "insidious", course: "continuous",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "Stopped working, stopped eating, expresses not wanting to live.",
+    discrepancy: "D3", divergence: "Less than in mania; patient and informant usually aligned, though patient may minimise suicidality."
+  },
+  {
+    id: "MDD", name: "Major Depressive Disorder",
+    preview: "I feel low, I am tired...",
+    patient: "I feel low. I cannot sleep. Nothing feels good anymore. I am tired all the time.",
+    informant: "She has stopped doing the things she used to enjoy, is in bed most of the day, cries without reason, said last week she wished she could just disappear, has lost weight.",
+    duration: "since 3 months",
+    onset: "insidious", course: "continuous",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "In bed most of the day, stopped enjoyable activities, weight loss.",
+    discrepancy: "D3", divergence: "Varies by severity. Severe melancholic MDD shows patient minimisation against informant alarm."
+  },
+  {
+    id: "ALC", name: "Alcohol Use Disorder",
+    preview: "I drink socially...",
+    patient: "I drink socially. Everyone drinks. I can stop when I want to.",
+    informant: "He drinks every day, spends his wages on alcohol, comes home drunk, has been violent with me, has had two seizures, the children are afraid of him.",
+    duration: "since 5 years, increased since 3 months",
+    onset: "insidious", course: "continuous",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "Lost jobs, violent at home, seizures, family ultimatum brought him in.",
+    discrepancy: "D4", divergence: "Patient minimises quantity, frequency, and consequences; informant's crisis is the entire chapter in microcosm."
+  },
+  {
+    id: "ANX", name: "Anxiety / Panic Disorder",
+    preview: "I get attacks where I feel I am dying...",
+    patient: "I get attacks where I feel I am dying. My heart races. I cannot breathe. I am afraid to leave the house alone now.",
+    informant: "She has become afraid of everything, will not travel alone, keeps asking me to check that she is alright, is always worried about her health.",
+    duration: "since 8 months, increased since 2 months",
+    onset: "subacute", course: "episodic",
+    functional: ["occupation","relationships","selfcare"],
+    functionalNote: "Afraid to leave house alone, will not travel alone, avoids going out.",
+    discrepancy: "none", divergence: "Usually aligned. Patient can often date first panic attack precisely."
+  },
+  {
+    id: "OCD", name: "OCD / OCRD",
+    preview: "I keep having thoughts I cannot get rid of...",
+    patient: "I keep having these thoughts that I cannot get rid of. I have to wash my hands. I have to check the door. I know it is silly but I cannot stop.",
+    informant: "She spends hours washing. We cannot leave the house. She makes us perform rituals. The water bill has doubled.",
+    duration: "since 2 years, increased since 6 months",
+    onset: "insidious", course: "continuous",
+    functional: ["occupation","relationships","selfcare"],
+    functionalNote: "Spends hours washing, cannot leave the house, makes family perform rituals.",
+    discrepancy: "none", divergence: "Generally aligned because OCD is ego-dystonic and patient recognises the problem."
+  },
+  {
+    id: "PTSD", name: "PTSD / Trauma",
+    preview: "I keep seeing what happened...",
+    patient: "I keep seeing what happened. I have nightmares. I am afraid to drive. I cannot sleep.",
+    informant: "Since the accident she has not been the same. She is jumpy, does not want to talk about it, has stopped going out, drinks now when she did not before.",
+    duration: "since 1 year, increased since 3 months",
+    onset: "acute", course: "fluctuating",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "Stopped going out, afraid to drive, jumpy, drinking more than before.",
+    discrepancy: "none", divergence: "Usually aligned. Symptoms date from a specific traumatic event with variable latency."
+  },
+  {
+    id: "AN", name: "Anorexia Nervosa",
+    preview: "I am fat, I need to lose weight...",
+    patient: "I am fat. I need to lose more weight. / I am fine. There is nothing wrong.",
+    informant: "She has lost fifteen kilograms in the last year, will not eat with the family, exercises for hours, has stopped menstruating, we are worried she will die.",
+    duration: "since 1 year, increased since 6 months",
+    onset: "insidious", course: "progressive",
+    functional: ["relationships","selfcare","risk"],
+    functionalNote: "Lost 15 kg, stopped menstruating, exercises for hours, will not eat with family.",
+    discrepancy: "D5", divergence: "Total discrepancy. Patient's body image distortion is ego-syntonic; family's alarm is escalating."
+  },
+  {
+    id: "FND", name: "Dissociative / FND",
+    preview: "My leg does not work...",
+    patient: "My leg does not work. I cannot walk. / I have these fits.",
+    informant: "She was fine until three days ago, then suddenly she could not walk. We took her to several doctors but they said nothing is wrong physically.",
+    duration: "since 3 days",
+    onset: "acute", course: "fluctuating",
+    functional: ["selfcare"],
+    functionalNote: "Suddenly unable to walk, taken to multiple doctors, no physical cause found.",
+    discrepancy: "none", divergence: "Usually aligned on the symptom itself; informant may volunteer a recent stressor the patient does not mention."
+  },
+  {
+    id: "BPD", name: "Borderline PD",
+    preview: "My husband left, I cannot cope...",
+    patient: "My husband left me. I cannot cope. I took an overdose last week. Nobody understands me. My life has always been like this.",
+    informant: "She has been in and out of hospital many times, has cut herself repeatedly since her teens, the relationship breakdown is the latest of several, we don't know what to do anymore.",
+    duration: "since adolescence, acute decompensation since 1 week",
+    onset: "insidious", course: "episodic",
+    functional: ["occupation","relationships","selfcare","risk"],
+    functionalNote: "In and out of hospital, repeated self-harm since teens, relationship breakdown latest of several.",
+    discrepancy: "D7", divergence: "Accounts differ in framing: patient describes current crisis, informant describes chronic pattern. Both contain truth."
+  },
+  {
+    id: "ASPD", name: "Antisocial PD / Conduct",
+    preview: "I want a certificate...",
+    patient: "I want a certificate. I want the judge to know I am unwell. The police brought me here but I don't need to be here.",
+    informant: "Often a family member who has run out of patience or a legal authority (court-mandated).",
+    duration: "since childhood, recent legal crisis since 2 weeks",
+    onset: "insidious", course: "continuous",
+    functional: ["occupation","relationships","risk"],
+    functionalNote: "Instrumental goal-oriented presentation (discharge, avoiding prosecution).",
+    discrepancy: "none", divergence: "Patient's account is frequently aimed at a specific instrumental goal rather than symptom relief."
+  },
+  {
+    id: "NEURO", name: "Delirium vs Dementia",
+    preview: "He was fine two days ago, now confused...",
+    patient: "(Delirium: disoriented, incoherent / Dementia: confabulates nothing is wrong or gives sparse account)",
+    informant: "Delirium: He was fine two days ago, now he is confused, does not recognise me, was agitated last night, sleeping all day. Dementia: She has been gradually getting worse for the last two years, started with forgetting names, now she cannot manage her own bathing.",
+    duration: "Delirium: since 2 days / Dementia: since 2 years",
+    onset: "delirium:acute,dementia:insidious", course: "delirium:fluctuating,dementia:progressive",
+    functional: ["selfcare","relationships"],
+    functionalNote: "Delirium: acute confusion, agitation, sleep reversal. Dementia: progressive loss of ADLs, forgetting names, getting lost.",
+    discrepancy: "D8/D6", divergence: "Acuity of onset is the single most important discriminator. Delirium = hours to days; Dementia = months to years."
+  }
+];
+
+const ONSET_OPTIONS = [
+  {value:"acute", label:"Acute (hours to days)"},
+  {value:"subacute", label:"Subacute (days to weeks)"},
+  {value:"insidious", label:"Insidious (weeks to months to years)"}
+];
+
+const COURSE_OPTIONS = [
+  {value:"continuous", label:"Continuous"},
+  {value:"episodic", label:"Episodic"},
+  {value:"fluctuating", label:"Fluctuating"},
+  {value:"progressive", label:"Progressive"}
+];
+
+const FUNC_OPTIONS = [
+  {value:"occupation", label:"Occupation"},
+  {value:"relationships", label:"Relationships"},
+  {value:"selfcare", label:"Self-care"},
+  {value:"risk", label:"Risk / Safety"}
+];
+
+/* ===== STATE (only for clusters + metadata not covered by data-key) ===== */
+let clusters = [];
+let nextClusterId = 1;
+
+const LS_KEY = "ch02_chief_complaints_v1";
+const LS_BACKUP_PREFIX = "ch02_backup_";
+
+let saveTimer = null;
+let pendingTemplates = [];
+
+/* ===== RESIZE TEXTAREA (exact spec) ===== */
+function resizeTextarea(el) {
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+}
+
+/* ===== INIT AUTO EXPAND (exact spec) ===== */
+function initAutoExpand() {
+  const areas = document.querySelectorAll("textarea");
+  areas.forEach(function(el) {
+    el.addEventListener("input", function() { resizeTextarea(el); });
+    el.addEventListener("paste", function() {
+      setTimeout(function() { resizeTextarea(el); }, 0);
+    });
+  });
+  setTimeout(function() {
+    areas.forEach(function(el) { resizeTextarea(el); });
+  }, 50);
+}
+
+/* ===== CHIP STYLES (exact spec) ===== */
+function updateChipVisuals() {
+  document.querySelectorAll(".option-chip").forEach(function(chip) {
+    var inp = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (inp) {
+      chip.classList.toggle("checked", inp.checked);
+    }
+  });
+}
+
+function updateChipVisualsFor(inp) {
+  var chip = inp.closest(".option-chip");
+  if (chip) chip.classList.toggle("checked", inp.checked);
+}
+
+function initChipStyles() {
+  document.querySelectorAll(".option-chip input").forEach(function(inp) {
+    if (inp.dataset.chipInit) return;
+    inp.dataset.chipInit = "1";
+    inp.addEventListener("change", function() { updateChipVisuals(); });
+  });
+  updateChipVisuals();
+}
+
+/* ===== SAVE DATA (exact spec: data-key based) ===== */
+function saveData() {
+  var data = {};
+  document.querySelectorAll("textarea[data-key], input[data-key], select[data-key]").forEach(function(el) {
+    var key = el.dataset.key;
+    if (!key) return;
+    if (el.type === "checkbox") {
+      data[key] = { type: "checkbox", value: el.checked };
+    } else if (el.type === "radio") {
+      if (el.checked) data[key] = { type: "radio", value: el.value };
+    } else {
+      data[key] = { type: "text", value: el.value };
+    }
+  });
+  // Save card open states
+  data._cardStates = {};
+  document.querySelectorAll(".card[data-id]").forEach(function(card) {
+    var body = card.querySelector(".card-body");
+    data._cardStates[card.dataset.id] = body && body.classList.contains("open");
+  });
+  // Save qr-panel open states
+  data._qrStates = {};
+  document.querySelectorAll(".qr-panel[data-id]").forEach(function(panel) {
+    var body = panel.querySelector(".qr-body");
+    data._qrStates[panel.dataset.id] = body && body.classList.contains("open");
+  });
+  // Manual edit flag
+  var summary = document.getElementById("summaryText");
+  data._manualEdit = summary && summary.dataset.manualEdit === "true";
+  // Clusters
+  data._clusters = clusters;
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+    updateSavedIndicator();
+  } catch(e) {
+    updateSavedIndicator("Save failed");
+  }
+}
+
+function triggerSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(function() { saveData(); }, 300);
+}
+
+/* ===== RESTORE DATA (exact spec) ===== */
+function restoreData() {
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    // Restore field values
+    document.querySelectorAll("textarea[data-key], input[data-key], select[data-key]").forEach(function(el) {
+      var key = el.dataset.key;
+      if (!key || !data[key]) return;
+      var saved = data[key];
+      if (el.type === "checkbox") {
+        el.checked = !!saved.value;
+      } else if (el.type === "radio") {
+        el.checked = (saved.value === el.value);
+      } else {
+        el.value = saved.value || "";
+      }
+    });
+    // Restore card open states
+    if (data._cardStates) {
+      Object.entries(data._cardStates).forEach(function(entry) {
+        var card = document.querySelector('.card[data-id="' + entry[0] + '"]');
+        if (card) {
+          var body = card.querySelector(".card-body");
+          var header = card.querySelector(".card-header");
+          var chev = card.querySelector(".chevron");
+          if (entry[1]) {
+            if (body) body.classList.add("open");
+            if (header) header.classList.add("open");
+            if (chev) chev.style.transform = "rotate(180deg)";
+          } else {
+            if (body) body.classList.remove("open");
+            if (header) header.classList.remove("open");
+            if (chev) chev.style.transform = "rotate(0deg)";
+          }
+        }
+      });
+    }
+    // Restore qr-panel open states
+    if (data._qrStates) {
+      Object.entries(data._qrStates).forEach(function(entry) {
+        var panel = document.querySelector('.qr-panel[data-id="' + entry[0] + '"]');
+        if (panel) {
+          var body = panel.querySelector(".qr-body");
+          var chev = panel.querySelector(".chevron");
+          if (entry[1]) {
+            if (body) body.classList.add("open");
+            if (chev) chev.style.transform = "rotate(180deg)";
+          } else {
+            if (body) body.classList.remove("open");
+            if (chev) chev.style.transform = "rotate(0deg)";
+          }
+        }
+      });
+    }
+    // Restore manual edit flag
+    if (data._manualEdit) {
+      var summary = document.getElementById("summaryText");
+      if (summary) summary.dataset.manualEdit = "true";
+      var locked = document.getElementById("summaryLocked");
+      if (locked) locked.style.display = "inline";
+      var resync = document.getElementById("resyncBtn");
+      if (resync) resync.style.display = "inline-flex";
+    }
+    // Restore clusters
+    if (data._clusters && data._clusters.length) {
+      clusters = data._clusters;
+    }
+    // Restore discrepancy note
+    updateDiscrepancyNote();
+    // Re-render clusters
+    renderAll();
+    // Update chip visuals
+    updateChipVisuals();
+    // Resize textareas after restore
+    setTimeout(function() {
+      document.querySelectorAll("textarea").forEach(function(el) { resizeTextarea(el); });
+    }, 100);
+  } catch(e) { console.error("Restore failed", e); }
+}
+
+/* ===== AUTO SAVE (every 800ms) ===== */
+function initAutoSave() {
+  setInterval(function() {
+    saveData();
+  }, 800);
+  // Also attach input/change listeners to trigger immediate save
+  document.querySelectorAll("textarea[data-key], input[data-key], select[data-key]").forEach(function(el) {
+    el.addEventListener("input", triggerSave);
+    el.addEventListener("change", triggerSave);
+  });
+}
+
+/* ===== TEMPLATE GRID ===== */
+function renderTemplateGrid() {
+  var grid = document.getElementById("templateGrid");
+  grid.innerHTML = TEMPLATES.map(function(t, i) {
+    return '<div class="template-item" onclick="toggleTemplateCheckbox(' + i + ')">' +
+      '<input type="checkbox" id="tpl_' + i + '" data-index="' + i + '" onchange="event.stopPropagation();">' +
+      '<label for="tpl_' + i + '">' +
+        '<div style="font-weight:600; color:var(--text);">' + t.name + '</div>' +
+        '<span class="t-preview">' + t.preview + '</span>' +
+      '</label>' +
+    '</div>';
+  }).join("");
+}
+
+function toggleTemplateCheckbox(idx) {
+  var cb = document.getElementById("tpl_" + idx);
+  cb.checked = !cb.checked;
+}
+
+function getSelectedTemplates() {
+  var checked = [];
+  document.querySelectorAll('.template-item input:checked').forEach(function(cb) {
+    checked.push(TEMPLATES[parseInt(cb.dataset.index)]);
+  });
+  return checked;
+}
+
+function previewTemplates() {
+  var selected = getSelectedTemplates();
+  if (selected.length === 0) { alert("Select at least one template."); return; }
+  pendingTemplates = selected;
+  var body = document.getElementById("previewBody");
+  body.innerHTML = selected.map(function(t) {
+    return '<div style="margin-bottom:14px; padding:12px; background:#111; border:1px solid #2a2a2a; border-radius:8px;">' +
+      '<div style="font-weight:700; color:var(--accent); margin-bottom:6px;">' + t.name + '</div>' +
+      '<div style="margin-bottom:6px;"><strong>Patient:</strong> ' + t.patient + '</div>' +
+      '<div style="margin-bottom:6px;"><strong>Informant:</strong> ' + t.informant + '</div>' +
+      '<div style="margin-bottom:6px;"><strong>Duration:</strong> ' + t.duration + '</div>' +
+      '<div style="margin-bottom:6px;"><strong>Onset:</strong> ' + t.onset + ' &nbsp;|&nbsp; <strong>Course:</strong> ' + t.course + '</div>' +
+      '<div><strong>Functional:</strong> ' + t.functionalNote + '</div>' +
+    '</div>';
+  }).join("");
+  if (selected.length > 1) {
+    body.innerHTML += '<div class="warning-text">Multiple clusters will be appended. Reorder chronologically in Section A3 after insertion.</div>';
+  }
+  document.getElementById("previewModal").classList.add("open");
+}
+
+function insertTemplates() {
+  var selected = getSelectedTemplates();
+  if (selected.length === 0) { alert("Select at least one template."); return; }
+  pendingTemplates = selected;
+  confirmInsert();
+}
+
+function confirmInsert() {
+  closeModal();
+  var clearFirst = document.getElementById("clearBeforeInsert").checked;
+  if (clearFirst) { clusters = []; }
+  pendingTemplates.forEach(function(t) {
+    var cluster = {
+      _id: "c" + (nextClusterId++),
+      disorderId: t.id,
+      patientText: t.id === "NEURO" ? "Delirium: " + t.patient.split("/")[0].trim() : t.patient,
+      informantText: t.informant,
+      duration: t.duration,
+      onset: t.id === "NEURO" ? "" : t.onset,
+      course: t.id === "NEURO" ? "" : t.course,
+      functional: t.functional.slice(),
+      functionalNote: t.functionalNote
+    };
+    clusters.push(cluster);
+  });
+  renderAll();
+  saveData();
+  document.querySelectorAll('.template-item input:checked').forEach(function(cb) { cb.checked = false; });
+  pendingTemplates = [];
+  openCard("cardA1");
+  openCard("cardA3");
+}
+
+/* ===== CLUSTER MANAGEMENT ===== */
+function addCluster() {
+  clusters.push({
+    _id: "c" + (nextClusterId++),
+    disorderId: "",
+    patientText: "",
+    informantText: "",
+    duration: "",
+    onset: "",
+    course: "",
+    functional: [],
+    functionalNote: ""
+  });
+  renderAll();
+  saveData();
+}
+
+function removeCluster(id) {
+  clusters = clusters.filter(function(c) { return c._id !== id; });
+  renderAll();
+  saveData();
+}
+
+function moveCluster(id, dir) {
+  var idx = clusters.findIndex(function(c) { return c._id === id; });
+  if (idx < 0) return;
+  var newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= clusters.length) return;
+  var tmp = clusters[idx];
+  clusters[idx] = clusters[newIdx];
+  clusters[newIdx] = tmp;
+  renderAll();
+  saveData();
+}
+
+function updateClusterField(id, field, value) {
+  var c = clusters.find(function(c) { return c._id === id; });
+  if (c) { c[field] = value; updateSummary(); saveData(); }
+}
+
+function toggleClusterFunctional(id, val) {
+  var c = clusters.find(function(c) { return c._id === id; });
+  if (!c) return;
+  var i = c.functional.indexOf(val);
+  if (i >= 0) c.functional.splice(i, 1);
+  else c.functional.push(val);
+  updateSummary();
+  saveData();
+}
+
+/* ===== RENDERING ===== */
+function renderAll() {
+  renderPatientClusters();
+  renderInformantClusters();
+  renderTimeline();
+  renderDuration();
+  renderOnset();
+  renderCourse();
+  renderFunctional();
+  updateSummary();
+}
+
+function getDisorderBadge(id) {
+  if (!id) return "";
+  var t = TEMPLATES.find(function(x) { return x.id === id; });
+  return t ? '<span class="cluster-badge">' + t.name + '</span>' : "";
+}
+
+function escHtml(str) {
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+
+function renderPatientClusters() {
+  var el = document.getElementById("patientClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="padding:10px 0; color:var(--text3);">No complaint clusters yet. Add manually or use templates above.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div class="cluster-header">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+        '</div>' +
+        '<div class="cluster-actions">' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', -1)" title="Move up">&#9650;</button>' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', 1)" title="Move down">&#9660;</button>' +
+          '<button class="cluster-btn danger" onclick="removeCluster(' + "'" + c._id + "'" + ')" title="Remove">&#128465;</button>' +
+        '</div>' +
+      '</div>' +
+      '<textarea data-cluster="' + c._id + '" data-field="patientText" placeholder="Patient verbatim complaint cluster..." ' +
+      'oninput="resizeTextarea(this); updateClusterField(' + "'" + c._id + "'" + ', ' + "'" + 'patientText' + "'" + ', this.value);" ' +
+      'style="min-height:80px;">' + escHtml(c.patientText) + '</textarea>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+  setTimeout(function() { el.querySelectorAll("textarea").forEach(function(ta) { resizeTextarea(ta); }); }, 0);
+}
+
+function renderInformantClusters() {
+  var el = document.getElementById("informantClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="padding:10px 0; color:var(--text3);">No clusters yet. Add manually or use templates.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div class="cluster-header">' +
+        '<div style="display:flex; align-items:center; gap:8px;">' +
+          '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+        '</div>' +
+        '<div class="cluster-actions">' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', -1)">&#9650;</button>' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', 1)">&#9660;</button>' +
+          '<button class="cluster-btn danger" onclick="removeCluster(' + "'" + c._id + "'" + ')">&#128465;</button>' +
+        '</div>' +
+      '</div>' +
+      '<textarea data-cluster="' + c._id + '" data-field="informantText" placeholder="Informant verbatim complaint cluster..." ' +
+      'oninput="resizeTextarea(this); updateClusterField(' + "'" + c._id + "'" + ', ' + "'" + 'informantText' + "'" + ', this.value);" ' +
+      'style="min-height:80px;">' + escHtml(c.informantText) + '</textarea>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+  setTimeout(function() { el.querySelectorAll("textarea").forEach(function(ta) { resizeTextarea(ta); }); }, 0);
+}
+
+function renderTimeline() {
+  var el = document.getElementById("timelineClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="color:var(--text3);">No clusters to reorder.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    var preview = c.patientText ? (c.patientText.slice(0, 80) + (c.patientText.length > 80 ? "..." : "")) : '<span style="color:var(--text3)">Empty cluster</span>';
+    html += '<div class="cluster-card" style="padding:10px 14px;">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">' +
+        '<div style="flex:1;">' +
+          '<div style="font-weight:600; font-size:0.9rem; margin-bottom:2px;">' +
+            '<span style="color:var(--accent3); margin-right:6px;">' + (i+1) + '.</span>' + preview +
+          '</div>' +
+          '<div class="small">' + (c.duration || "No duration tagged") + '</div>' +
+        '</div>' +
+        '<div class="cluster-actions">' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', -1)">&#9650;</button>' +
+          '<button class="cluster-btn" onclick="moveCluster(' + "'" + c._id + "'" + ', 1)">&#9660;</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function renderDuration() {
+  var el = document.getElementById("durationClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="color:var(--text3);">No clusters yet.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">' +
+        '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+      '</div>' +
+      '<input type="text" data-cluster="' + c._id + '" data-field="duration" ' +
+      'placeholder="since ___, increased since ___" value="' + escHtml(c.duration) + '" ' +
+      'style="min-height:48px; width:100%;" ' +
+      'oninput="updateClusterField(' + "'" + c._id + "'" + ', ' + "'" + 'duration' + "'" + ', this.value); triggerSave();">' +
+    '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function renderOnset() {
+  var el = document.getElementById("onsetClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="color:var(--text3);">No clusters yet.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">' +
+        '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+      '</div>' +
+      '<div class="option-grid">';
+    ONSET_OPTIONS.forEach(function(o) {
+      var sel = c.onset === o.value ? " checked" : "";
+      html += '<label class="option-chip' + (sel ? " checked" : "") + '" onclick="selectOnsetChip(this)">' +
+        '<input type="radio" name="onset_' + c._id + '" value="' + o.value + '"' + sel +
+        ' onchange="selectOnset(' + "'" + c._id + "'" + ', ' + "'" + o.value + "'" + ')">' +
+        '<label>' + o.label + '</label>' +
+      '</label>';
+    });
+    html += '</div></div>';
+  });
+  el.innerHTML = html;
+}
+
+function selectOnsetChip(chip) {
+  var inp = chip.querySelector("input");
+  if (inp) inp.checked = true;
+}
+
+function selectOnset(cid, val) {
+  updateClusterField(cid, "onset", val);
+  renderOnset();
+}
+
+function renderCourse() {
+  var el = document.getElementById("courseClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="color:var(--text3);">No clusters yet.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">' +
+        '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+      '</div>' +
+      '<div class="option-grid">';
+    COURSE_OPTIONS.forEach(function(o) {
+      var sel = c.course === o.value ? " checked" : "";
+      html += '<label class="option-chip' + (sel ? " checked" : "") + '" onclick="selectCourseChip(this)">' +
+        '<input type="radio" name="course_' + c._id + '" value="' + o.value + '"' + sel +
+        ' onchange="selectCourse(' + "'" + c._id + "'" + ', ' + "'" + o.value + "'" + ')">' +
+        '<label>' + o.label + '</label>' +
+      '</label>';
+    });
+    html += '</div></div>';
+  });
+  el.innerHTML = html;
+}
+
+function selectCourseChip(chip) {
+  var inp = chip.querySelector("input");
+  if (inp) inp.checked = true;
+}
+
+function selectCourse(cid, val) {
+  updateClusterField(cid, "course", val);
+  renderCourse();
+}
+
+function renderFunctional() {
+  var el = document.getElementById("functionalClusters");
+  if (clusters.length === 0) {
+    el.innerHTML = '<div class="small" style="color:var(--text3);">No clusters yet.</div>';
+    return;
+  }
+  var html = "";
+  clusters.forEach(function(c, i) {
+    html += '<div class="cluster-card">' +
+      '<div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">' +
+        '<span class="cluster-num">#' + (i+1) + '</span>' + getDisorderBadge(c.disorderId) +
+      '</div>' +
+      '<div class="option-grid" style="margin-bottom:10px;">';
+    FUNC_OPTIONS.forEach(function(o) {
+      var sel = c.functional.indexOf(o.value) >= 0 ? " checked" : "";
+      html += '<label class="option-chip' + (sel ? " checked" : "") + '" onclick="toggleFuncChip(this, ' + "'" + c._id + "'" + ', ' + "'" + o.value + "'" + ')">' +
+        '<input type="checkbox"' + sel + '>' +
+        '<label>' + o.label + '</label>' +
+      '</label>';
+    });
+    html += '</div>' +
+      '<textarea data-cluster="' + c._id + '" data-field="functionalNote" placeholder="Brief functional impact note..." ' +
+      'oninput="resizeTextarea(this); updateClusterField(' + "'" + c._id + "'" + ', ' + "'" + 'functionalNote' + "'" + ', this.value);" ' +
+      'style="min-height:60px;">' + escHtml(c.functionalNote) + '</textarea>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+  setTimeout(function() { el.querySelectorAll("textarea").forEach(function(ta) { resizeTextarea(ta); }); }, 0);
+}
+
+function toggleFuncChip(chip, cid, val) {
+  var inp = chip.querySelector("input");
+  if (inp) inp.checked = !inp.checked;
+  toggleClusterFunctional(cid, val);
+  renderFunctional();
+}
+
+/* ===== DISCREPANCY ===== */
+function updateDiscrepancyNote() {
+  var sel = document.getElementById("discrepancyPattern").value;
+  var banner = document.getElementById("discrepancyNote");
+  if (!sel) { banner.style.display = "none"; return; }
+  var t = TEMPLATES.find(function(x) {
+    return x.discrepancy === sel || (x.discrepancy && x.discrepancy.indexOf(sel) >= 0);
+  });
+  var note = t ? t.divergence : "Review the patient-informant divergence explicitly in your documentation.";
+  banner.innerHTML = "<strong>" + sel + " Pattern:</strong> " + note;
+  banner.style.display = "block";
+}
+
+/* ===== AUTO-SUMMARY ===== */
+function updateSummary() {
+  var summary = document.getElementById("summaryText");
+  if (!summary || summary.dataset.manualEdit === "true") return;
+  var blocks = clusters.map(function(c) {
+    var parts = [];
+    if (c.patientText) parts.push(c.patientText.trim());
+    if (c.duration) parts.push("since " + c.duration);
+    return parts.join(", ") + ".";
+  }).filter(Boolean);
+  summary.value = blocks.join("\n\n");
+  resizeTextarea(summary);
+}
+
+function markSummaryManual() {
+  var summary = document.getElementById("summaryText");
+  summary.dataset.manualEdit = "true";
+  document.getElementById("summaryLocked").style.display = "inline";
+  document.getElementById("resyncBtn").style.display = "inline-flex";
+  triggerSave();
+}
+
+function resyncSummary() {
+  var summary = document.getElementById("summaryText");
+  summary.dataset.manualEdit = "false";
+  document.getElementById("summaryLocked").style.display = "none";
+  document.getElementById("resyncBtn").style.display = "none";
+  updateSummary();
+  saveData();
+}
+
+function copySummary() {
+  var text = document.getElementById("summaryText").value;
+  if (!text.trim()) { alert("Summary is empty."); return; }
+  navigator.clipboard.writeText(text).then(function() {
+    var ind = document.getElementById("savedIndicator");
+    var old = ind.textContent;
+    ind.textContent = "Copied!";
+    ind.style.color = "var(--success)";
+    setTimeout(function() { ind.textContent = old; ind.style.color = ""; }, 1500);
+  });
+}
+
+/* ===== UI INTERACTIONS ===== */
+function toggleCard(header) {
+  var body = header.nextElementSibling;
+  if (!body) return;
+  var isOpen = body.classList.contains("open");
+  var chev = header.querySelector(".chevron");
+  if (isOpen) {
+    body.classList.remove("open");
+    header.classList.remove("open");
+    if (chev) chev.style.transform = "rotate(0deg)";
+  } else {
+    body.classList.add("open");
+    header.classList.add("open");
+    if (chev) chev.style.transform = "rotate(180deg)";
+  }
+}
+
+function openCard(cardId) {
+  var card = document.getElementById(cardId);
+  if (!card) return;
+  var body = card.querySelector(".card-body");
+  var header = card.querySelector(".card-header");
+  if (body) body.classList.add("open");
+  if (header) header.classList.add("open");
+  var chev = card.querySelector(".chevron");
+  if (chev) chev.style.transform = "rotate(180deg)";
+}
+
+function toggleQr(header) {
+  var body = header.nextElementSibling;
+  if (!body) return;
+  var isOpen = body.classList.contains("open");
+  body.classList.toggle("open");
+  var chev = header.querySelector(".chevron");
+  if (chev) chev.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+}
+
+function toggleHelp(btn) {
+  var panel = btn.parentElement.nextElementSibling;
+  if (panel) panel.classList.toggle("open");
+}
+
+function toggleCheckboxItem(item) {
+  var cb = item.querySelector('input[type="checkbox"]');
+  if (cb) cb.checked = !cb.checked;
+}
+
+function togglePitfallItem(item) {
+  var cb = item.querySelector("input");
+  if (cb) cb.checked = !cb.checked;
+  item.classList.toggle("checked", cb && cb.checked);
+}
+
+/* ===== DISORDER REFERENCE RENDERING ===== */
+function renderDisorderRef() {
+  var el = document.getElementById("disorderRefList");
+  el.innerHTML = TEMPLATES.map(function(t) {
+    return '<div style="margin-bottom:14px; padding:12px; background:var(--card2); border:1px solid var(--border2); border-radius:var(--radius-sm);">' +
+      '<div style="font-weight:700; color:var(--accent); margin-bottom:6px; font-size:0.92rem;">' + t.name + '</div>' +
+      '<div style="font-size:0.82rem; color:var(--text2); margin-bottom:4px;"><strong style="color:var(--text);">Patient:</strong> ' + t.patient + '</div>' +
+      '<div style="font-size:0.82rem; color:var(--text2); margin-bottom:4px;"><strong style="color:var(--text);">Informant:</strong> ' + t.informant + '</div>' +
+      '<div style="font-size:0.82rem; color:var(--text2); margin-bottom:4px;"><strong style="color:var(--text);">Duration:</strong> ' + t.duration + '</div>' +
+      '<div style="font-size:0.82rem; color:var(--text2); margin-bottom:4px;"><strong style="color:var(--text);">Onset:</strong> ' + t.onset + ' &nbsp;|&nbsp; <strong style="color:var(--text);">Course:</strong> ' + t.course + '</div>' +
+      '<div style="font-size:0.82rem; color:var(--text2);"><strong style="color:var(--text);">Divergence:</strong> ' + t.divergence + '</div>' +
+    '</div>';
+  }).join("");
+}
+
+/* ===== MODAL MANAGEMENT ===== */
+function closeModal() {
+  document.querySelectorAll(".modal-overlay").forEach(function(m) { m.classList.remove("open"); });
+}
+
+function showClearConfirm() {
+  document.getElementById("confirmModal").classList.add("open");
+}
+
+function confirmClear() {
+  var backup = JSON.stringify({ _clusters: clusters });
+  try { localStorage.setItem(LS_BACKUP_PREFIX + Date.now(), backup); } catch(e) {}
+  // Clear all data-key fields
+  document.querySelectorAll("textarea[data-key], input[data-key], select[data-key]").forEach(function(el) {
+    if (el.type === "checkbox" || el.type === "radio") el.checked = false;
+    else el.value = "";
+  });
+  clusters = [];
+  document.getElementById("discrepancyNote").style.display = "none";
+  document.getElementById("summaryLocked").style.display = "none";
+  document.getElementById("resyncBtn").style.display = "none";
+  var summary = document.getElementById("summaryText");
+  if (summary) summary.dataset.manualEdit = "false";
+  closeModal();
+  renderAll();
+  updateChipVisuals();
+  saveData();
+  updateSavedIndicator("Cleared & backed up");
+}
+
+function checkRestore() {
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    var hasClusters = data._clusters && data._clusters.length > 0;
+    var hasFields = Object.keys(data).some(function(k) {
+      return k[0] !== "_" && data[k] && data[k].value;
+    });
+    if (!hasClusters && !hasFields) return;
+    var count = data._clusters ? data._clusters.length : 0;
+    document.getElementById("restoreBody").innerHTML = "Found saved session with <strong>" + count + " complaint cluster(s)</strong>. Restore it?";
+    document.getElementById("restoreModal").classList.add("open");
+  } catch(e) {}
+}
+
+function acceptRestore() {
+  closeModal();
+  restoreData();
+  updateSavedIndicator("Restored");
+}
+
+function declineRestore() {
+  closeModal();
+  localStorage.removeItem(LS_KEY);
+  updateSavedIndicator("New session");
+}
+
+/* ===== SAVED INDICATOR ===== */
+function updateSavedIndicator(msg) {
+  var el = document.getElementById("savedIndicator");
+  var now = new Date();
+  var time = now.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+  el.textContent = msg || ("Saved " + time);
+  el.style.color = msg ? "var(--warn)" : "";
+}
+
+/* ===== PRINT / PDF ===== */
+window.addEventListener("beforeprint", function() {
+  document.querySelectorAll(".card-body").forEach(function(b) { b.classList.add("open"); });
+  document.querySelectorAll(".card-header").forEach(function(h) { h.classList.add("open"); });
+  document.querySelectorAll(".chevron").forEach(function(c) { c.style.transform = "rotate(180deg)"; });
+  document.querySelectorAll(".qr-body").forEach(function(b) { b.classList.add("open"); });
+  document.querySelectorAll("textarea").forEach(function(ta) { resizeTextarea(ta); ta.style.overflow = "visible"; });
+});
+
+window.addEventListener("afterprint", function() {
+  document.querySelectorAll("textarea").forEach(function(ta) { ta.style.overflow = "hidden"; });
+});
+
+/* ===== DOMContentLoaded (exact spec order) ===== */
+document.addEventListener("DOMContentLoaded", function() {
+  renderTemplateGrid();
+  renderDisorderRef();
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  // Final safety resize
+  setTimeout(function() {
+    document.querySelectorAll("textarea").forEach(function(el) { resizeTextarea(el); });
+  }, 300);
+  // Check for restore after a brief delay
+  setTimeout(checkRestore, 500);
+});
+</script>
+</body>
+</html>

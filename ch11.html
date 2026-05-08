@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 11 — Mental State Examination</title>
+<style>
+/* ===== ROOT & RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #000000;
+  --surface: #121212;
+  --surface-2: #1a1a1a;
+  --surface-3: #242424;
+  --text: #e8eaed;
+  --text-2: #bdc1c6;
+  --text-3: #9aa0a6;
+  --accent: #4fd1c5;
+  --accent-2: #80cbc4;
+  --accent-dark: #26a69a;
+  --danger: #ff5252;
+  --warning: #ffd740;
+  --success: #69f0ae;
+  --border: #333333;
+  --border-2: #444444;
+  --instruction-bg: #1b2a2a;
+  --instruction-border: #2e4a4a;
+  --help-bg: #1e1e24;
+  --input-bg: #1e1e1e;
+  --shadow: 0 2px 8px rgba(0,0,0,0.5);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --tap: 52px;
+}
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.55;
+  padding-bottom: 100px;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ===== UTILITIES ===== */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.flex { display: flex; align-items: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.w-full { width: 100%; }
+
+/* ===== HEADER ===== */
+.app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.app-header h1 { font-size: 1.15rem; font-weight: 600; color: var(--accent); letter-spacing: 0.3px; }
+.app-header .subtitle { font-size: 0.82rem; color: var(--text-3); margin-top: 2px; }
+.save-indicator { font-size: 0.72rem; color: var(--text-3); text-align: right; margin-top: 4px; }
+
+/* ===== CONTAINER ===== */
+.container { max-width: 900px; margin: 0 auto; padding: 12px 14px; }
+
+/* ===== SUMMARY BAR ===== */
+.summary-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.summary-bar h2 { font-size: 0.9rem; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.summary-textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: none;
+  font-family: inherit;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.summary-textarea:focus { outline: none; border-color: var(--accent); }
+.summary-textarea::placeholder { color: #777777; opacity: 1; }
+.summary-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+/* ===== METADATA STRIP ===== */
+.metadata-strip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+@media (min-width: 600px) { .metadata-strip { grid-template-columns: repeat(4, 1fr); } }
+.meta-field label { display: block; font-size: 0.78rem; color: var(--text-3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+.meta-field input {
+  width: 100%;
+  min-height: var(--tap);
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.meta-field input:focus { outline: none; border-color: var(--accent); }
+
+/* ===== QUICK REFERENCE PANELS ===== */
+.qr-drawer { margin-bottom: 16px; }
+.qr-toggle {
+  width: 100%;
+  min-height: var(--tap);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  color: var(--accent-2);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: inherit;
+}
+.qr-toggle::after { content: "▼"; font-size: 0.7rem; transition: transform 0.2s; color: var(--text-3); }
+.qr-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
+.qr-panel {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 14px;
+}
+.qr-panel.open { display: block; }
+.qr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (min-width: 600px) { .qr-grid { grid-template-columns: repeat(3, 1fr); } }
+.qr-card {
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 0.82rem;
+}
+.qr-card h4 { color: var(--accent); font-size: 0.8rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+.qr-card p, .qr-card li { color: var(--text-2); line-height: 1.5; }
+.qr-card ul { padding-left: 14px; }
+.qr-card table { width: 100%; font-size: 0.78rem; border-collapse: collapse; margin-top: 4px; }
+.qr-card th, .qr-card td { padding: 5px 4px; border-bottom: 1px solid var(--border); text-align: left; color: var(--text-2); }
+.qr-card th { color: var(--accent); font-weight: 600; }
+
+/* ===== ACCORDION CARDS ===== */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; }
+.card-header {
+  width: 100%;
+  min-height: var(--tap);
+  background: var(--surface-2);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: inherit;
+  text-align: left;
+}
+.card-header .num { color: var(--accent); margin-right: 10px; font-weight: 700; }
+.card-header::after { content: "▼"; font-size: 0.75rem; color: var(--text-3); transition: transform 0.2s; }
+.card-header[aria-expanded="true"]::after { transform: rotate(180deg); }
+.card-body { display: none; padding: 14px 16px; }
+.card-body.open { display: block; }
+
+/* ===== INSTRUCTION BOX ===== */
+.instruction-box {
+  background: var(--instruction-bg);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 0.88rem;
+}
+.instruction-box h4 { color: var(--accent-2); font-size: 0.85rem; margin-bottom: 6px; font-weight: 600; }
+.instruction-box p, .instruction-box li { color: var(--text-2); line-height: 1.55; }
+.instruction-box ul { padding-left: 18px; margin-top: 4px; }
+.instruction-box strong { color: var(--accent-2); }
+
+/* ===== FORM FIELDS ===== */
+.field { margin-bottom: 14px; }
+.field-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.field-label-text { font-size: 0.92rem; color: var(--text); font-weight: 500; }
+
+/* FIELD HINT */
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  border: 1px dashed var(--border-2);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  line-height: 1.45;
+}
+
+.help-btn {
+  width: 28px; height: 28px; min-width: 28px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: inherit;
+}
+.help-panel {
+  display: none;
+  background: var(--help-bg);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+.help-panel.open { display: block; }
+.help-panel h5 { color: var(--accent); font-size: 0.82rem; margin-bottom: 6px; margin-top: 10px; }
+.help-panel h5:first-child { margin-top: 0; }
+.help-panel p, .help-panel li { line-height: 1.5; }
+.help-panel ul { padding-left: 18px; }
+.help-panel .sample { background: var(--surface); padding: 8px; border-radius: 6px; margin: 6px 0; font-style: italic; color: var(--text-3); border-left: 3px solid var(--accent-dark); }
+
+/* ===== INPUTS ===== */
+input[type="text"], input[type="number"], input[type="date"], input[type="time"], select, textarea {
+  width: 100%;
+  min-height: var(--tap);
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea {
+  min-height: 56px;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.55;
+}
+textarea::placeholder { color: #777777; opacity: 1; }
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%239aa0a6'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* ===== OPTION CHIPS ===== */
+.options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 480px) { .options.grid-2 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 500px) { .options.grid-3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 600px) { .options { grid-template-columns: repeat(3, 1fr); } .options.grid-4 { grid-template-columns: repeat(4, 1fr); } }
+
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-2);
+  transition: border-color 0.15s;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+.option-chip.checked { border-color: var(--accent); background: rgba(79,209,197,0.08); color: var(--text); }
+.option-chip input[type="radio"], .option-chip input[type="checkbox"] {
+  width: 22px; height: 22px; min-width: 22px;
+  accent-color: var(--accent);
+  margin: 0;
+  cursor: pointer;
+}
+
+/* ===== INLINE ROWS ===== */
+.inline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (min-width: 600px) { .inline-row { grid-template-columns: repeat(3, 1fr); } .inline-row.col-2 { grid-template-columns: 1fr 1fr; } .inline-row.col-4 { grid-template-columns: repeat(4, 1fr); } }
+
+/* ===== CHECKLIST ITEM ===== */
+.checklist-item { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 0; }
+.checklist-item input { width: 22px; height: 22px; accent-color: var(--accent); }
+.checklist-item label { font-size: 0.88rem; color: var(--text-2); flex: 1; }
+
+/* ===== TABLES ===== */
+.data-table-wrap { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.85rem; }
+.data-table th, .data-table td { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; color: var(--text-2); white-space: nowrap; }
+.data-table th { color: var(--accent); font-weight: 600; font-size: 0.82rem; }
+.data-table tr:last-child td { border-bottom: none; }
+
+/* ===== STICKY BOTTOM BAR ===== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+  justify-content: center;
+}
+.btn {
+  min-height: var(--tap);
+  padding: 0 20px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  max-width: 220px;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-secondary { background: var(--surface-3); color: var(--text); border: 1px solid var(--border-2); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-sm { min-height: 40px; padding: 0 14px; font-size: 0.82rem; max-width: 140px; }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  body { background: #fff; color: #000; padding-bottom: 0; overflow-x: visible; }
+  .app-header, .bottom-bar, .qr-toggle, .qr-panel, .summary-actions, .instruction-box, .help-btn, .help-panel { display: none !important; }
+  .card { border: 1px solid #ccc; margin-bottom: 10px; break-inside: avoid; page-break-inside: avoid; }
+  .card-header { display: none !important; }
+  .card-body { display: block !important; padding: 12px; }
+  .summary-bar { display: block !important; border: 1px solid #333; margin-bottom: 10px; }
+  .summary-textarea { background: #fff; border: 1px solid #999; color: #000; min-height: auto; overflow: visible; height: auto !important; }
+  input, textarea, select { background: #fff; border: 1px solid #999; color: #000; }
+  .option-chip { background: #f5f5f5; border: 1px solid #ccc; color: #000; }
+  .option-chip.checked { background: #e0f7fa; border-color: #26a69a; }
+  a { text-decoration: none; color: #000; }
+  h1, h2, h3 { color: #000; }
+  .field-hint { border-color: #999; color: #555; }
+  .data-table th { color: #000; }
+  .data-table td, .data-table th { border-bottom-color: #ccc; }
+  textarea { overflow: visible !important; height: auto !important; white-space: pre-wrap; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="container" style="padding:0;">
+    <h1>Ch 11 — Mental State Examination</h1>
+    <div class="subtitle">The Adult Psychiatry History-Taking Compendium</div>
+    <div class="save-indicator" id="saveStatus">Not saved yet</div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- METADATA STRIP -->
+<div class="metadata-strip">
+  <div class="meta-field">
+    <label for="mseDate">Date</label>
+    <input type="date" id="mseDate" data-key>
+  </div>
+  <div class="meta-field">
+    <label for="mseTime">Time</label>
+    <input type="time" id="mseTime" data-key>
+  </div>
+  <div class="meta-field">
+    <label for="mseLang">Language</label>
+    <input type="text" id="mseLang" placeholder="e.g., Hindi, English" data-key>
+  </div>
+  <div class="meta-field">
+    <label for="mseTranslator">Translator</label>
+    <input type="text" id="mseTranslator" placeholder="None / Name" data-key>
+  </div>
+</div>
+
+<!-- AUTO-GENERATED SUMMARY -->
+<div class="summary-bar" id="summaryBar">
+  <h2>MSE One-Line Summary (live)</h2>
+  <div class="field-hint">Summary will appear here as you fill the form. You can edit it directly.</div>
+  <textarea class="summary-textarea" id="summaryBox" data-key="_summaryBox" placeholder="Type here..."></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-sm btn-secondary" onclick="resyncSummary()">Re-sync</button>
+    <button class="btn btn-sm btn-secondary" onclick="copySummary()">Copy</button>
+    <button class="btn btn-sm btn-danger" onclick="clearAll()">Clear All</button>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE DRAWERS -->
+<div class="qr-drawer">
+  <button class="qr-toggle" aria-expanded="false" onclick="toggleQr(this)">Quick Reference: 12 Headings & Mnemonics</button>
+  <div class="qr-panel">
+    <div class="qr-grid">
+      <div class="qr-card">
+        <h4>12 MSE Headings</h4>
+        <ol style="padding-left:16px;color:var(--text-2);font-size:0.8rem;line-height:1.6;">
+          <li>General appearance & behaviour</li>
+          <li>Psychomotor activity</li>
+          <li>Speech</li>
+          <li>Thought (form, stream, possession, content)</li>
+          <li>Mood and affect</li>
+          <li>Perception</li>
+          <li>Consciousness & orientation</li>
+          <li>Attention & concentration</li>
+          <li>Memory</li>
+          <li>Intelligence</li>
+          <li>Judgement</li>
+          <li>Insight</li>
+        </ol>
+      </div>
+      <div class="qr-card">
+        <h4>Schneider’s FRS</h4>
+        <p style="font-size:0.78rem;margin-bottom:6px;"><strong>3 perceptual:</strong> audible thoughts, 3rd-person AH, running commentary</p>
+        <p style="font-size:0.78rem;margin-bottom:6px;"><strong>3 thought:</strong> insertion, withdrawal, broadcasting</p>
+        <p style="font-size:0.78rem;margin-bottom:6px;"><strong>3 passivity:</strong> made affect, made impulse, made volition</p>
+        <p style="font-size:0.78rem;margin-bottom:6px;"><strong>+</strong> somatic passivity, delusional perception</p>
+      </div>
+      <div class="qr-card">
+        <h4>Bush-Francis Catatonia</h4>
+        <p style="font-size:0.78rem;">Excitement, immobility/stupor, mutism, staring, posturing, grimacing, echopraxia/echolalia, stereotypy, mannerisms, verbigeration, rigidity, negativism. <strong>≥3 = consider catatonia</strong></p>
+      </div>
+      <div class="qr-card">
+        <h4>Affect Glossary</h4>
+        <div class="data-table-wrap">
+<table>
+          <tr><th>Term</th><th>Meaning</th></tr>
+          <tr><td>Flat</td><td>Near-absolute absence</td></tr>
+          <tr><td>Blunt</td><td>Significant reduction</td></tr>
+          <tr><td>Constricted</td><td>Less severe than blunt</td></tr>
+          <tr><td>Restricted</td><td>Mild reduction in range</td></tr>
+          <tr><td>Inappropriate</td><td>Discordant with situation</td></tr>
+          <tr><td>Incongruent</td><td>Discordant with thought</td></tr>
+          <tr><td>Labile</td><td>Rapid shift to opposite</td></tr>
+        </table>
+</div>
+      </div>
+      <div class="qr-card">
+        <h4>Orientation Rule</h4>
+        <p style="font-size:0.78rem;"><strong>Lost:</strong> Time → Place → Person<br><strong>Recovers:</strong> Person → Place → Time<br>Use this to stage delirium vs functional psychosis.</p>
+      </div>
+      <div class="qr-card">
+        <h4>Insight Grades</h4>
+        <table>
+          <tr><th>G</th><th>Description</th></tr>
+          <tr><td>1</td><td>Denies illness</td></tr>
+          <tr><td>2</td><td>Denies but accepts at times</td></tr>
+          <tr><td>3</td><td>Aware, attributes to physical/external</td></tr>
+          <tr><td>4</td><td>Aware, attributes to mental illness</td></tr>
+          <tr><td>5</td><td>Intellectual insight</td></tr>
+          <tr><td>6</td><td>True emotional insight</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="qr-drawer">
+  <button class="qr-toggle" aria-expanded="false" onclick="toggleQr(this)">Quick Reference: Delusions, Hallucinations, Attention Tests</button>
+  <div class="qr-panel">
+    <div class="qr-grid">
+      <div class="qr-card">
+        <h4>Common Delusions</h4>
+        <table>
+          <tr><th>Type</th><th>Typical Disorder</th></tr>
+          <tr><td>Persecutory</td><td>Schizophrenia, severe depression</td></tr>
+          <tr><td>Reference</td><td>Schizophrenia spectrum</td></tr>
+          <tr><td>Grandiose</td><td>Mania, neurosyphilis</td></tr>
+          <tr><td>Infidelity</td><td>Alcohol dependence</td></tr>
+          <tr><td>Erotomania</td><td>Delusional disorder</td></tr>
+          <tr><td>Nihilism/Cotard</td><td>Severe psychotic depression</td></tr>
+          <tr><td>Guilt/sin</td><td>Severe depression</td></tr>
+          <tr><td>Ill-health</td><td>Depression, schizophrenia</td></tr>
+          <tr><td>Control/passivity</td><td>Schizophrenia</td></tr>
+        </table>
+      </div>
+      <div class="qr-card">
+        <h4>Special Hallucinations</h4>
+        <table>
+          <tr><th>Term</th><th>Meaning</th></tr>
+          <tr><td>Hypnagogic</td><td>Falling asleep</td></tr>
+          <tr><td>Hypnopompic</td><td>Waking up</td></tr>
+          <tr><td>Imperative</td><td>Commands given</td></tr>
+          <tr><td>Thought echo</td><td>Own thoughts aloud</td></tr>
+          <tr><td>Functional</td><td>Same-modality trigger</td></tr>
+          <tr><td>Reflex</td><td>Cross-modality trigger</td></tr>
+          <tr><td>Extracampine</td><td>Outside sensory field</td></tr>
+          <tr><td>Autoscopy</td><td>Sees self externally</td></tr>
+          <tr><td>Formication</td><td>Insects on skin</td></tr>
+        </table>
+      </div>
+      <div class="qr-card">
+        <h4>Attention Tests (NIMHANS)</h4>
+        <table>
+          <tr><th>Test</th><th>Norm</th></tr>
+          <tr><td>Digit span forward</td><td>Up to 7±2</td></tr>
+          <tr><td>Digit span backward</td><td>Up to 5±1</td></tr>
+          <tr><td>Serial 100−7</td><td>5 subs in 120s</td></tr>
+          <tr><td>Serial 40−3</td><td>In 60s</td></tr>
+          <tr><td>Serial 20−1</td><td>In 15s</td></tr>
+          <tr><td>Days/months backward</td><td>3 trials</td></tr>
+        </table>
+      </div>
+      <div class="qr-card">
+        <h4>Mood States in Mania</h4>
+        <table>
+          <tr><th>State</th><th>Definition</th></tr>
+          <tr><td>Euthymia</td><td>Normal</td></tr>
+          <tr><td>Elevated</td><td>More cheerful, not pathological</td></tr>
+          <tr><td>Euphoria</td><td>Exaggerated well-being</td></tr>
+          <tr><td>Expansive</td><td>No restraint, overestimation</td></tr>
+          <tr><td>Elation</td><td>Euphoria + triumph</td></tr>
+          <tr><td>Exaltation</td><td>Intense elation + grandiosity</td></tr>
+          <tr><td>Ecstasy</td><td>Intense rapture/bliss</td></tr>
+        </table>
+      </div>
+      <div class="qr-card">
+        <h4>Speech Parameters</h4>
+        <p style="font-size:0.78rem;">Coherence, relevance, spontaneity, amount/volume, tone (high/normal/low), tempo (slow/normal/fast/pressured), reaction time (increased/decreased), prosody (preserved/monotonous)</p>
+      </div>
+      <div class="qr-card">
+        <h4>Primary vs Secondary Delusions</h4>
+        <p style="font-size:0.78rem;"><strong>Primary (apophany):</strong> delusional mood, sudden delusional idea, delusional perception.</p>
+        <p style="font-size:0.78rem;"><strong>Secondary:</strong> arises from depressed mood, hallucinations, or stress.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- A. STANCE AND FRAMING -->
+<div class="card" id="card-a">
+  <button class="card-header" aria-expanded="true" onclick="toggleCard(this)">
+    <span><span class="num">A</span>Stance and Framing</span>
+  </button>
+  <div class="card-body open">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>The MSE is a <strong>cross-sectional</strong> record anchored in the last 7 days. Three rules govern everything:</p>
+      <ul>
+        <li><strong>Describe, don't label.</strong> Document heading → verbatim → interpretation as three distinct entities.</li>
+        <li><strong>Patient's language first.</strong> Record thought, perception, affect, mood, and insight verbatim. Mark translations as "translated".</li>
+        <li><strong>Time and date the MSE.</strong> Without timestamping, it is not interpretable.</li>
+      </ul>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">MSE Window</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="mseWindow" value="Current (interview hour)" data-key> Current (interview hour)</label>
+        <label class="option option-chip"><input type="radio" name="mseWindow" value="Cross-sectional (last 7 days)" data-key checked> Cross-sectional (last 7 days)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Describe-don't-label checklist</span></label>
+      <div class="checklist-item"><input type="checkbox" id="chkDesc1" data-key><label for="chkDesc1">I recorded the patient's verbatim language</label></div>
+      <div class="checklist-item"><input type="checkbox" id="chkDesc2" data-key><label for="chkDesc2">I separated description from interpretation</label></div>
+      <div class="checklist-item"><input type="checkbox" id="chkDesc3" data-key><label for="chkDesc3">I noted language used and translator status</label></div>
+      <div class="checklist-item"><input type="checkbox" id="chkDesc4" data-key><label for="chkDesc4">I dated and timed this MSE</label></div>
+    </div>
+  </div>
+</div>
+
+<!-- B1. GENERAL APPEARANCE AND BEHAVIOUR -->
+<div class="card" id="card-b1">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B1</span>General Appearance and Behaviour</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Observational from the moment the patient enters. Note ward staff observations and your own. Comment on whether the patient looks ill, is in touch with surroundings, can be engaged, can be diverted.</p>
+      <p><strong>Diagnostic shifts:</strong> Mania → bright/over-groomed/over-familiar; Depression → self-neglect, drooping posture; Schizophrenia → odd self-care, guardedness; Anxiety → tense, sweaty, tremor; Delirium → restless, plucking, looks ill; Personality disorder → theatrical, provocative.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Build</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="radio" name="build" value="Athletic" data-key> Athletic</label>
+        <label class="option option-chip"><input type="radio" name="build" value="Lean" data-key> Lean</label>
+        <label class="option option-chip"><input type="radio" name="build" value="Asthenic" data-key> Asthenic</label>
+        <label class="option option-chip"><input type="radio" name="build" value="Obese" data-key> Obese</label>
+      </div>
+    </div>
+    <div class="inline-row">
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">BMI</span></label>
+        <input type="number" id="bmi" placeholder="e.g., 22.4" step="0.1" data-key>
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">BMI source</span></label>
+        <input type="text" id="bmiSource" placeholder="Measured / Stated" data-key>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Grooming and hygiene</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Assess in context of socioeconomic and cultural baseline. Note self-care of how many days.</p>
+        <div class="sample">"Grooming and hygiene were poor, with self-neglect of approximately 5 days noted by family."</div>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="grooming" value="Well-groomed" data-key> Well-groomed</label>
+        <label class="option option-chip"><input type="radio" name="grooming" value="Average" data-key> Average</label>
+        <label class="option option-chip"><input type="radio" name="grooming" value="Poor / self-neglect" data-key> Poor / self-neglect</label>
+        <label class="option option-chip"><input type="radio" name="grooming" value="Over-groomed" data-key> Over-groomed</label>
+      </div>
+      <div class="field-hint">Describe specifics: unkempt hair, soiled clothes, odour, overdone makeup/jewellery...</div>
+  <textarea class="mt-2" id="groomingText" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Facial expression</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Appropriate" data-key> Appropriate</label>
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Fixed" data-key> Fixed</label>
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Changing" data-key> Changing</label>
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Blank / vacant" data-key> Blank / vacant</label>
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Anxious" data-key> Anxious</label>
+        <label class="option option-chip"><input type="radio" name="facialExpr" value="Sad" data-key> Sad</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Eye contact</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="eyeContact" value="Established and maintained" data-key> Established & maintained</label>
+        <label class="option option-chip"><input type="radio" name="eyeContact" value="Poor" data-key> Poor</label>
+        <label class="option option-chip"><input type="radio" name="eyeContact" value="Averted" data-key> Averted</label>
+        <label class="option option-chip"><input type="radio" name="eyeContact" value="Excessive / staring" data-key> Excessive / staring</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Posture</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="posture" value="Relaxed" data-key> Relaxed</label>
+        <label class="option option-chip"><input type="radio" name="posture" value="Anxious / tense" data-key> Anxious / tense</label>
+        <label class="option option-chip"><input type="radio" name="posture" value="Guarded" data-key> Guarded</label>
+        <label class="option option-chip"><input type="radio" name="posture" value="Catatonic" data-key> Catatonic</label>
+        <label class="option option-chip"><input type="radio" name="posture" value="Stooped" data-key> Stooped</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Gait</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="gait" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="gait" value="Circumductive" data-key> Circumductive</label>
+        <label class="option option-chip"><input type="radio" name="gait" value="Ataxic" data-key> Ataxic</label>
+        <label class="option option-chip"><input type="radio" name="gait" value="Shuffling" data-key> Shuffling</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Attitude towards examiner</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="radio" name="attitude" value="Cooperative" data-key> Cooperative</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Hostile" data-key> Hostile</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Defensive" data-key> Defensive</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Guarded" data-key> Guarded</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Evasive" data-key> Evasive</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Suspicious" data-key> Suspicious</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Over-familiar" data-key> Over-familiar</label>
+        <label class="option option-chip"><input type="radio" name="attitude" value="Minimally responsive" data-key> Minimally responsive</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Rapport</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Definition: "Spontaneous, harmonious responsiveness to achieve a common therapeutic goal."</p>
+        <div class="sample">"Rapport was established / partially established / not established."</div>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="rapport" value="Established" data-key> Established</label>
+        <label class="option option-chip"><input type="radio" name="rapport" value="Partially established" data-key> Partially established</label>
+        <label class="option option-chip"><input type="radio" name="rapport" value="Not established" data-key> Not established</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Looks ill / in touch / divertible?</span></label>
+      <div class="field-hint">Comment on whether the patient looks ill, is in touch with surroundings, can be engaged, can be diverted...</div>
+  <textarea id="appearanceNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B2. PSYCHOMOTOR ACTIVITY -->
+<div class="card" id="card-b2">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B2</span>Psychomotor Activity</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Compare to <strong>premorbid</strong> state. In first-episode psychosis, always do a brief catatonia screen. Posturing and waxy flexibility are easy to miss if focused on interview content.</p>
+      <p><strong>Bush-Francis screening (≥3 = consider catatonia):</strong> excitement, immobility/stupor, mutism, staring, posturing, grimacing, echopraxia/echolalia, stereotypy, mannerisms, verbigeration, rigidity, negativism.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Overall PMA vs premorbid</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="pmaOverall" value="Increased" data-key> Increased</label>
+        <label class="option option-chip"><input type="radio" name="pmaOverall" value="Decreased" data-key> Decreased</label>
+        <label class="option option-chip"><input type="radio" name="pmaOverall" value="Normal" data-key> Normal</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Abnormal motor phenomena (tick all observed)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Test passive movement of upper limb for catatonia signs.</p>
+        <div class="sample">"I tested passive movement of the right upper limb; no waxy flexibility or negativism was observed."</div>
+      </div>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Tics" data-key> Tics</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Mannerisms" data-key> Mannerisms</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Stereotypies" data-key> Stereotypies</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Posturing" data-key> Posturing</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Waxy flexibility" data-key> Waxy flexibility</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Automatic obedience" data-key> Automatic obedience</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Mitgehen" data-key> Mitgehen</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Mitmachen" data-key> Mitmachen</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Echopraxia" data-key> Echopraxia</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Negativism" data-key> Negativism</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Ambitendency" data-key> Ambitendency</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Excitement" data-key> Excitement</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Immobility/stupor" data-key> Immobility/stupor</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Mutism" data-key> Mutism</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Staring" data-key> Staring</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Grimacing" data-key> Grimacing</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Echolalia" data-key> Echolalia</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Verbigeration" data-key> Verbigeration</label>
+        <label class="option option-chip"><input type="checkbox" name="motorPhenom" value="Rigidity" data-key> Rigidity</label>
+      </div>
+      <div class="mt-2"><label class="field-label-text">Bush-Francis score (count checked above ≥3?)</label></div>
+      <div class="inline-row col-2">
+        <input type="number" id="bushFrancisCount" placeholder="Count" min="0" max="23" data-key>
+        <select id="catatoniaScreen" data-key>
+          <option value="">Catatonia screen result</option>
+          <option value="Negative (&lt;3)">Negative (&lt;3)</option>
+          <option value="Positive (≥3), lorazepam challenge considered">Positive (≥3), lorazepam challenge considered</option>
+          <option value="Lorazepam challenge given">Lorazepam challenge given</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">PMA description / verbatim</span></label>
+      <div class="field-hint">Describe observed psychomotor activity in patient's own words or your observations...</div>
+  <textarea id="pmaDesc" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B3. SPEECH -->
+<div class="card" id="card-b3">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B3</span>Speech</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Speech is <strong>physical output</strong>, not content (content goes under Thought). Sample a sufficient length of speech before commenting. Distinguish dysarthria (peripheral), aphasia (central), poverty of speech (negative symptom), pressure of speech (mania), and mutism (catatonia, severe depression, conversion).</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Coherence</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechCoherence" value="Coherent / intelligible" data-key> Coherent / intelligible</label>
+        <label class="option option-chip"><input type="radio" name="speechCoherence" value="Incoherent" data-key> Incoherent</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Relevance to question asked</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechRelevance" value="Relevant" data-key> Relevant</label>
+        <label class="option option-chip"><input type="radio" name="speechRelevance" value="Partially relevant" data-key> Partially relevant</label>
+        <label class="option option-chip"><input type="radio" name="speechRelevance" value="Irrelevant" data-key> Irrelevant</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Spontaneity</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechSpontaneity" value="Spontaneous" data-key> Spontaneous</label>
+        <label class="option option-chip"><input type="radio" name="speechSpontaneity" value="Only in response to questions" data-key> Only in response to questions</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Amount / volume</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechAmount" value="Little" data-key> Little</label>
+        <label class="option option-chip"><input type="radio" name="speechAmount" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="speechAmount" value="Excessive" data-key> Excessive</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Tone</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechTone" value="High pitched" data-key> High pitched</label>
+        <label class="option option-chip"><input type="radio" name="speechTone" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="speechTone" value="Low pitched" data-key> Low pitched</label>
+        <label class="option option-chip"><input type="radio" name="speechTone" value="Tremulous" data-key> Tremulous</label>
+        <label class="option option-chip"><input type="radio" name="speechTone" value="Monotonous" data-key> Monotonous</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Tempo</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechTempo" value="Slow" data-key> Slow</label>
+        <label class="option option-chip"><input type="radio" name="speechTempo" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="speechTempo" value="Fast" data-key> Fast</label>
+        <label class="option option-chip"><input type="radio" name="speechTempo" value="Pressured" data-key> Pressured</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Reaction time</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Increased in depression; decreased in mania and anxiety.</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechReaction" value="Increased" data-key> Increased</label>
+        <label class="option option-chip"><input type="radio" name="speechReaction" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="speechReaction" value="Decreased" data-key> Decreased</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Prosody</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="speechProsody" value="Preserved" data-key> Preserved</label>
+        <label class="option option-chip"><input type="radio" name="speechProsody" value="Monotonous" data-key> Monotonous</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Speech disorder present?</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Dysarthria" data-key> Dysarthria</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Broca / motor non-fluent aphasia" data-key> Broca aphasia</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Wernicke / sensory fluent aphasia" data-key> Wernicke aphasia</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Conduction aphasia" data-key> Conduction aphasia</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Global aphasia" data-key> Global aphasia</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Poverty of speech" data-key> Poverty of speech</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Pressure of speech" data-key> Pressure of speech</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Mutism" data-key> Mutism</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Slurred speech" data-key> Slurred speech</label>
+        <label class="option option-chip"><input type="checkbox" name="speechDisorder" value="Word-finding pauses" data-key> Word-finding pauses</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Speech — verbatim & description</span></label>
+      <div class="field-hint">Patient's speech verbatim or your detailed description...</div>
+  <textarea id="speechVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B4A. THOUGHT — FORM -->
+<div class="card" id="card-b4a">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B4A</span>Thought — Form (Structure)</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Disorders of form ask: is the <strong>architecture</strong> of thinking intact? Sample sufficient length of speech (spontaneous or to an open, non-emotionally-charged cue) before commenting.</p>
+      <p><strong>Pitfall:</strong> Do not confuse flight of ideas with derailment. FOI is fast but connections are understandable; derailment loses the connections. Tangentiality never reaches the goal; circumstantiality always does.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Form of thinking</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Definitions (Fish)</h5>
+        <ul>
+          <li><strong>Derailment:</strong> Ideas slip onto another track, obliquely related or unrelated. FOI = derailment occurring rapidly in pressured speech.</li>
+          <li><strong>Tangentiality:</strong> Response stays on subject with slight deviation each time but eventually goes completely off topic. Distinguished from circumstantiality (which always returns to goal).</li>
+          <li><strong>Substitution:</strong> One major thought replaced by a subsidiary one.</li>
+          <li><strong>Desultory thinking:</strong> Speech grammatically correct but sudden ideas force their way in.</li>
+          <li><strong>Omission:</strong> Intention interrupted leaving a gap.</li>
+          <li><strong>Drivelling:</strong> Preliminary outline present but organisation lost, parts get muddled.</li>
+          <li><strong>Fusion:</strong> Heterogeneous elements brought together with broken logical progression.</li>
+          <li><strong>Word salad:</strong> Terminal disorganisation; words without recognisable syntactic links.</li>
+        </ul>
+      </div>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Preserved / intact" data-key> Preserved / intact</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Derailment" data-key> Derailment</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Flight of ideas" data-key> Flight of ideas</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Tangentiality" data-key> Tangentiality</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Circumstantiality" data-key> Circumstantiality</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Substitution" data-key> Substitution</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Desultory thinking" data-key> Desultory thinking</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Omission" data-key> Omission</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Drivelling" data-key> Drivelling</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Fusion" data-key> Fusion</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Word salad" data-key> Word salad</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtForm" value="Disorganised" data-key> Disorganised</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Form — verbatim example</span></label>
+      <div class="field-hint">Quote patient speech showing the form disturbance. Include the cue/question you gave.</div>
+  <textarea id="thoughtFormVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B4B. THOUGHT — STREAM -->
+<div class="card" id="card-b4b">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B4B</span>Thought — Stream (Flow)</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Stream assesses <strong>tempo</strong> and <strong>continuity</strong> of thinking. Do not confuse thought blocking (sudden arrest, new thought emerges) with poverty of thought (generalised slowing). Poverty hampers formation of associations; blocking is an abrupt stop.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Tempo</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Tempo Definitions</h5>
+        <ul>
+          <li><strong>Pressure / push of speech / flight of ideas:</strong> Thoughts follow rapidly with no general direction; connections due to chance factors (clang, punning, distraction) but usually understandable.</li>
+          <li><strong>Poverty of thought:</strong> Slowing hampers formation of associations and may prevent reaching the original goal.</li>
+          <li><strong>Circumstantiality:</strong> Slow, with many unnecessary trivial details, but goal never lost and eventually reached.</li>
+        </ul>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="thoughtTempo" value="Pressure / flight of ideas" data-key> Pressure / flight of ideas</label>
+        <label class="option option-chip"><input type="radio" name="thoughtTempo" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="thoughtTempo" value="Poverty of thought" data-key> Poverty of thought</label>
+        <label class="option option-chip"><input type="radio" name="thoughtTempo" value="Circumstantiality" data-key> Circumstantiality</label>
+        <label class="option option-chip"><input type="radio" name="thoughtTempo" value="Retardation" data-key> Retardation</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Continuity</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Continuity Definitions</h5>
+        <ul>
+          <li><strong>Perseveration:</strong> Mental operations persist beyond point of relevance. Asked previous PM replies "Manmohan Singh"; asked present PM, again "Manmohan Singh".</li>
+          <li><strong>Thought blocking:</strong> Sudden arrest of train of thought leaving a 'blank'. An entirely new thought may then begin.</li>
+        </ul>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="thoughtContinuity" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="thoughtContinuity" value="Perseveration" data-key> Perseveration</label>
+        <label class="option option-chip"><input type="radio" name="thoughtContinuity" value="Thought blocking" data-key> Thought blocking</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Stream — verbatim example</span></label>
+      <div class="field-hint">Document the verbatim speech showing the stream disturbance, with the cue given.</div>
+  <textarea id="thoughtStreamVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B4C. THOUGHT — POSSESSION -->
+<div class="card" id="card-b4c">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B4C</span>Thought — Possession (Control)</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Assess whether the patient experiences their thoughts as under their own control. This is where <strong>Schneider's First Rank Symptoms</strong> are documented. Not pathognomonic for schizophrenia—also seen in mania and organic states.</p>
+      <p><strong>Mnemonic:</strong> 3 perceptual (audible thoughts, 3rd-person AH, running commentary) + 3 thought alienation (insertion, withdrawal, broadcasting) + 3 passivity (made affect, made impulse, made volition) + somatic passivity + delusional perception.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Obsessions / ruminations</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Thoughts that persist and dominate despite awareness they are without purpose. Sub-types: ideas, doubts, imagery, impulses, phobias.</p>
+        <p>Compulsions are obsessional motor acts. Distinguish controlling vs yielding compulsions.</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Present — ideas" data-key> Present — ideas</label>
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Present — doubts" data-key> Present — doubts</label>
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Present — imagery" data-key> Present — imagery</label>
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Present — impulses" data-key> Present — impulses</label>
+        <label class="option option-chip"><input type="radio" name="obsessions" value="Present — phobias" data-key> Present — phobias</label>
+      </div>
+      <div class="field-hint">Describe content, patient's insight into excessiveness, and any associated compulsions...</div>
+  <textarea class="mt-2" id="obsessionsText" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Thought alienation (Schneider FRS)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Sample Phrasing</h5>
+        <div class="sample">"Do you feel that your thoughts are your own? Do you ever feel that thoughts are being put into your head from outside, or taken out of your head, or that other people can hear what you are thinking?"</div>
+      </div>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Thought insertion" data-key> Thought insertion</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Thought withdrawal" data-key> Thought withdrawal</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Thought broadcasting" data-key> Thought broadcasting</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Made affect" data-key> Made affect</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Made impulse" data-key> Made impulse</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Made volition" data-key> Made volition</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Somatic passivity" data-key> Somatic passivity</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="Delusional perception" data-key> Delusional perception</label>
+        <label class="option option-chip"><input type="checkbox" name="thoughtAlien" value="None observed" data-key> None observed</label>
+      </div>
+      <div class="field-hint">Verbatim descriptions of any thought alienation / passivity experiences...</div>
+  <textarea class="mt-2" id="thoughtAlienVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B4D. THOUGHT — CONTENT -->
+<div class="card" id="card-b4d">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B4D</span>Thought — Content</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Examine for overvalued ideas and delusions, then preoccupations, suicidal ideation, depressive cognitions, and substance-use motivational stage. A delusion is a false, unshakeable belief out of keeping with the patient's social and cultural background [Fish].</p>
+      <p><strong>Apply the cultural test</strong> before labelling any belief as delusional. A religiously-sanctioned belief in keeping with social/cultural background is NOT a delusion.</p>
+      <p><strong>Common pitfall:</strong> Writing "delusions present" without verbatim. Document: single/multiple, type, exact verbatim, fleeting vs fixed, well-systematised vs poorly, mood-congruent, primary vs secondary.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Overvalued ideas</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="overvalued" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="overvalued" value="Present" data-key> Present</label>
+      </div>
+      <textarea class="mt-2" id="overvaluedText" placeholder="Describe content and how it dominates life..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Delusions — presence</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="delusionsPresent" value="None elicited" data-key> None elicited</label>
+        <label class="option option-chip"><input type="radio" name="delusionsPresent" value="Single" data-key> Single</label>
+        <label class="option option-chip"><input type="radio" name="delusionsPresent" value="Multiple" data-key> Multiple</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Delusion type(s)</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Persecutory" data-key> Persecutory</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Reference" data-key> Reference</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Grandiose" data-key> Grandiose</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Nihilistic (Cotard)" data-key> Nihilistic (Cotard)</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Infidelity" data-key> Infidelity</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Love (Erotomania)" data-key> Love (Erotomania)</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Guilt / sin" data-key> Guilt / sin</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Ill-health (hypochondriacal)" data-key> Ill-health</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Control / passivity" data-key> Control / passivity</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Delusional perception" data-key> Delusional perception</label>
+        <label class="option option-chip"><input type="checkbox" name="delusionType" value="Delusional mood" data-key> Delusional mood</label>
+      </div>
+    </div>
+    <div class="inline-row col-2">
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">Fleeting vs Fixed</span></label>
+        <select id="delusionFixed" data-key>
+          <option value="">Select</option>
+          <option value="Fleeting">Fleeting</option>
+          <option value="Fixed">Fixed</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">Systematised?</span></label>
+        <select id="delusionSystem" data-key>
+          <option value="">Select</option>
+          <option value="Well-systematised">Well-systematised</option>
+          <option value="Poorly systematised">Poorly systematised</option>
+        </select>
+      </div>
+    </div>
+    <div class="inline-row col-2">
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">Mood-congruent?</span></label>
+        <select id="delusionMood" data-key>
+          <option value="">Select</option>
+          <option value="Mood-congruent">Mood-congruent</option>
+          <option value="Mood-incongruent">Mood-incongruent</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="field-label-text">Primary vs Secondary</span></label>
+        <select id="delusionPrimary" data-key>
+          <option value="">Select</option>
+          <option value="Primary (apophany)">Primary (apophany)</option>
+          <option value="Secondary">Secondary</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Exact verbatim content of delusion(s)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Document the patient's exact words. Do not summarise or label. The reader should be able to disagree with your interpretation while still seeing the data.</p>
+        <div class="sample">"The neighbours are tapping my phone."</div>
+        <div class="sample">"TV anchor is sending personal messages just for me."</div>
+      </div>
+      <div class="field-hint">Quote the patient verbatim for each delusion. Include the language used and mark translations as 'translated'.</div>
+  <textarea id="delusionVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Preoccupations / worries</span></label>
+      <textarea id="preoccupations" placeholder="Work, family, illness, financial, relationship..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Suicidal ideation screen</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Sample Phrasing</h5>
+        <div class="sample">"Sometimes when people feel this low, they have thoughts that life is not worth living. Have you had thoughts like that?... Have you thought of ending your life?... Have you thought about how you might do it?... Have you taken any steps?"</div>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Passive death wishes" data-key> Passive death wishes</label>
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Active ideation, no plan" data-key> Active ideation, no plan</label>
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Active with plan" data-key> Active with plan</label>
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Active with intent" data-key> Active with intent</label>
+        <label class="option option-chip"><input type="radio" name="suicidalIdeation" value="Prior attempt" data-key> Prior attempt</label>
+      </div>
+      <div class="field-hint">Frequency, intent, plan, lethality, access to means, protective factors...</div>
+  <textarea class="mt-2" id="suicidalDetails" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Homicidal ideation</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="homicidal" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="homicidal" value="Present" data-key> Present</label>
+      </div>
+      <textarea class="mt-2" id="homicidalDetails" placeholder="Target, intent, plan, access..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Beck's triad (depressive cognitions)</span></label>
+      <div class="checklist-item"><input type="checkbox" id="beckWorthless" data-key><label for="beckWorthless">Worthlessness</label></div>
+      <div class="checklist-item"><input type="checkbox" id="beckHelpless" data-key><label for="beckHelpless">Helplessness</label></div>
+      <div class="checklist-item"><input type="checkbox" id="beckHopeless" data-key><label for="beckHopeless">Hopelessness</label></div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Substance use — motivational stage</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Prochaska-DiClemente stages: precontemplation → contemplation → preparation → action → maintenance → relapse.</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Precontemplation" data-key> Precontemplation</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Contemplation" data-key> Contemplation</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Preparation" data-key> Preparation</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Action" data-key> Action</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Maintenance" data-key> Maintenance</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Relapse" data-key> Relapse</label>
+        <label class="option option-chip"><input type="radio" name="motivStage" value="Not applicable" data-key> Not applicable</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- B5. MOOD AND AFFECT -->
+<div class="card" id="card-b5">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B5</span>Mood and Affect</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p><strong>Mood</strong> = patient's pervasive sustained emotion over past 7 days (longitudinal, subjective, climate). <strong>Affect</strong> = present cross-sectional emotional responsiveness observed by examiner (weather). Do not document affect when you mean mood.</p>
+      <p>Sthenic affects (joy, hate, anger) push outward; asthenic (fear, sadness, anxiety, shame) push inward.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Mood — quality (patient's own word)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Record in the patient's own language first, then translate. Examples: "udaas", "pareshaan", "khush", "gussa", "kuch bhi nahi mehsoos ho raha".</p>
+      </div>
+      <input type="text" id="moodQuality" placeholder="Patient's verbatim word for mood, then translation..." data-key>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Mood — reactivity (past week)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="moodReactivity" value="Reactive" data-key> Reactive</label>
+        <label class="option option-chip"><input type="radio" name="moodReactivity" value="Non-reactive" data-key> Non-reactive</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Mood — intensity</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="moodIntensity" value="Mild" data-key> Mild</label>
+        <label class="option option-chip"><input type="radio" name="moodIntensity" value="Moderate" data-key> Moderate</label>
+        <label class="option option-chip"><input type="radio" name="moodIntensity" value="Severe" data-key> Severe</label>
+      </div>
+      <input type="number" class="mt-2" id="moodRating" placeholder="Patient-rated 0-10 (if asked)" min="0" max="10" data-key>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Affect — quality</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Depressed" data-key> Depressed</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Euphoric" data-key> Euphoric</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Elated" data-key> Elated</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Blunted" data-key> Blunted</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Flat" data-key> Flat</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Anxious" data-key> Anxious</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Irritable" data-key> Irritable</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Euthymic" data-key> Euthymic</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Labile" data-key> Labile</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Incongruent" data-key> Incongruent</label>
+        <label class="option option-chip"><input type="radio" name="affectQuality" value="Shallow / vacant" data-key> Shallow / vacant</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Affect — range</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="affectRange" value="Wide" data-key> Wide</label>
+        <label class="option option-chip"><input type="radio" name="affectRange" value="Restricted" data-key> Restricted</label>
+        <label class="option option-chip"><input type="radio" name="affectRange" value="Constricted" data-key> Constricted</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Affect — reactivity (during interview)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="affectReactivity" value="Present" data-key> Present</label>
+        <label class="option option-chip"><input type="radio" name="affectReactivity" value="Absent" data-key> Absent</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Affect — intensity / depth</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="affectDepth" value="Normal" data-key> Normal</label>
+        <label class="option option-chip"><input type="radio" name="affectDepth" value="Reduced" data-key> Reduced</label>
+        <label class="option option-chip"><input type="radio" name="affectDepth" value="High" data-key> High</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Volatility / lability</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p><strong>Volatility</strong> = variation within the same affective state. <strong>Lability</strong> = shift to the opposite affective state (laughing then crying).</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="volatility" value="Stable" data-key> Stable</label>
+        <label class="option option-chip"><input type="radio" name="volatility" value="Volatile" data-key> Volatile</label>
+        <label class="option option-chip"><input type="radio" name="volatility" value="Labile" data-key> Labile</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Communicability</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="communicability" value="Good" data-key> Good</label>
+        <label class="option option-chip"><input type="radio" name="communicability" value="Poor" data-key> Poor</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Appropriateness (to situation)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="appropriateness" value="Appropriate" data-key> Appropriate</label>
+        <label class="option option-chip"><input type="radio" name="appropriateness" value="Inappropriate" data-key> Inappropriate</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Congruity (with thought content)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="congruity" value="Congruent" data-key> Congruent</label>
+        <label class="option option-chip"><input type="radio" name="congruity" value="Incongruent" data-key> Incongruent</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Mood & affect — notes / verbatim</span></label>
+      <div class="field-hint">Patient's verbatim description of mood. Your observations of affect with examples from the interview...</div>
+  <textarea id="moodAffectNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B6. PERCEPTION -->
+<div class="card" id="card-b6">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B6</span>Perception</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Document under <strong>distortions</strong> (heightened, dulled, depersonalisation, derealisation, changes in shape/size) and <strong>deceptions</strong> (illusions and hallucinations). A hallucination is a perception without an object — not a sensory distortion, not a misinterpretation. Occurs simultaneously with real perceptions.</p>
+      <p><strong>Pitfall:</strong> Listing 16 hallucination types and "no hallucinations" instead of describing the modality scan you actually performed. State what you asked and what the patient reported.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Perceptual distortions</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Heightened" data-key> Heightened</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Dulled" data-key> Dulled</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Depersonalisation" data-key> Depersonalisation</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Derealisation" data-key> Derealisation</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Micropsia" data-key> Micropsia</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Macropsia" data-key> Macropsia</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="Changes in time sense" data-key> Changes in time sense</label>
+        <label class="option option-chip"><input type="checkbox" name="percepDistort" value="None" data-key> None</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Illusions</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Completion illusions depend on inattention (misreading words). Affect illusions arise from mood state (bereaved person "sees" deceased).</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="illusions" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="illusions" value="Completion illusions" data-key> Completion illusions</label>
+        <label class="option option-chip"><input type="radio" name="illusions" value="Affect illusions" data-key> Affect illusions</label>
+        <label class="option option-chip"><input type="radio" name="illusions" value="Other" data-key> Other</label>
+      </div>
+      <div class="field-hint">Describe the illusion, context, and patient's explanation...</div>
+  <textarea class="mt-2" id="illusionsText" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Hallucinations — modality scan performed</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <h5>Sample Phrasing</h5>
+        <div class="sample">"Sometimes when people are unwell or under stress, they hear voices or see things that other people around them don't. Has anything like that happened to you?"</div>
+        <p>Follow-up if positive: Whose voice? How many? Male or female? Familiar? Speaking to you or about you? Second or third person? What do they say — give an example. Do they comment on what you are doing? Do they tell you to do things? Have you ever acted on them?</p>
+      </div>
+      <div class="checklist-item"><input type="checkbox" id="scanAuditory" data-key><label for="scanAuditory">Auditory — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanVisual" data-key><label for="scanVisual">Visual — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanOlfactory" data-key><label for="scanOlfactory">Olfactory — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanGustatory" data-key><label for="scanGustatory">Gustatory — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanTactile" data-key><label for="scanTactile">Tactile — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanVisceral" data-key><label for="scanVisceral">Visceral — screened</label></div>
+      <div class="checklist-item"><input type="checkbox" id="scanVestibular" data-key><label for="scanVestibular">Vestibular — screened</label></div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Hallucinations — description</span></label>
+      <div class="field-hint">For each modality with positive findings, document: verbal vs non-verbal, continuous vs intermittent, single vs multiple voices, familiar vs unfamiliar, first/second/third person, pleasant vs unpleasant, commanding/abusive/threatening, mood-congruent vs not, patient's response. Distinguish from imagery and pseudo-hallucination.</div>
+  <textarea id="hallucinationsDesc" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Special hallucination types present</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Hypnagogic" data-key> Hypnagogic</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Hypnopompic" data-key> Hypnopompic</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Imperative (command)" data-key> Imperative (command)</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Thought echo / sonorisation" data-key> Thought echo</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Functional" data-key> Functional</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Reflex" data-key> Reflex</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Extracampine" data-key> Extracampine</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Autoscopy" data-key> Autoscopy</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Negative autoscopy" data-key> Negative autoscopy</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Internal autoscopy" data-key> Internal autoscopy</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Formication" data-key> Formication</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Zoopathy" data-key> Zoopathy</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Sense of presence" data-key> Sense of presence</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Fantastic" data-key> Fantastic</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Kinaesthetic" data-key> Kinaesthetic</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Haptic" data-key> Haptic</label>
+        <label class="option option-chip"><input type="checkbox" name="hallucType" value="Multimodal" data-key> Multimodal</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Pseudo-hallucinations / vivid intrusive imagery</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="pseudoHalluc" value="Absent" data-key> Absent</label>
+        <label class="option option-chip"><input type="radio" name="pseudoHalluc" value="Present" data-key> Present</label>
+      </div>
+      <div class="field-hint">Located in subjective space, known not to be real, full consciousness...</div>
+  <textarea class="mt-2" id="pseudoHallucText" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Perception — notes / verbatim</span></label>
+      <div class="field-hint">Document the modality scan you performed and all findings, including verbatim patient descriptions.</div>
+  <textarea id="perceptionNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B7. CONSCIOUSNESS AND ORIENTATION -->
+<div class="card" id="card-b7">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B7</span>Consciousness and Orientation</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>In organic brain disease, <strong>time is lost first, then place, then person</strong>. Recovery is in reverse: person → place → time. This single rule helps stage delirium and distinguish it from functional psychosis where orientation is typically preserved.</p>
+      <p>Stupor = reversible unresponsiveness requiring stimulus to maintain awakeness. Drowsiness = reversible to alert by stimulus.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Level of consciousness</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="consciousness" value="Conscious / alert" data-key> Conscious / alert</label>
+        <label class="option option-chip"><input type="radio" name="consciousness" value="Drowsy" data-key> Drowsy</label>
+        <label class="option option-chip"><input type="radio" name="consciousness" value="Stupor" data-key> Stupor</label>
+        <label class="option option-chip"><input type="radio" name="consciousness" value="Coma" data-key> Coma</label>
+        <label class="option option-chip"><input type="radio" name="consciousness" value="Fluctuating" data-key> Fluctuating</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Orientation — time</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Hierarchy: approximate time → part of day → day of week → date → month → year → season</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="orientTime" value="Fully oriented" data-key> Fully oriented</label>
+        <label class="option option-chip"><input type="radio" name="orientTime" value="Partially impaired" data-key> Partially impaired</label>
+        <label class="option option-chip"><input type="radio" name="orientTime" value="Disoriented" data-key> Disoriented</label>
+      </div>
+      <div class="field-hint">Which time elements were lost? Date? Month? Year? Season?</div>
+  <textarea class="mt-2" id="orientTimeDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Orientation — place</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Hierarchy: building → floor → town</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="orientPlace" value="Fully oriented" data-key> Fully oriented</label>
+        <label class="option option-chip"><input type="radio" name="orientPlace" value="Partially impaired" data-key> Partially impaired</label>
+        <label class="option option-chip"><input type="radio" name="orientPlace" value="Disoriented" data-key> Disoriented</label>
+      </div>
+      <textarea class="mt-2" id="orientPlaceDetail" placeholder="Which place elements were lost? Building? Town?" data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Orientation — person</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Hierarchy: family members → doctor → attender → self</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="orientPerson" value="Fully oriented" data-key> Fully oriented</label>
+        <label class="option option-chip"><input type="radio" name="orientPerson" value="Partially impaired" data-key> Partially impaired</label>
+        <label class="option option-chip"><input type="radio" name="orientPerson" value="Disoriented" data-key> Disoriented</label>
+      </div>
+      <div class="field-hint">Which person elements were lost? Self-recognition? Doctor? Family?</div>
+  <textarea class="mt-2" id="orientPersonDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Consciousness & orientation — notes</span></label>
+      <div class="field-hint">Sundowning? Fluctuation? Carphologia? Restlessness?</div>
+  <textarea id="consciousnessNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B8. ATTENTION AND CONCENTRATION -->
+<div class="card" id="card-b8">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B8</span>Attention and Concentration</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Attention = ability to focus on task at hand. Concentration = sustained attention. If one is lost, both are typically lost together. Normal attention span = 120-180 seconds; normal concentration span = 40-45 minutes (resetting attention).</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Attention (observed during interview)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="attention" value="Attentive" data-key> Attentive</label>
+        <label class="option option-chip"><input type="radio" name="attention" value="Distractible" data-key> Distractible</label>
+        <label class="option option-chip"><input type="radio" name="attention" value="Inattentive" data-key> Inattentive</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Concentration</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="concentration" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="concentration" value="Impaired" data-key> Impaired</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Standard tests performed</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <div class="data-table-wrap">
+<table class="data-table">
+          <tr><th>Test</th><th>Norm</th></tr>
+          <tr><td>Digit span forward</td><td>Up to 7 ± 2</td></tr>
+          <tr><td>Digit span backward</td><td>Up to 5 ± 1</td></tr>
+          <tr><td>Serial 100 − 7</td><td>5 subtractions in 120s</td></tr>
+          <tr><td>Serial 40 − 3</td><td>In 60s</td></tr>
+          <tr><td>Serial 20 − 1</td><td>In 15s</td></tr>
+          <tr><td>Days/months backward</td><td>3 trials allowed</td></tr>
+        </table>
+</div>
+      </div>
+      <div class="inline-row col-2">
+        <div class="field">
+          <label class="field-label-text">Digit span forward — achieved</label>
+          <input type="number" id="digitForward" placeholder="e.g., 6" min="0" max="15" data-key>
+        </div>
+        <div class="field">
+          <label class="field-label-text">Digit span backward — achieved</label>
+          <input type="number" id="digitBackward" placeholder="e.g., 4" min="0" max="15" data-key>
+        </div>
+      </div>
+      <div class="inline-row col-2">
+        <div class="field">
+          <label class="field-label-text">Serial 100−7 (subtractions correct)</label>
+          <input type="number" id="serial7" placeholder="0-5" min="0" max="5" data-key>
+        </div>
+        <div class="field">
+          <label class="field-label-text">Time taken (seconds)</label>
+          <input type="number" id="serial7time" placeholder="120s norm" data-key>
+        </div>
+      </div>
+      <div class="inline-row col-2">
+        <div class="field">
+          <label class="field-label-text">Serial 40−3 (pass/fail/time)</label>
+          <input type="text" id="serial40" placeholder="Pass / Fail — time" data-key>
+        </div>
+        <div class="field">
+          <label class="field-label-text">Serial 20−1 (pass/fail/time)</label>
+          <input type="text" id="serial20" placeholder="Pass / Fail — time" data-key>
+        </div>
+      </div>
+      <div class="field mt-2">
+        <label class="field-label-text">Days/months backward</label>
+        <input type="text" id="daysMonths" placeholder="Pass / Fail — trials used" data-key>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Attention & concentration — notes</span></label>
+      <div class="field-hint">Was impairment due to primary deficit vs distractibility vs lack of effort?</div>
+  <textarea id="attentionNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B9. MEMORY -->
+<div class="card" id="card-b9">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B9</span>Memory</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Document across <strong>three time bands</strong>. Immediate + recent share hippocampal-temporal substrates. Avoid autobiographical questions whose answers you can't verify, and avoid repetitive events.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Immediate memory (seconds to minutes)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Tested by digit span and three-object recall (objects not in visual field; recall after 3-5 minute distraction). Requires intact attention and concentration.</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="memImmediate" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="memImmediate" value="Impaired" data-key> Impaired</label>
+        <label class="option option-chip"><input type="radio" name="memImmediate" value="Could not test" data-key> Could not test</label>
+      </div>
+      <div class="field-hint">Digit span result; three-object recall (objects used, time delay, result)...</div>
+  <textarea class="mt-2" id="memImmediateDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Recent memory (hours to days/weeks)</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Address test: read 4-5 fact address slowly; engage in conversation; ask recall after 3-5 minutes; cross-check verbatim. Also ask about last 24-48 hours (meals, visitors, ward events).</p>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="memRecent" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="memRecent" value="Impaired" data-key> Impaired</label>
+        <label class="option option-chip"><input type="radio" name="memRecent" value="Could not test" data-key> Could not test</label>
+      </div>
+      <div class="field-hint">Address test (facts, recall score); last 24-48h events recalled; cross-checked with whom?</div>
+  <textarea class="mt-2" id="memRecentDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Remote memory (months to years)</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="memRemote" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="memRemote" value="Impaired" data-key> Impaired</label>
+        <label class="option option-chip"><input type="radio" name="memRemote" value="Relatively preserved" data-key> Relatively preserved</label>
+      </div>
+      <div class="field-hint">Date of birth, number of children, family names, time since marriage/losses, year of education completion...</div>
+  <textarea class="mt-2" id="memRemoteDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Memory — pattern notes</span></label>
+      <div class="field-hint">Depressive pseudomentia pattern? Korsakoff's? Hippocampal pattern?</div>
+  <textarea id="memoryNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B10. INTELLIGENCE -->
+<div class="card" id="card-b10">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B10</span>Intelligence</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>A <strong>clinical estimate</strong> (not formal IQ), judged adequate or inadequate to the patient's educational and cultural background. Test general fund of knowledge, comprehension, arithmetic, and abstraction.</p>
+      <p><strong>Tips:</strong> Differences are easier than similarities and should be presented first. Discard stone-potato (overused). Use real-world rupee scenarios for arithmetic.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Overall clinical estimate</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="intellectOverall" value="Adequate for background" data-key> Adequate for background</label>
+        <label class="option option-chip"><input type="radio" name="intellectOverall" value="Inadequate / below expected" data-key> Inadequate / below expected</label>
+        <label class="option option-chip"><input type="radio" name="intellectOverall" value="Could not assess" data-key> Could not assess</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">General fund of knowledge</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <p>Literates: capitals, rivers, current PM, major events. Non-literates: seasons, crops, prices of food grains/land.</p>
+      </div>
+      <textarea id="fundKnowledge" placeholder="Questions asked and patient's responses..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Comprehension</span></label>
+      <textarea id="comprehension" placeholder=""What will you do if it rains when you start work?" "Why should we be away from bad company?" — responses" data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Arithmetic</span></label>
+      <div class="field-hint">Simple +/−/×/÷ in rupee scenarios: 4+5 rupees; 12 rupees cloth, 20-rupee note, change?</div>
+  <textarea id="arithmetic" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Abstraction — similarities</span></label>
+      <div class="field-hint">Orange-banana, dog-lion, eye-ear, north-west, table-chair — responses</div>
+  <textarea id="abstractionSim" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Abstraction — differences</span></label>
+      <div class="field-hint">Fly-butterfly, cinema-radio, iron-silver, praise-punishment — responses</div>
+  <textarea id="abstractionDiff" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Abstraction — proverbs</span></label>
+      <textarea id="abstractionProv" placeholder=""Slow and steady wins the race"; "A barking dog never bites"; "All that glitters is not gold" — responses" data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Intelligence — notes</span></label>
+      <div class="field-hint">Clinical estimate with justification in context of education/culture...</div>
+  <textarea id="intelligenceNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B11. JUDGEMENT -->
+<div class="card" id="card-b11">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B11</span>Judgement</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Three domains: personal (does behaviour disrupt their own life?), social (disrupt social functioning?), and test judgement (problem solution). Interpret test judgement in the patient's intellectual and cultural context — utility is limited.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Personal judgement</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="judgementPersonal" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="judgementPersonal" value="Impaired" data-key> Impaired</label>
+      </div>
+      <textarea class="mt-2" id="judgementPersonalDetail" placeholder="Future plans? Behaviour disrupting own life?" data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Social judgement</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="judgementSocial" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="judgementSocial" value="Impaired" data-key> Impaired</label>
+      </div>
+      <textarea class="mt-2" id="judgementSocialDetail" placeholder="How do they manage in social situations?" data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Test judgement</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <div class="sample">"If the building you are in catches fire, what is the first thing you will do?" (correct: try to put it out / leave)</div>
+        <div class="sample">"If you find a stamped, sealed envelope with an address on the road, what will you do?" (correct: post it / hand to postman)</div>
+      </div>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="judgementTest" value="Intact" data-key> Intact</label>
+        <label class="option option-chip"><input type="radio" name="judgementTest" value="Impaired" data-key> Impaired</label>
+        <label class="option option-chip"><input type="radio" name="judgementTest" value="Could not assess" data-key> Could not assess</label>
+      </div>
+      <div class="field-hint">Questions posed, patient's responses, prompts given...</div>
+  <textarea class="mt-2" id="judgementTestDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Judgement — overall notes</span></label>
+      <div class="field-hint">Overall impression with cultural/intellectual context...</div>
+  <textarea id="judgementNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- B12. INSIGHT -->
+<div class="card" id="card-b12">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">B12</span>Insight</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Insight = awareness of illness and need for help, across <strong>awareness, attribution, and acceptance</strong>. Never skip insight — incomplete MSE without it. For OCD, use BABS (Brown Assessment of Beliefs Scale).</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Insight grade</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <div class="data-table-wrap">
+<table class="data-table">
+          <tr><th>Grade</th><th>Description</th><th>Domain</th></tr>
+          <tr><td>1</td><td>Denies illness</td><td>Awareness</td></tr>
+          <tr><td>2</td><td>Denies but accepts at times</td><td>Awareness</td></tr>
+          <tr><td>3</td><td>Aware, attributes to physical/external</td><td>Attribution</td></tr>
+          <tr><td>4</td><td>Aware, attributes to mental illness</td><td>Attribution</td></tr>
+          <tr><td>5</td><td>Intellectual insight</td><td>Acceptance</td></tr>
+          <tr><td>6</td><td>True emotional insight</td><td>Acceptance (rare)</td></tr>
+        </table>
+</div>
+      </div>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 1 — denies illness" data-key> Grade 1 — denies illness</label>
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 2 — accepts at times" data-key> Grade 2 — accepts at times</label>
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 3 — physical/external cause" data-key> Grade 3 — physical/external cause</label>
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 4 — mental illness" data-key> Grade 4 — mental illness</label>
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 5 — intellectual insight" data-key> Grade 5 — intellectual insight</label>
+        <label class="option option-chip"><input type="radio" name="insightGrade" value="Grade 6 — true emotional insight" data-key> Grade 6 — true emotional insight</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Insight — verbatim exchange</span>
+        <button class="help-btn" onclick="toggleHelp(this)" type="button">ℹ️</button>
+      </label>
+      <div class="help-panel">
+        <div class="sample">"What do you think is going on with you? Do you think this is an illness? Do you think you need help? What kind of help do you think would be useful?"</div>
+      </div>
+      <div class="field-hint">Document the patient's verbatim responses to insight questions...</div>
+  <textarea id="insightVerbatim" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">BABS score (if OCD)</span></label>
+      <input type="number" id="babsScore" placeholder="0-24" min="0" max="24" data-key>
+      <div class="field-hint">If applicable: belief rating, conviction, explanation...</div>
+  <textarea class="mt-2" id="babsDetail" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- C. DISORDER-SPECIFIC MSE PATTERNS -->
+<div class="card" id="card-c">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">C</span>Disorder-Specific MSE Patterns (Templates)</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>These are worked viva-style MSE templates for typical cases. Use them as study guides for orals; they propagate to Chapter 03 (HOPI) and Chapter 14 (management). Tick the relevant diagnosis and adapt the template to your patient.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Primary suspected diagnosis (template to apply)</span></label>
+      <div class="options grid-3">
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Schizophrenia (FEP)" data-key> Schizophrenia (FEP)</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Mania (current episode)" data-key> Mania (current episode)</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Major depressive disorder (severe)" data-key> MDD (severe)</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Substance use / intoxication / withdrawal" data-key> Substance use</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Anxiety / panic disorder" data-key> Anxiety / panic</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="OCD" data-key> OCD</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="PTSD" data-key> PTSD</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Eating disorder (AN)" data-key> Eating disorder (AN)</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Dissociative / FND" data-key> Dissociative / FND</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Personality disorder (BPD)" data-key> PD (BPD)</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Delirium" data-key> Delirium</label>
+        <label class="option option-chip"><input type="checkbox" name="disorderPattern" value="Dementia (Alzheimer's pattern)" data-key> Dementia (AD)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Applied template / adapted MSE summary</span></label>
+      <div class="field-hint">Paste or adapt the relevant disorder-specific template here. Modify to fit your actual patient findings.</div>
+  <textarea id="disorderTemplateText" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D. NON-COOPERATIVE / STUPOROSE PATIENT -->
+<div class="card" id="card-d">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">D</span>Non-Cooperative / Stuporose Patient (Kirby Protocol)</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>When the patient is mute, stuporose, catatonic, or actively negativistic, you cannot run the standard MSE, but <strong>observation alone yields rich data</strong>. Document under 8 Kirby headings. Do not write "MSE could not be assessed" — that is itself a failure.</p>
+      <p><strong>Clinical anchor:</strong> In catatonia, the Kirby observational MSE is what gets you to the diagnosis. A lorazepam challenge (1-2 mg IV/IM) is both diagnostic and therapeutic in 60-80% of cases. Document baseline signs, give lorazepam, document post-challenge state.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Kirby protocol used?</span></label>
+      <div class="options">
+        <label class="option option-chip"><input type="radio" name="kirbyUsed" value="Yes" data-key> Yes</label>
+        <label class="option option-chip"><input type="radio" name="kirbyUsed" value="No — patient cooperative" data-key> No — patient cooperative</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">1. General reaction and posture</span></label>
+      <div class="field-hint">Voluntary or passive; comfortable/constrained/awkward; behaviour toward staff; spontaneous acts...</div>
+  <textarea id="kirby1" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">2. Facial expression</span></label>
+      <div class="field-hint">Alert, attentive, placid, vacant, sulky, scowling, perplexed, distressed; play of expression, tears, smiles, sweating...</div>
+  <textarea id="kirby2" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">3. Eyes</span></label>
+      <div class="field-hint">Open or closed; resists lids raised; movements; follows examiner; rolling upward; blinking, flickering, lid tremors; pupillary reaction...</div>
+  <textarea id="kirby3" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">4. Reaction to what is said or done</span></label>
+      <div class="field-hint">Show tongue, move limbs, grasp on command; automatic obedience; reaction to pin-prick...</div>
+  <textarea id="kirby4" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">5. Muscular reactions</span></label>
+      <div class="field-hint">Rigidity; relaxed or tense; catalepsy; waxy flexibility; negativism; cog-wheel resistance; Schnauzkrampf...</div>
+  <textarea id="kirby5" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">6. Emotional responsiveness</span></label>
+      <div class="field-hint">Response to family/children mentioned; sensitive points; visitors; flushing, perspiration, tears; jokes...</div>
+  <textarea id="kirby6" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">7. Speech (any effort)</span></label>
+      <div class="field-hint">Lip movements, whispers, head movements; exact utterances with emotional reaction (may indicate hallucinations)...</div>
+  <textarea id="kirby7" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">8. Writing</span></label>
+      <div class="field-hint">Offered paper and pencil; response; partial stuporose patients often write when they cannot talk...</div>
+  <textarea id="kirby8" placeholder="Type here..." data-key></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Lorazepam challenge</span></label>
+      <div class="inline-row col-2">
+        <select id="lorazepamGiven" data-key>
+          <option value="">Given?</option>
+          <option value="Not given">Not given</option>
+          <option value="1 mg IV">1 mg IV</option>
+          <option value="2 mg IV">2 mg IV</option>
+          <option value="1 mg IM">1 mg IM</option>
+          <option value="2 mg IM">2 mg IM</option>
+        </select>
+        <input type="text" id="lorazepamResponse" placeholder="Response (diagnostic/therapeutic)" data-key>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- E. PITFALLS AND EXAM TRAPS -->
+<div class="card" id="card-e">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">E</span>Pitfalls and Exam Traps</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>These are the most common MSE errors in exams and clinical documentation. Check each one before finalising your case sheet.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Pre-submission checklist</span></label>
+      <div class="checklist-item"><input type="checkbox" id="pit1" data-key><label for="pit1">I did NOT write "delusions present" or "hallucinations present" without verbatim</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit2" data-key><label for="pit2">I distinguished flight of ideas (fast, understandable connections) from derailment (lost connections)</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit3" data-key><label for="pit3">I distinguished tangentiality (never reaches goal) from circumstantiality (eventually reaches goal)</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit4" data-key><label for="pit4">I did NOT call thought blocking when it was poverty of thought</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit5" data-key><label for="pit5">I documented mood (past 7 days, patient-reported) separately from affect (observed now)</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit6" data-key><label for="pit6">I did NOT skip the Kirby protocol in mute/stuporose patients</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit7" data-key><label for="pit7">I documented date, time, language, and translator status</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit8" data-key><label for="pit8">I commented on insight (never leave blank)</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit9" data-key><label for="pit9">I described the modality scan I performed rather than listing types</label></div>
+      <div class="checklist-item"><input type="checkbox" id="pit10" data-key><label for="pit10">I applied the cultural test before labelling any belief as delusional</label></div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Additional pitfalls noted</span></label>
+      <div class="field-hint">Any other documentation concerns or examiner feedback...</div>
+  <textarea id="pitfallsNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- F. SAMPLE PHRASINGS -->
+<div class="card" id="card-f">
+  <button class="card-header" aria-expanded="false" onclick="toggleCard(this)">
+    <span><span class="num">F</span>Sample Phrasings</span>
+  </button>
+  <div class="card-body">
+    <div class="instruction-box">
+      <h4>Clinical Instruction</h4>
+      <p>Keep these phrasings accessible during the interview. The Hindi equivalents are provided where given in the textbook.</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Opening / framing</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--accent);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>English:</strong> "I'm going to ask you some questions that we ask everyone we meet here. Some may sound unusual but they help us understand what you are going through. Is that alright?"</p>
+      </div>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--accent-dark);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>Hindi:</strong> "Main aapse kuch sawaal puchunga jo hum sabse puchte hain. Kuch ajeeb lag sakte hain lekin yeh aapko samajhne mein madad karte hain. Theek hai?"</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Hallucinations</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--accent);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>English:</strong> "Sometimes when people are unwell or under stress, they hear voices or see things that other people around them don't. Has anything like that happened to you?"</p>
+      </div>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--accent-dark);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>Hindi:</strong> "Kabhi kabhi jab log pareshani mein hote hain, toh unhe aisi awaazein sunaai deti hain ya aisi cheezein dikhaai deti hain jo doosron ko nahi dikhti. Kya aapke saath aisa kuch hua hai?"</p>
+      </div>
+      <p style="color:var(--text-3);font-size:0.82rem;margin-top:8px;">Follow-up: Whose voice? How many? Male or female? Familiar? Speaking to you or about you? Second or third person? What do they say — give an example. Do they comment? Do they command? Have you acted on them?</p>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Delusions of reference</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--accent);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>English:</strong> "Do you ever feel that things on the TV or radio or in the newspaper have a special meaning just for you?"</p>
+      </div>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--accent-dark);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>Hindi:</strong> "Kya aapko kabhi lagta hai ki TV, radio ya akhbaar mein kuch khaas aapke liye bola ja raha hai?"</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Suicide screen</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--danger);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>English:</strong> "Sometimes when people feel this low, they have thoughts that life is not worth living. Have you had thoughts like that?... Have you thought of ending your life?... Have you thought about how you might do it?... Have you taken any steps?"</p>
+      </div>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--danger);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>Hindi:</strong> "Kabhi kabhi jab log itna udaas hote hain, unhe aisa lagta hai ki jeene ka koi matlab nahi hai. Kya aapko aise vichar aate hain?... Kya aapne jeevan khatam karne ke baare mein socha hai?... Kaise karenge yeh socha hai?... Kuch tayyari ki hai?"</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Thought possession</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--accent);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;">"Do you feel that your thoughts are your own? Do you ever feel that thoughts are being put into your head from outside, or taken out of your head, or that other people can hear what you are thinking?"</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Insight check</span></label>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;margin-bottom:8px;border-left:3px solid var(--accent);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>English:</strong> "What do you think is going on with you? Do you think this is an illness? Do you think you need help? What kind of help do you think would be useful?"</p>
+      </div>
+      <div class="sample" style="background:var(--surface-3);padding:10px;border-radius:8px;border-left:3px solid var(--accent-dark);">
+        <p style="color:var(--text-2);font-size:0.88rem;line-height:1.5;"><strong>Hindi:</strong> "Aapko kya lagta hai aapke saath kya ho raha hai? Kya yeh ek bimari hai? Kya aapko madad ki zaroorat hai?"</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label"><span class="field-label-text">Custom phrasing notes</span></label>
+      <div class="field-hint">Add your own go-to phrases or patient-specific adaptations...</div>
+  <textarea id="phrasingNotes" placeholder="Type here..." data-key></textarea>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- BOTTOM STICKY BAR -->
+<div class="bottom-bar">
+  <button class="btn btn-primary" onclick="window.print()">Export to PDF</button>
+  <button class="btn btn-secondary" onclick="copySummary()">Copy Summary</button>
+</div>
+
+<script>
+/* ===== CONFIG ===== */
+const STORAGE_KEY = 'ch11_mse_v1';
+const BACKUP_PREFIX = 'ch11_backup_';
+
+/* ===== ACCORDION ===== */
+function toggleCard(btn) {
+  const body = btn.nextElementSibling;
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  body.classList.toggle('open');
+}
+
+function toggleQr(btn) {
+  const panel = btn.nextElementSibling;
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', !expanded);
+  panel.classList.toggle('open');
+}
+
+function toggleHelp(btn) {
+  const panel = btn.closest('.field').querySelector('.help-panel');
+  panel.classList.toggle('open');
+}
+
+/* ===== AUTO-EXPANDING TEXTAREAS ===== */
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(ta => {
+    ta.addEventListener('input', () => resizeTextarea(ta));
+    ta.addEventListener('paste', () => setTimeout(() => resizeTextarea(ta), 50));
+  });
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(ta => resizeTextarea(ta));
+  }, 50);
+}
+
+/* ===== CHIP STYLES ===== */
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip').forEach(chip => {
+    const input = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (input) {
+      chip.classList.toggle('checked', input.checked);
+    }
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip input[type="checkbox"], .option-chip input[type="radio"]').forEach(input => {
+    if (input.dataset.chipInit) return;
+    input.dataset.chipInit = 'true';
+    input.addEventListener('change', updateChipVisuals);
+  });
+  updateChipVisuals();
+}
+
+/* ===== PERSISTENCE ===== */
+let saveTimeout;
+let _manualEdit = false;
+
+function saveData() {
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key') || el.id || el.name;
+    if (!key) return;
+    if (el.type === 'checkbox') {
+      data[key] = el.checked;
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  // Save multi-checkboxes by name
+  const multiNames = new Set();
+  document.querySelectorAll('input[data-key][type="checkbox"]').forEach(el => {
+    if (el.name) multiNames.add(el.name);
+  });
+  multiNames.forEach(name => {
+    const vals = Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(e => e.value);
+    data[name] = vals;
+  });
+  // Card open states
+  const cardStates = {};
+  document.querySelectorAll('.card').forEach(card => {
+    const id = card.id;
+    const body = card.querySelector('.card-body');
+    if (id && body) cardStates[id] = body.classList.contains('open');
+  });
+  data._cardStates = cardStates;
+  // QR panel states
+  const qrStates = {};
+  document.querySelectorAll('.qr-drawer').forEach((drawer, idx) => {
+    const panel = drawer.querySelector('.qr-panel');
+    qrStates['qr_' + idx] = panel && panel.classList.contains('open');
+  });
+  data._qrStates = qrStates;
+  data._manualEdit = _manualEdit;
+  data._savedAt = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const ts = new Date().toLocaleTimeString();
+  document.getElementById('saveStatus').textContent = 'Saved at ' + ts;
+}
+
+function restoreData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    // Restore fields
+    document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+      const key = el.getAttribute('data-key') || el.id || el.name;
+      if (!key || !data.hasOwnProperty(key)) return;
+      const val = data[key];
+      if (el.type === 'checkbox') {
+        if (Array.isArray(val)) {
+          el.checked = val.includes(el.value);
+        } else {
+          el.checked = !!val;
+        }
+      } else if (el.type === 'radio') {
+        el.checked = (el.value === val);
+      } else {
+        el.value = (val === undefined || val === null) ? '' : val;
+      }
+    });
+    // Restore multi-checkboxes by name
+    if (data._cardStates) {
+      Object.entries(data._cardStates).forEach(([id, open]) => {
+        const card = document.getElementById(id);
+        if (!card) return;
+        const body = card.querySelector('.card-body');
+        const header = card.querySelector('.card-header');
+        if (body) body.classList.toggle('open', open);
+        if (header) header.setAttribute('aria-expanded', open);
+      });
+    }
+    if (data._qrStates) {
+      document.querySelectorAll('.qr-drawer').forEach((drawer, idx) => {
+        const open = data._qrStates['qr_' + idx];
+        const toggle = drawer.querySelector('.qr-toggle');
+        const panel = drawer.querySelector('.qr-panel');
+        if (toggle) toggle.setAttribute('aria-expanded', open);
+        if (panel) panel.classList.toggle('open', open);
+      });
+    }
+    if (data._manualEdit !== undefined) {
+      _manualEdit = data._manualEdit;
+    }
+    if (data._summaryBox) {
+      document.getElementById('summaryBox').value = data._summaryBox;
+    }
+    setTimeout(() => {
+      document.querySelectorAll('textarea').forEach(ta => resizeTextarea(ta));
+    }, 100);
+  } catch (e) { console.error('Restore error', e); }
+}
+
+function initAutoSave() {
+  document.addEventListener('input', (e) => {
+    if (e.target.closest('#summaryBox')) return;
+    document.getElementById('saveStatus').textContent = 'Saving...';
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveData, 800);
+  });
+  document.addEventListener('change', () => {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(saveData, 800);
+  });
+}
+
+/* ===== CLEAR ALL ===== */
+function clearAll() {
+  if (!confirm('Clear all data? A timestamped backup will be saved first.')) return;
+  const backupKey = BACKUP_PREFIX + Date.now();
+  const current = localStorage.getItem(STORAGE_KEY);
+  if (current) localStorage.setItem(backupKey, current);
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else el.value = '';
+  });
+  document.getElementById('summaryBox').value = '';
+  _manualEdit = false;
+  document.getElementById('saveStatus').textContent = 'Cleared. Backup saved.';
+  document.querySelectorAll('textarea').forEach(ta => { ta.style.height = 'auto'; });
+  updateChipVisuals();
+}
+
+/* ===== SUMMARY ===== */
+const summaryBox = document.getElementById('summaryBox');
+
+summaryBox.addEventListener('input', () => {
+  _manualEdit = true;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(saveData, 800);
+  resizeTextarea(summaryBox);
+});
+
+function resyncSummary() {
+  _manualEdit = false;
+  updateSummary();
+  saveData();
+}
+
+function copySummary() {
+  summaryBox.select();
+  document.execCommand('copy');
+  const btn = document.querySelector('.bottom-bar .btn-secondary');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  }
+}
+
+function getRadio(name) {
+  const el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+function getChecks(name) {
+  return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(e => e.value);
+}
+function getVal(id) { return document.getElementById(id)?.value || ''; }
+
+function updateSummary() {
+  if (_manualEdit) return;
+  const parts = [];
+  const date = getVal('mseDate');
+  const time = getVal('mseTime');
+  if (date) parts.push('Date: ' + date + (time ? ' ' + time : ''));
+
+  const build = getRadio('build');
+  const grooming = getRadio('grooming');
+  const facial = getRadio('facialExpr');
+  const eye = getRadio('eyeContact');
+  const posture = getRadio('posture');
+  const gait = getRadio('gait');
+  const attitude = getRadio('attitude');
+  const rapport = getRadio('rapport');
+  if (build || grooming || facial || eye || posture || gait || attitude || rapport) {
+    const appParts = [];
+    if (build) appParts.push(build + ' build');
+    if (grooming) appParts.push(grooming.toLowerCase());
+    if (facial) appParts.push(facial.toLowerCase() + ' facial expression');
+    if (eye) appParts.push(eye.toLowerCase() + ' eye contact');
+    if (posture) appParts.push(posture.toLowerCase() + ' posture');
+    if (gait) appParts.push(gait.toLowerCase() + ' gait');
+    if (attitude) appParts.push(attitude.toLowerCase() + ' attitude');
+    if (rapport) appParts.push('rapport ' + rapport.toLowerCase());
+    parts.push('GENERAL APPEARANCE: ' + appParts.join(', ') + '.');
+  }
+
+  const pma = getRadio('pmaOverall');
+  const motorPhenom = getChecks('motorPhenom');
+  if (pma || motorPhenom.length) {
+    const pmaParts = [];
+    if (pma) pmaParts.push('PMA ' + pma.toLowerCase());
+    if (motorPhenom.length) pmaParts.push(motorPhenom.join(', '));
+    parts.push('PSYCHOMOTOR: ' + pmaParts.join('; ') + '.');
+  }
+
+  const speechParts = [];
+  ['speechCoherence','speechRelevance','speechSpontaneity','speechAmount','speechTone','speechTempo','speechReaction','speechProsody'].forEach(n => {
+    const v = getRadio(n);
+    if (v) speechParts.push(v);
+  });
+  if (speechParts.length) parts.push('SPEECH: ' + speechParts.join(', ') + '.');
+
+  const thoughtForm = getChecks('thoughtForm');
+  const thoughtTempo = getRadio('thoughtTempo');
+  const thoughtContinuity = getRadio('thoughtContinuity');
+  const thoughtAlien = getChecks('thoughtAlien');
+  const delusions = getRadio('delusionsPresent');
+  if (thoughtForm.length || thoughtTempo || thoughtContinuity || thoughtAlien.length || delusions) {
+    const tParts = [];
+    if (thoughtForm.length) tParts.push('form: ' + thoughtForm.join(', '));
+    if (thoughtTempo) tParts.push('stream tempo: ' + thoughtTempo.toLowerCase());
+    if (thoughtContinuity) tParts.push('continuity: ' + thoughtContinuity.toLowerCase());
+    if (thoughtAlien.length) tParts.push('possession: ' + thoughtAlien.join(', '));
+    if (delusions && delusions !== 'None elicited') tParts.push('delusions: ' + delusions.toLowerCase());
+    parts.push('THOUGHT: ' + tParts.join('; ') + '.');
+  }
+
+  const moodQ = getVal('moodQuality');
+  const moodI = getRadio('moodIntensity');
+  const affQ = getRadio('affectQuality');
+  const affR = getRadio('affectRange');
+  const affReact = getRadio('affectReactivity');
+  const congruity = getRadio('congruity');
+  if (moodQ || moodI || affQ || affR || affReact || congruity) {
+    const maParts = [];
+    if (moodQ) maParts.push('mood "' + moodQ + '"');
+    if (moodI) maParts.push('intensity ' + moodI.toLowerCase());
+    if (affQ) maParts.push('affect ' + affQ.toLowerCase());
+    if (affR) maParts.push('range ' + affR.toLowerCase());
+    if (affReact) maParts.push('reactivity ' + affReact.toLowerCase());
+    if (congruity) maParts.push(congruity.toLowerCase());
+    parts.push('MOOD & AFFECT: ' + maParts.join(', ') + '.');
+  }
+
+  const hallucCheck = ['scanAuditory','scanVisual','scanOlfactory','scanGustatory','scanTactile','scanVisceral','scanVestibular'].some(id => document.getElementById(id)?.checked);
+  const hallucText = getVal('hallucinationsDesc');
+  const pseudo = getRadio('pseudoHalluc');
+  const distortions = getChecks('percepDistort');
+  if (hallucCheck || hallucText || pseudo || distortions.length) {
+    const pParts = [];
+    if (distortions.length) pParts.push('distortions: ' + distortions.join(', '));
+    if (hallucText) pParts.push('hallucinations: ' + (hallucText.length > 60 ? hallucText.slice(0,60)+'...' : hallucText));
+    else if (hallucCheck) pParts.push('modality scan performed');
+    if (pseudo && pseudo !== 'Absent') pParts.push('pseudo-hallucinations present');
+    parts.push('PERCEPTION: ' + pParts.join('; ') + '.');
+  }
+
+  const conscious = getRadio('consciousness');
+  const orientT = getRadio('orientTime');
+  const orientP = getRadio('orientPlace');
+  const orientPers = getRadio('orientPerson');
+  if (conscious || orientT || orientP || orientPers) {
+    const cParts = [];
+    if (conscious) cParts.push('consciousness ' + conscious.toLowerCase());
+    const oParts = [];
+    if (orientT) oParts.push('time ' + orientT.toLowerCase());
+    if (orientP) oParts.push('place ' + orientP.toLowerCase());
+    if (orientPers) oParts.push('person ' + orientPers.toLowerCase());
+    if (oParts.length) cParts.push('orientation: ' + oParts.join(', '));
+    parts.push('COGNITION: ' + cParts.join('; ') + '.');
+  }
+
+  const insight = getRadio('insightGrade');
+  if (insight) parts.push('INSIGHT: ' + insight + '.');
+
+  if (parts.length > 1) {
+    summaryBox.value = parts.join('\n\n');
+    resizeTextarea(summaryBox);
+  }
+}
+
+/* Build summary on input changes */
+document.addEventListener('input', (e) => {
+  if (e.target.closest('#summaryBox')) return;
+  if (e.target.hasAttribute('data-key')) {
+    updateSummary();
+  }
+});
+
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded', () => {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  if (!document.getElementById('mseDate').value) {
+    document.getElementById('mseDate').value = new Date().toISOString().split('T')[0];
+  }
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(ta => resizeTextarea(ta));
+  }, 300);
+});
+
+/* Print preparation: expand all for clean print */
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('.card-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.card-header').forEach(h => h.setAttribute('aria-expanded','true'));
+  document.querySelectorAll('.qr-panel').forEach(p => p.classList.add('open'));
+  document.querySelectorAll('.qr-toggle').forEach(t => t.setAttribute('aria-expanded','true'));
+  document.querySelectorAll('textarea').forEach(ta => { ta.style.overflow = 'visible'; resizeTextarea(ta); });
+});
+</script>
+</body>
+</html>

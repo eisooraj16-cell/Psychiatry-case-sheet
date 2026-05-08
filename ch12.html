@@ -1,0 +1,2662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 12 — Diagnosis (4-Axis)</title>
+<style>
+/* ===== CSS VARIABLES & RESET ===== */
+:root {
+  --bg: #000000;
+  --surface: #0d0d0d;
+  --surface-2: #1a1a1a;
+  --surface-3: #262626;
+  --border: #333333;
+  --text: #e8e8e8;
+  --text-2: #b0b0b0;
+  --text-3: #888888;
+  --hint: #999999;
+  --accent: #4fc3f7;
+  --accent-2: #81c784;
+  --accent-warn: #ffb74d;
+  --accent-danger: #e57373;
+  --accent-mono: #ce93d8;
+  --touch: 52px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --gap: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+h4 { font-size: 0.95rem; font-weight: 600; margin: 0.75rem 0 0.4rem; color: var(--accent); }
+p { margin-bottom: 0.75rem; }
+
+/* ===== UTILITY ===== */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: calc(var(--gap)/2); }
+.gap-2 { gap: var(--gap); }
+.mt-1 { margin-top: calc(var(--gap)/2); }
+.mt-2 { margin-top: var(--gap); }
+.mb-1 { margin-bottom: calc(var(--gap)/2); }
+.mb-2 { margin-bottom: var(--gap); }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-accent { color: var(--accent); }
+.text-warn { color: var(--accent-warn); }
+.text-danger { color: var(--accent-danger); }
+.text-mono { color: var(--accent-mono); }
+.text-2 { color: var(--text-2); }
+.text-3 { color: var(--text-3); }
+
+/* ===== LAYOUT ===== */
+.container { max-width: 900px; margin: 0 auto; padding: var(--gap); padding-bottom: calc(var(--touch) + 80px); }
+.header { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: var(--gap); }
+.header-inner { max-width: 900px; margin: 0 auto; }
+
+/* ===== QUICK REFERENCE PANELS ===== */
+.qr-panels { margin-bottom: var(--gap); }
+.qr-toggle {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 var(--gap);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch);
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+.qr-toggle:active { background: var(--surface-3); }
+.qr-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  margin-bottom: var(--gap);
+  display: none;
+}
+.qr-panel h4 { color: var(--accent); margin-top: 0; }
+.qr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+.qr-table th, .qr-table td {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+.qr-table th { background: var(--surface-2); color: var(--accent); font-weight: 600; }
+.qr-table tr:nth-child(even) td { background: var(--surface-2); }
+.qr-list { list-style: none; padding: 0; }
+.qr-list li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+.qr-list li:last-child { border-bottom: none; }
+.qr-arrow { color: var(--text-3); }
+
+/* ===== DATA TABLE WRAP ===== */
+.data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0; }
+
+/* ===== SUMMARY BOX ===== */
+.summary-box {
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: var(--gap);
+  margin-bottom: var(--gap);
+}
+.summary-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+.summary-actions { display: flex; gap: 8px; margin-top: 0.5rem; flex-wrap: wrap; }
+
+/* ===== ACCORDION CARDS ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: var(--gap);
+  overflow: hidden;
+}
+.card-toggle {
+  background: var(--surface-2);
+  padding: 0 var(--gap);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+.card-toggle:active { background: var(--surface-3); }
+.card-toggle-left { display: flex; align-items: center; gap: 12px; }
+.card-num {
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.card-title { font-weight: 600; font-size: 1rem; }
+.card-chevron {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  color: var(--text-3);
+}
+.card.expanded .card-chevron { transform: rotate(180deg); }
+.card-body { display: none; padding: var(--gap); }
+.card.expanded .card-body { display: block; }
+
+/* ===== INSTRUCTION BOX ===== */
+.instruct-box {
+  background: rgba(79,195,247,0.08);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.instruct-box h4 {
+  color: var(--accent);
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.instruct-box ul { margin-left: 1.2rem; margin-top: 4px; }
+.instruct-box li { margin-bottom: 3px; }
+
+/* ===== FIELD HINT ===== */
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+.field-hint strong { color: var(--accent); }
+.field-hint em { color: var(--accent-2); font-style: italic; }
+
+/* ===== FORM ELEMENTS ===== */
+.field-group { margin-bottom: 1rem; }
+.field-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: var(--text-2);
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%;
+  min-height: var(--touch);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+textarea {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  overflow: hidden;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 56px;
+  line-height: 1.5;
+}
+textarea:focus { outline: none; border-color: var(--accent); }
+textarea::placeholder { color: #777777; opacity: 1; }
+
+/* ===== OPTION CHIPS ===== */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  min-height: var(--touch);
+  cursor: pointer;
+  flex: 1 1 auto;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+.option-chip:active { background: var(--surface-3); }
+.option-chip input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.option-chip.checked {
+  border-color: var(--accent);
+  background: rgba(79, 195, 247, 0.08);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--touch);
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+.btn:active { opacity: 0.8; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+.btn-danger { background: var(--accent-danger); color: #000; }
+.btn-warn { background: var(--accent-warn); color: #000; }
+.btn-sm { min-height: 40px; padding: 0 12px; font-size: 0.9rem; }
+
+/* ===== TAGS / BADGES ===== */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.tag-accent { background: rgba(79,195,247,0.15); color: var(--accent); }
+.tag-warn { background: rgba(255,183,77,0.15); color: var(--accent-warn); }
+.tag-danger { background: rgba(229,115,115,0.15); color: var(--accent-danger); }
+.tag-mono { background: rgba(206,147,216,0.15); color: var(--accent-mono); }
+
+/* ===== GRID ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+@media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* ===== TABLE FORM ===== */
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+.grid-table th, .grid-table td {
+  border: 1px solid var(--border);
+  padding: 8px;
+  text-align: left;
+}
+.grid-table th {
+  background: var(--surface-2);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.grid-table td { vertical-align: top; }
+.grid-table textarea {
+  min-height: 80px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  color: var(--text);
+  font-size: 0.9rem;
+  padding: 4px;
+}
+.grid-table textarea:focus { outline: 1px solid var(--accent); border-radius: 4px; }
+
+/* ===== EXAMPLE / STEM BOX ===== */
+.stem-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+.stem-box em { color: var(--accent-2); font-style: italic; }
+
+/* ===== PITFALLS ===== */
+.pitfall-item {
+  background: rgba(255,183,77,0.06);
+  border-left: 3px solid var(--accent-warn);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.pitfall-item strong { color: var(--accent-warn); }
+
+/* ===== STICKY BOTTOM BAR ===== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(13,13,13,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  padding: 8px var(--gap);
+  z-index: 100;
+}
+.bottom-bar-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+.bottom-actions { display: flex; gap: 8px; }
+.save-status { font-size: 0.75rem; color: var(--text-3); white-space: nowrap; }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  body { background: #fff; color: #000; font-size: 11pt; line-height: 1.4; }
+  .no-print, .card-toggle, .bottom-bar, .qr-toggle, .summary-actions, .instruct-box { display: none !important; }
+  .card { border: 1px solid #ccc; margin-bottom: 12px; page-break-inside: avoid; }
+  .card-body { display: block !important; padding: 12px; }
+  .qr-panel { display: block !important; margin-bottom: 12px; }
+  .container { padding: 0; max-width: 100%; padding-bottom: 0; }
+  input, textarea, select { border: 1px solid #999; background: #f5f5f5; color: #000; }
+  .option-chip { border: 1px solid #999; background: #f5f5f5; }
+  .option-chip input { accent-color: #333; }
+  .summary-box { border: 1px solid #333; }
+  .tag { border: 1px solid #999; }
+  .grid-table th, .grid-table td, .qr-table th, .qr-table td { border: 1px solid #999; }
+  textarea { overflow: visible !important; height: auto !important; min-height: 40px; resize: none; }
+  h1, h2, h3, h4 { page-break-after: avoid; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.card-body { animation: fadeIn 0.15s ease-out; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <h1>Chapter 12 — Diagnosis (4-Axis)</h1>
+    <p class="text-sm text-3" style="margin:0;">The Adult Psychiatry History-Taking Compendium · NIMHANS Framework · ICD-11 / ICD-10 / DSM-5-TR</p>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- QUICK REFERENCE PANELS -->
+<div class="qr-panels" id="qrPanels">
+  <div class="qr-toggle" onclick="toggleQr('qrAxes')" role="button" aria-expanded="false" aria-controls="qrAxes">
+    <span>Quick Reference: The 4 Axes at a Glance</span>
+    <span class="qr-arrow">&#9662;</span>
+  </div>
+  <div class="qr-panel" id="qrAxes">
+    <div class="data-table-wrap">
+      <table class="qr-table">
+        <thead><tr><th>Axis</th><th>Content</th><th>Exam Priority</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Axis I</strong></td><td>Clinical syndromes — diagnosable mental disorder(s) with severity, course, specifiers. ICD-11 codes preferred.</td><td>Non-negotiable. Write first, most detailed.</td></tr>
+          <tr><td><strong>Axis II</strong></td><td>Personality & developmental — PD severity grading, trait domains, intellectual disability, learning disorders. <em>Do NOT diagnose during acute Axis I episode.</em></td><td>High-yield viva trap: state-vs-trait.</td></tr>
+          <tr><td><strong>Axis III</strong></td><td>Physical illness — medical/neurological conditions contributing to presentation or restricting drug choice.</td><td>Forces organic cause question. Never omit.</td></tr>
+          <tr><td><strong>Axis IV</strong></td><td>Psychosocial & environmental — life events, chronic stressors (DSM-IV-TR taxonomy). Include joint-family dynamics, migration, expressed emotion.</td><td>Context without which diagnosis is just a label.</td></tr>
+          <tr><td><strong>Axis V (Note)</strong></td><td>Functional statement — GAF or WHODAS 2.0. Often folded into Axis IV in practice.</td><td>State functional impairment regardless.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="qr-toggle" onclick="toggleQr('qrMnemonics')" role="button" aria-expanded="false" aria-controls="qrMnemonics">
+    <span>Quick Reference: Mnemonics & Discriminators</span>
+    <span class="qr-arrow">&#9662;</span>
+  </div>
+  <div class="qr-panel" id="qrMnemonics">
+    <div class="grid-2">
+      <div>
+        <h4>Mania: DIGFAST</h4>
+        <ul class="qr-list">
+          <li><strong>D</strong>istractibility</li>
+          <li><strong>I</strong>ndiscretion / Impulsivity</li>
+          <li><strong>G</strong>randiosity</li>
+          <li><strong>F</strong>light of ideas</li>
+          <li><strong>A</strong>ctivity increase</li>
+          <li><strong>S</strong>leep deficit</li>
+          <li><strong>T</strong>alkativeness</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Depression: SIG E CAPS</h4>
+        <ul class="qr-list">
+          <li><strong>S</strong>leep disturbance</li>
+          <li><strong>I</strong>nterest loss (anhedonia)</li>
+          <li><strong>G</strong>uilt / worthlessness</li>
+          <li><strong>E</strong>nergy loss</li>
+          <li><strong>C</strong>oncentration loss</li>
+          <li><strong>A</strong>ppetite change</li>
+          <li><strong>P</strong>sychomotor change</li>
+          <li><strong>S</strong>uicidal ideation</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Schizophrenia ICD-11 Specifiers</h4>
+        <ul class="qr-list">
+          <li>Positive symptoms</li>
+          <li>Negative symptoms</li>
+          <li>Depressive mood symptoms</li>
+          <li>Manic mood symptoms</li>
+          <li>Psychomotor symptoms (catatonic features)</li>
+          <li>Cognitive symptoms</li>
+        </ul>
+      </div>
+      <div>
+        <h4>4P x BPS Formulation Grid</h4>
+        <ul class="qr-list">
+          <li>Predisposing x Biological / Psychological / Social</li>
+          <li>Precipitating x Biological / Psychological / Social</li>
+          <li>Perpetuating x Biological / Psychological / Social</li>
+          <li>Protective x Biological / Psychological / Social</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="qr-toggle" onclick="toggleQr('qrDifferentials')" role="button" aria-expanded="false" aria-controls="qrDifferentials">
+    <span>Quick Reference: Six Worked Differentials Summary</span>
+    <span class="qr-arrow">&#9662;</span>
+  </div>
+  <div class="qr-panel" id="qrDifferentials">
+    <div class="data-table-wrap">
+      <table class="qr-table">
+        <thead><tr><th>Case</th><th>Working Diagnosis</th><th>Key Discriminator</th></tr></thead>
+        <tbody>
+          <tr><td>Psychotic mania</td><td>BPAD-I manic + psychotic features</td><td>Full inter-episode recovery; mood-first then psychosis</td></tr>
+          <tr><td>Agitated depression</td><td>MDD severe with mixed features</td><td>Racing thoughts + decreased sleep alongside depression</td></tr>
+          <tr><td>OCD with poor insight</td><td>OCD, poor insight specifier</td><td>Ego-dystonia + neutralising compulsions</td></tr>
+          <tr><td>Low BMI + restriction</td><td>Anorexia nervosa, restricting subtype</td><td>Fear of weight gain + body image distortion + active restriction</td></tr>
+          <tr><td>Sudden motor weakness</td><td>Dissociative neuro symptom disorder</td><td>Positive Hoover's sign (task-dependent weakness)</td></tr>
+          <tr><td>Acute confusion in elderly</td><td>Delirium due to substance/medication</td><td>Acute onset + fluctuating attention + precipitant</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- AUTO-GENERATED SUMMARY -->
+<div class="summary-box" id="summaryBox">
+  <div class="summary-title">
+    <span class="text-accent" style="font-weight:700;">Live Diagnostic Summary</span>
+    <div class="summary-actions no-print">
+      <button class="btn btn-sm btn-secondary" onclick="copySummary()" type="button">Copy</button>
+      <button class="btn btn-sm btn-secondary" onclick="resyncSummary()" type="button" id="resyncBtn">Re-sync Auto</button>
+    </div>
+  </div>
+  <textarea id="summaryText" data-key="summary_text" placeholder="Summary auto-generates as you fill sections below. Edit manually to pause auto-sync."></textarea>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+    <span class="text-xs text-3" id="syncStatus">Auto-sync: ON</span>
+    <span class="text-xs text-3" id="saveStatus">Last saved: never</span>
+  </div>
+</div>
+
+<!-- ===== A1: NIMHANS 4-AXIS SYSTEM ===== -->
+<div class="card expanded" data-id="A1">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">A1</span>
+      <span class="card-title">NIMHANS Framework — The 4-Axis System</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Why this matters</h4>
+      <p>The 4-axis discipline separates clinical syndrome from personality, physical illness, and psychosocial context. The line ordering is sacred: Axis I → II → III → IV. In KMCRI viva, candidates must write all four axes line by line without prompting.</p>
+      <ul>
+        <li>Multiple Axis I diagnoses are listed in order of clinical priority (the diagnosis driving the current presentation first).</li>
+        <li>Axis II must NOT be diagnosed during an acute Axis I episode — the state-versus-trait trap is among the highest-yield viva failures.</li>
+        <li>Axis III forces the organic question; Axis IV prevents diagnosis from becoming a decontextualised label.</li>
+      </ul>
+    </div>
+
+    <h3>Axis I — Clinical Syndromes</h3>
+    <div class="field-group">
+      <label class="field-label">Primary Axis I diagnosis (driving current presentation)</label>
+      <div class="field-hint">
+        <strong>Sample phrasing:</strong> "Bipolar affective disorder type I, current episode manic with mood-congruent psychotic features, severe, multiple prior episodes (ICD-11: 6A60.4 / ICD-10: F31.2)". A complete Axis I line includes: <em>disorder name + course specifier + severity + current state + psychotic features if present + ICD-11 code + ICD-10 code if needed</em>.
+      </div>
+      <textarea data-key="a1_axis1_primary" placeholder="Type the primary Axis I diagnosis line here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Secondary / comorbid Axis I diagnoses (in order of priority)</label>
+      <div class="field-hint">
+        List additional diagnosable mental disorders. Common pairings: substance use disorder + mood disorder; anxiety disorder + depression; OCD + tics; PTSD + substance use.
+      </div>
+      <textarea data-key="a1_axis1_comorbid" placeholder="Type comorbid diagnoses here..."></textarea>
+    </div>
+
+    <h3>Axis II — Personality & Developmental</h3>
+    <div class="field-group">
+      <label class="field-label">Personality disorder (severity + trait domains + borderline pattern qualifier)</label>
+      <div class="field-hint">
+        <strong>ICD-11 PD format:</strong> "Personality disorder, [mild/moderate/severe], with prominent features of [trait domains], [with/without] borderline pattern qualifier (ICD-11: 6D11.5 / 6D10.0)". Trait domains: <em>Negative affectivity, Detachment, Dissociality, Disinhibition, Anankastia</em>. <strong>Exam trap:</strong> Do not diagnose PD during an acute Axis I episode. Defer until state symptoms have settled.
+      </div>
+      <textarea data-key="a1_axis2_pd" placeholder="Type Axis II personality disorder line here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Intellectual disability / specific learning disorder (if relevant)</label>
+      <textarea data-key="a1_axis2_id" placeholder="Type here if applicable..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Personality traits not amounting to disorder (if relevant)</label>
+      <textarea data-key="a1_axis2_traits" placeholder="Type here if applicable..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">State-versus-trait assessment (document why PD was or was not diagnosed now)</label>
+      <div class="field-hint">
+        Explain whether the acute episode obscures trait assessment. Document your plan to re-evaluate.
+      </div>
+      <textarea data-key="a1_axis2_state_trait" placeholder="e.g., PD assessment deferred — patient currently in acute manic episode; traits observed but cannot distinguish state from trait. Re-evaluate at 3-month follow-up after mood stabilisation."></textarea>
+    </div>
+
+    <h3>Axis III — Physical Illness</h3>
+    <div class="field-group">
+      <label class="field-label">Relevant medical and neurological conditions</label>
+      <div class="field-hint">
+        <strong>Always include:</strong> conditions that contribute to presentation, restrict drug choice, or are themselves contributory. Common high-yield omissions: <em>hypothyroidism, B12 deficiency, autoimmune encephalitis, frontal tumour, post-stroke mood disorder, hepatic impairment, pregnancy/lactation</em>.
+      </div>
+      <textarea data-key="a1_axis3" placeholder="List relevant medical and neurological conditions here..."></textarea>
+    </div>
+
+    <h3>Axis IV — Psychosocial & Environmental</h3>
+    <div class="field-group">
+      <label class="field-label">Recent life events and chronic stressors (DSM-IV-TR taxonomy)</label>
+      <div class="field-hint">
+        <strong>DSM-IV-TR Axis IV categories:</strong> Problems with primary support group; social environment; education; occupation; housing; economic; healthcare access; legal; other psychosocial. <strong>Indian context additions:</strong> joint-family dynamics, dowry, caste-related stress, migration, expressed-emotion environment.
+      </div>
+      <textarea data-key="a1_axis4" placeholder="Describe psychosocial stressors here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity rating of psychosocial stressors</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="a1_axis4_sev" data-key="a1_axis4_sev_none" value="none"><span>None / minimal</span></label>
+        <label class="option-chip"><input type="radio" name="a1_axis4_sev" data-key="a1_axis4_sev_mild" value="mild"><span>Mild</span></label>
+        <label class="option-chip"><input type="radio" name="a1_axis4_sev" data-key="a1_axis4_sev_moderate" value="moderate"><span>Moderate</span></label>
+        <label class="option-chip"><input type="radio" name="a1_axis4_sev" data-key="a1_axis4_sev_severe" value="severe"><span>Severe</span></label>
+        <label class="option-chip"><input type="radio" name="a1_axis4_sev" data-key="a1_axis4_sev_extreme" value="extreme"><span>Extreme / catastrophic</span></label>
+      </div>
+    </div>
+
+    <h3>Axis V — Functional Impairment (Optional / Folded into Axis IV)</h3>
+    <div class="field-group">
+      <label class="field-label">Current functioning score and tool</label>
+      <div class="field-hint">
+        <strong>GAF (legacy DSM-IV):</strong> 0–100 scale. <strong>WHODAS 2.0 (current):</strong> 0–100 disability score across 6 domains. State the functional impairment regardless of where you put it.
+      </div>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Tool</label>
+          <select data-key="a1_axis5_tool">
+            <option value="">Select tool...</option>
+            <option value="GAF">GAF (0–100)</option>
+            <option value="WHODAS 2.0">WHODAS 2.0 (0–100)</option>
+            <option value="SOFAS">SOFAS</option>
+            <option value="clinical">Clinical estimate only</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Score / Estimate</label>
+          <input type="text" data-key="a1_axis5_score" placeholder="e.g., GAF 45 / WHODAS 72">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== A2: WHY IT MATTERS ===== -->
+<div class="card" data-id="A2">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">A2</span>
+      <span class="card-title">Why Diagnosis Matters — The Probabilistic Stance</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Why this matters diagnostically</h4>
+      <p>Diagnosis is probabilistic, not categorical. The examiner is listening for diagnostic humility alongside diagnostic commitment. A flat statement of one diagnosis without acknowledging the differential signals over-confidence and is marked down.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Working diagnosis (primary, with probability statement)</label>
+      <textarea data-key="a2_working" placeholder="Type the working diagnosis with probability statement here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Ranked differential diagnoses (2–3 alternatives, with discriminators)</label>
+      <div class="field-hint">
+        <strong>Template:</strong> "The working diagnosis is [primary], with [differential 1] and [differential 2] on the differential, ranked in that order. The discriminating features are [feature A favouring primary over D1], [feature B favouring primary over D2], and the single most decisive feature in this patient is [feature]."
+      </div>
+      <textarea data-key="a2_differential" placeholder="Type the ranked differential with discriminators here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature in this patient</label>
+      <input type="text" data-key="a2_discriminator" placeholder="e.g., Full inter-episode recovery — consistent with BD, inconsistent with schizophrenia/schizoaffective">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Re-evaluation plan (when and what pending information)</label>
+      <textarea data-key="a2_reeval" placeholder="e.g., Re-evaluate at 4-week follow-up when longitudinal course clarifies and collateral history becomes available."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">How wrong Axis I drives wrong drug — drug-choice implication check</label>
+      <textarea data-key="a2_drug_implication" placeholder="Document drug-choice implications of misdiagnosis here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Missing organic cause check — Axis III screen rationale</label>
+      <textarea data-key="a2_organic_screen" placeholder="e.g., TSH, B12, CBC, LFT, RFT, ESR, CRP, CT/MRI if indicated — to rule out hypothyroidism, B12 deficiency, autoimmune encephalitis, frontal tumour, post-stroke changes."></textarea>
+    </div>
+  </div>
+</div>
+<!-- ===== B1: BIG PICTURE COMPARISON ===== -->
+<div class="card" data-id="B1">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">B1</span>
+      <span class="card-title">ICD-11 vs ICD-10 vs DSM-5-TR — The Big Picture</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>How this shifts the differential</h4>
+      <p>Classification system choice matters in India. ICD-11 is the official Indian classification (notified 2022). ICD-10 remains in legal use for disability certification and insurance. DSM-5-TR is the research standard. You must be able to read all three and primarily write in ICD-11.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Classification system used for this case</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b1_class_sys" data-key="b1_class_icd11" value="ICD-11"><span>ICD-11 (primary)</span></label>
+        <label class="option-chip"><input type="radio" name="b1_class_sys" data-key="b1_class_icd10" value="ICD-10"><span>ICD-10 (legacy)</span></label>
+        <label class="option-chip"><input type="radio" name="b1_class_sys" data-key="b1_class_dsm" value="DSM-5-TR"><span>DSM-5-TR (cross-ref)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Rationale for classification system choice in this case</label>
+      <textarea data-key="b1_rationale" placeholder="e.g., Primary coding in ICD-11 as per Government of India notification. ICD-10 code included for legacy disability certification purposes. DSM-5-TR cross-reference for research comparability."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== B2: HIGH-YIELD ICD-11 REFORMS ===== -->
+<div class="card" data-id="B2">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">B2</span>
+      <span class="card-title">High-Yield ICD-11 Reforms — Moderate Depth</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>What to ask and how to document</h4>
+      <p>Five examinable reforms: (1) Schizophrenia subtypes abolished → symptomatic specifiers; (2) PD revolution → severity + trait domains + borderline qualifier; (3) CPTSD as distinct from PTSD; (4) OCRD grouping; (5) ASD single diagnosis with severity grading. Document which apply to your patient and how they change the diagnostic line.</p>
+    </div>
+
+    <h4>C2A. Schizophrenia: End of Subtypes</h4>
+    <div class="field-group">
+      <label class="field-label">Schizophrenia symptomatic specifiers present (ICD-11) — check all that apply</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_positive" value="positive"><span>Positive symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_negative" value="negative"><span>Negative symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_depressive" value="depressive"><span>Depressive mood symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_manic" value="manic"><span>Manic mood symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_psychomotor" value="psychomotor"><span>Psychomotor / catatonic</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_sz_spec" data-key="b2_sz_spec_cognitive" value="cognitive"><span>Cognitive symptoms</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Catatonia status (if applicable)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_catatonia" data-key="b2_cat_none" value="none"><span>No catatonia</span></label>
+        <label class="option-chip"><input type="radio" name="b2_catatonia" data-key="b2_cat_associated" value="associated"><span>Catatonia associated with another mental disorder</span></label>
+        <label class="option-chip"><input type="radio" name="b2_catatonia" data-key="b2_cat_medical" value="medical"><span>Catatonia due to medical condition</span></label>
+        <label class="option-chip"><input type="radio" name="b2_catatonia" data-key="b2_cat_substance" value="substance"><span>Substance-induced catatonia</span></label>
+      </div>
+    </div>
+
+    <h4>C2B. Personality Disorder Revolution</h4>
+    <div class="field-group">
+      <label class="field-label">PD severity (ICD-11)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_pd_sev" data-key="b2_pd_sev_mild" value="mild"><span>Mild</span></label>
+        <label class="option-chip"><input type="radio" name="b2_pd_sev" data-key="b2_pd_sev_moderate" value="moderate"><span>Moderate</span></label>
+        <label class="option-chip"><input type="radio" name="b2_pd_sev" data-key="b2_pd_sev_severe" value="severe"><span>Severe</span></label>
+        <label class="option-chip"><input type="radio" name="b2_pd_sev" data-key="b2_pd_sev_none" value="none"><span>No PD / deferred</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Trait domain qualifiers — check all that apply</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b2_pd_trait" data-key="b2_pd_trait_negative" value="negative_affectivity"><span>Negative affectivity</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_pd_trait" data-key="b2_pd_trait_detachment" value="detachment"><span>Detachment</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_pd_trait" data-key="b2_pd_trait_dissociality" value="dissociality"><span>Dissociality</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_pd_trait" data-key="b2_pd_trait_disinhibition" value="disinhibition"><span>Disinhibition</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_pd_trait" data-key="b2_pd_trait_anankastia" value="anankastia"><span>Anankastia</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Borderline pattern qualifier</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_pd_borderline" data-key="b2_pd_bord_applicable" value="applicable"><span>Applicable</span></label>
+        <label class="option-chip"><input type="radio" name="b2_pd_borderline" data-key="b2_pd_bord_not" value="not_applicable"><span>Not applicable</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Evidence for BPD pattern (instability of relationships, self-image, affect, impulsivity)</label>
+      <textarea data-key="b2_pd_bord_evidence" placeholder="Document specific evidence if borderline pattern qualifier is applicable..."></textarea>
+    </div>
+
+    <h4>C2C. Complex PTSD as Distinct Diagnosis</h4>
+    <div class="field-group">
+      <label class="field-label">CPTSD criteria check — all 3 PTSD clusters + 3 DSO present?</label>
+      <div class="field-hint">
+        <strong>PTSD core (3):</strong> Re-experiencing, Avoidance, Sense of current threat.<br>
+        <strong>DSO (3):</strong> Affective dysregulation, Negative self-concept, Interpersonal disturbances.<br>
+        <strong>Discriminator from BPD:</strong> Trauma history (prolonged interpersonal trauma required for CPTSD), persistent negative self-concept vs unstable identity oscillation.
+      </div>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_ptsd" data-key="b2_cptsd_ptsd_reexp" value="reexperiencing"><span>PTSD: Re-experiencing</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_ptsd" data-key="b2_cptsd_ptsd_avoid" value="avoidance"><span>PTSD: Avoidance</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_ptsd" data-key="b2_cptsd_ptsd_threat" value="threat"><span>PTSD: Sense of current threat</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_dso" data-key="b2_cptsd_dso_affective" value="affective"><span>DSO: Affective dysregulation</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_dso" data-key="b2_cptsd_dso_self" value="self_concept"><span>DSO: Negative self-concept</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_cptsd_dso" data-key="b2_cptsd_dso_interpersonal" value="interpersonal"><span>DSO: Interpersonal disturbances</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Trauma history supporting CPTSD vs BPD differential</label>
+      <textarea data-key="b2_cptsd_trauma" placeholder="Document prolonged/repeated interpersonal trauma (childhood abuse, domestic violence, captivity, refugee experience)..."></textarea>
+    </div>
+
+    <h4>C2D. OCRD Grouping</h4>
+    <div class="field-group">
+      <label class="field-label">OCRD diagnosis applicable</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_ocd" value="ocd"><span>OCD (6B20)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_bdd" value="bdd"><span>BDD (6B21)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_olfactory" value="olfactory"><span>Olfactory reference (6B22)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_health" value="hypochondriasis"><span>Health anxiety / hypochondriasis (6B23)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_hoarding" value="hoarding"><span>Hoarding (6B24)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_trich" value="trich"><span>Trichotillomania (6B25.0)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_excoriation" value="excoriation"><span>Excoriation (6B25.1)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_bid" value="bid"><span>Body integrity dysphoria (6B66)</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocrd_dx" data-key="b2_ocrd_none" value="none"><span>None / N/A</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">OCD insight specifier (ICD-11 dimensional)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_ocd_insight" data-key="b2_ocd_insight_good" value="good"><span>Good / fair insight</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocd_insight" data-key="b2_ocd_insight_poor" value="poor"><span>Poor insight</span></label>
+        <label class="option-chip"><input type="radio" name="b2_ocd_insight" data-key="b2_ocd_insight_absent" value="absent"><span>Absent insight (delusional beliefs)</span></label>
+      </div>
+    </div>
+
+    <h4>C2E. Autism Spectrum Disorder</h4>
+    <div class="field-group">
+      <label class="field-label">ASD severity / support needs</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b2_asd_sev" data-key="b2_asd_level1" value="level1"><span>Level 1: Requires support</span></label>
+        <label class="option-chip"><input type="radio" name="b2_asd_sev" data-key="b2_asd_level2" value="level2"><span>Level 2: Requires substantial support</span></label>
+        <label class="option-chip"><input type="radio" name="b2_asd_sev" data-key="b2_asd_level3" value="level3"><span>Level 3: Requires very substantial support</span></label>
+        <label class="option-chip"><input type="radio" name="b2_asd_sev" data-key="b2_asd_na" value="na"><span>N/A</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">ASD qualifiers (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b2_asd_qual" data-key="b2_asd_qual_intellectual" value="intellectual"><span>With intellectual impairment</span></label>
+        <label class="option-chip"><input type="checkbox" name="b2_asd_qual" data-key="b2_asd_qual_language" value="language"><span>With functional language impairment</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ===== B3: THREE HIGH-PROFILE REORGANISATIONS ===== -->
+<div class="card" data-id="B3">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">B3</span>
+      <span class="card-title">Three High-Profile Reorganisations</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Common pitfalls</h4>
+      <p>(1) Gaming disorder is a formal ICD-11 diagnosis (6C51) — not just a habit. (2) Burnout is <em>explicitly NOT</em> a psychiatric diagnosis in ICD-11 (QD85, chapter 24). (3) Gender incongruence is moved out of mental disorders entirely in ICD-11 (HA60/HA61). Do not code these incorrectly.</p>
+    </div>
+
+    <h4>C3A. Gaming Disorder</h4>
+    <div class="field-group">
+      <label class="field-label">Gaming disorder criteria met?</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b3_gaming" data-key="b3_gaming_control" value="control"><span>Impaired control over gaming</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_gaming" data-key="b3_gaming_priority" value="priority"><span>Increasing priority over other life interests</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_gaming" data-key="b3_gaming_continuation" value="continuation"><span>Continuation despite negative consequences</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_gaming" data-key="b3_gaming_impairment" value="impairment"><span>Significant impairment in functioning</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_gaming" data-key="b3_gaming_duration" value="duration"><span>Pattern evident ≥12 months (or shorter if severe)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Gaming disorder documentation</label>
+      <textarea data-key="b3_gaming_doc" placeholder="If criteria met: 'Gaming disorder, predominantly online [or offline], severe (ICD-11: 6C51.0)'."></textarea>
+    </div>
+
+    <h4>C3B. Burnout (NOT a psychiatric diagnosis)</h4>
+    <div class="field-group">
+      <label class="field-label">If patient presents with burnout-like features, actual psychiatric diagnosis made</label>
+      <textarea data-key="b3_burnout_actual" placeholder="e.g., Adjustment disorder with depressed mood (ICD-11: 6B43) — NOT 'burnout' as diagnosis. Burnout (QD85) is an occupational phenomenon, chapter 24."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Burnout features present (for occupational documentation only)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="b3_burnout" data-key="b3_burnout_energy" value="energy"><span>Energy depletion / exhaustion</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_burnout" data-key="b3_burnout_distance" value="distance"><span>Mental distance / negativism / cynicism</span></label>
+        <label class="option-chip"><input type="checkbox" name="b3_burnout" data-key="b3_burnout_efficacy" value="efficacy"><span>Reduced professional efficacy</span></label>
+      </div>
+    </div>
+
+    <h4>C3C. Gender Incongruence (Depathologised)</h4>
+    <div class="field-group">
+      <label class="field-label">Gender incongruence status</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="b3_gender" data-key="b3_gender_ha60" value="ha60"><span>Gender Incongruence of Adolescence/Adulthood (HA60)</span></label>
+        <label class="option-chip"><input type="radio" name="b3_gender" data-key="b3_gender_ha61" value="ha61"><span>Gender Incongruence of Childhood (HA61)</span></label>
+        <label class="option-chip"><input type="radio" name="b3_gender" data-key="b3_gender_na" value="na"><span>Not applicable</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Documentation note — NOT coded under mental disorders in ICD-11</label>
+      <textarea data-key="b3_gender_doc" placeholder="e.g., Gender incongruence of adolescence and adulthood (HA60) — documented under Conditions Related to Sexual Health, not mental disorders. DSM-5-TR retains Gender Dysphoria under mental disorders."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C1: SCHIZOPHRENIA / FIRST-EPISODE PSYCHOSIS ===== -->
+<div class="card" data-id="C1">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C1</span>
+      <span class="card-title">Schizophrenia / First-Episode Psychosis</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Diagnostic documentation checklist</h4>
+      <p>ICD-11 (6A20): ≥2 of core symptoms for ≥1 month, with ≥1 from first four (delusions, hallucinations, thought disorder, passivity). Document symptomatic specifiers, course specifiers, and duration carefully. DSM-5-TR requires ≥6 months total disturbance.</p>
+      <ul>
+        <li><strong>Pitfall:</strong> Brief psychotic disorder is &lt;1 month; schizophreniform is 1–6 months (DSM only); schizophrenia is ≥1 month (ICD) or ≥6 months (DSM).</li>
+        <li><strong>Pitfall:</strong> Do not use abolished ICD-10 subtypes (paranoid, hebephrenic, catatonic) when writing in ICD-11.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Core symptoms present (check ≥2, with ≥1 from first four)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_delusions" value="delusions"><span>Persistent delusions</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_hallucinations" value="hallucinations"><span>Persistent hallucinations</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_thought" value="thought_disorder"><span>Thought disorder / disorganised thinking</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_passivity" value="passivity"><span>Passivity / influence / control experiences</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_negative" value="negative"><span>Negative symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_behaviour" value="disorganised_behaviour"><span>Grossly disorganised behaviour</span></label>
+        <label class="option-chip"><input type="checkbox" name="c1_sz_core" data-key="c1_sz_core_psychomotor" value="psychomotor"><span>Psychomotor disturbance</span></label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Duration of active symptoms (weeks)</label>
+        <input type="number" data-key="c1_sz_duration" placeholder="e.g., 8">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Total duration of disturbance (months, for DSM-5-TR)</label>
+        <input type="number" data-key="c1_sz_total_duration" placeholder="e.g., 4">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Course specifier</label>
+      <select data-key="c1_sz_course">
+        <option value="">Select...</option>
+        <option value="first_symptomatic">First episode, currently symptomatic</option>
+        <option value="first_partial">First episode, in partial remission</option>
+        <option value="first_full">First episode, in full remission</option>
+        <option value="multiple_symptomatic">Multiple episodes, currently symptomatic</option>
+        <option value="multiple_partial">Multiple episodes, in partial remission</option>
+        <option value="multiple_full">Multiple episodes, in full remission</option>
+        <option value="continuous">Continuous</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c1_sz_sev" data-key="c1_sz_sev_mild" value="mild"><span>Mild</span></label>
+        <label class="option-chip"><input type="radio" name="c1_sz_sev" data-key="c1_sz_sev_moderate" value="moderate"><span>Moderate</span></label>
+        <label class="option-chip"><input type="radio" name="c1_sz_sev" data-key="c1_sz_sev_severe" value="severe"><span>Severe</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis — discriminators documented</label>
+      <textarea data-key="c1_sz_differential" placeholder="1) Schizoaffective — excluded because mood symptoms not present majority of illness duration&#10;2) Bipolar with psychotic features — excluded because psychosis persists beyond mood episode&#10;3) Substance-induced — excluded by negative toxicology and temporal relationship&#10;4) Delusional disorder — excluded because >delusions alone (hallucinations and negative symptoms present)"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">IPS-CPG 2026 citation / other references</label>
+      <input type="text" data-key="c1_sz_refs" placeholder="Sahoo S et al. Indian J Psychiatry 2026;68:91–121">
+    </div>
+  </div>
+</div>
+
+<!-- ===== C2: MANIA / BIPOLAR I ===== -->
+<div class="card" data-id="C2">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C2</span>
+      <span class="card-title">Mania / Bipolar I Disorder</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Mnemonic: DIGFAST</h4>
+      <p>Distractibility, Indiscretion/Impulsivity, Grandiosity, Flight of ideas, Activity increase, Sleep deficit, Talkativeness. Criterion B requires ≥3 symptoms (≥4 if mood only irritable).</p>
+      <ul>
+        <li>Duration ≥1 week (or any duration if hospitalised).</li>
+        <li>Mixed features specifier replaces the old "mixed episode" — document symptoms of opposite polarity.</li>
+        <li>Rapid cycling: ≥4 mood episodes per year.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Core mood state (criterion A)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c2_mania_mood" data-key="c2_mania_mood_euphoric" value="euphoric"><span>Euphoric / elevated / expansive</span></label>
+        <label class="option-chip"><input type="radio" name="c2_mania_mood" data-key="c2_mania_mood_irritable" value="irritable"><span>Irritable</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Criterion B symptoms present (DIGFAST) — check all</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_distract" value="distractibility"><span>Distractibility</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_impulse" value="impulsivity"><span>Impulsivity / Indiscretion</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_grand" value="grandiosity"><span>Grandiosity / increased self-esteem</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_flight" value="flight"><span>Flight of ideas / racing thoughts</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_activity" value="activity"><span>Activity increase / psychomotor agitation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_sleep" value="sleep"><span>Decreased need for sleep</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_talk" value="talk"><span>Talkativeness / pressured speech</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_sexual" value="sexual"><span>Increased sexual drive</span></label>
+        <label class="option-chip"><input type="checkbox" name="c2_mania_digfast" data-key="c2_digfast_risky" value="risky"><span>Risky behaviour / spending / ventures</span></label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Duration (days, or hospitalised)</label>
+        <input type="number" data-key="c2_mania_duration" placeholder="e.g., 10">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Marked impairment / hospitalisation?</label>
+        <div class="chip-group">
+          <label class="option-chip"><input type="radio" name="c2_mania_impair" data-key="c2_mania_impair_yes" value="yes"><span>Yes</span></label>
+          <label class="option-chip"><input type="radio" name="c2_mania_impair" data-key="c2_mania_impair_no" value="no"><span>No</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Psychotic features specifier</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c2_mania_psych" data-key="c2_mania_psych_none" value="none"><span>None</span></label>
+        <label class="option-chip"><input type="radio" name="c2_mania_psych" data-key="c2_mania_psych_congruent" value="mood_congruent"><span>With mood-congruent psychotic features</span></label>
+        <label class="option-chip"><input type="radio" name="c2_mania_psych" data-key="c2_mania_psych_incongruent" value="mood_incongruent"><span>With mood-incongruent psychotic features</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Mixed features specifier</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c2_mania_mixed" data-key="c2_mania_mixed_yes" value="yes"><span>Present — meets opposite polarity symptoms</span></label>
+        <label class="option-chip"><input type="radio" name="c2_mania_mixed" data-key="c2_mania_mixed_no" value="no"><span>Absent</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If mixed features present, specify opposite polarity symptoms</label>
+      <textarea data-key="c2_mania_mixed_specs" placeholder="e.g., Depressive symptoms present during manic episode: prominent dysphoria, psychomotor retardation, suicidal ideation."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Rapid cycling status</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c2_mania_rapid" data-key="c2_mania_rapid_yes" value="yes"><span>Rapid cycling (≥4 episodes/year)</span></label>
+        <label class="option-chip"><input type="radio" name="c2_mania_rapid" data-key="c2_mania_rapid_no" value="no"><span>Not rapid cycling</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis — discriminators</label>
+      <textarea data-key="c2_mania_differential" placeholder="1) Schizoaffective disorder — excluded by episodic course with full inter-episode recovery&#10;2) ADHD — excluded by absence of childhood-onset continuous symptoms, episodic nature&#10;3) Substance-induced — excluded by negative toxicology&#10;4) Hyperthyroidism — TSH screening required"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C3: BIPOLAR DEPRESSION ===== -->
+<div class="card" data-id="C3">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C3</span>
+      <span class="card-title">Bipolar Depression (BD-I or BD-II Depressive Episode)</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>High-yield differential: BD depression vs unipolar MDD</h4>
+      <p>Features favouring bipolar depression: age of onset &lt;25, multiple prior episodes, atypical features (hypersomnia, hyperphagia, leaden paralysis), psychomotor retardation, psychotic features, postpartum onset, family history of BD, history of treatment-emergent mania/hypomania on antidepressant, bipolar temperament.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Prior manic or hypomanic episodes confirmed?</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c3_bd_prior" data-key="c3_bd_prior_manic" value="manic"><span>Prior manic episode (BD-I confirmed)</span></label>
+        <label class="option-chip"><input type="radio" name="c3_bd_prior" data-key="c3_bd_prior_hypomanic" value="hypomanic"><span>Prior hypomanic only (BD-II)</span></label>
+        <label class="option-chip"><input type="radio" name="c3_bd_prior" data-key="c3_bd_prior_none" value="none"><span>No prior manic/hypomanic — first episode</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Features favouring bipolar over unipolar depression (check all that apply)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_early" value="early_onset"><span>Age of onset &lt;25</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_multiple" value="multiple"><span>Multiple prior depressive episodes</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_atypical" value="atypical"><span>Atypical features (hypersomnia, hyperphagia, leaden paralysis)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_retardation" value="retardation"><span>Severe psychomotor retardation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_psychotic" value="psychotic"><span>Psychotic features</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_postpartum" value="postpartum"><span>Postpartum onset</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_family" value="family_bd"><span>Family history of bipolar disorder</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_te" value="te_switch"><span>History of treatment-emergent mania/hypomania on antidepressant</span></label>
+        <label class="option-chip"><input type="checkbox" name="c3_bd_features" data-key="c3_bd_feat_temp" value="temperament"><span>Bipolar temperament (cyclothymic, hyperthymic, irritable)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Mitchell-Goodwin probabilistic criteria assessment</label>
+      <textarea data-key="c3_bd_mitchell" placeholder="Document score or qualitative assessment using Mitchell-Goodwin criteria favouring bipolarity..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Antidepressant risk assessment — treatment-emergent affective switching discussed?</label>
+      <textarea data-key="c3_bd_ad_risk" placeholder="e.g., Given family history of BD and presence of mixed features, antidepressant monotherapy carries risk of treatment-emergent manic switching. Mood stabiliser + antidepressant or mood stabiliser alone preferred."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis</label>
+      <textarea data-key="c3_bd_differential" placeholder="1) Unipolar MDD — no manic/hypomanic history; however, family history and atypical features raise suspicion of latent bipolarity&#10;2) Persistent depressive disorder — chronic, ≥2 years, milder&#10;3) Cyclothymic disorder — subthreshold mood swings&#10;4) Hypothyroid depression — TSH screening"></textarea>
+    </div>
+  </div>
+</div>
+<!-- ===== C4: MAJOR DEPRESSIVE DISORDER ===== -->
+<div class="card" data-id="C4">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C4</span>
+      <span class="card-title">Major Depressive Disorder</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Mnemonic: SIG E CAPS</h4>
+      <p>Sleep, Interest, Guilt, Energy, Concentration, Appetite, Psychomotor, Suicidal. Criterion A requires ≥5 of 9 symptoms for ≥2 weeks; one must be depressed mood or anhedonia.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Core symptoms present (≥2 weeks, nearly every day)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_core" data-key="c4_mdd_core_mood" value="mood"><span>Depressed mood most of the day</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_core" data-key="c4_mdd_core_anhedonia" value="anhedonia"><span>Anhedonia / diminished interest or pleasure</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Associated symptoms (SIG E CAPS — check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_sleep" value="sleep"><span>Sleep disturbance (insomnia/hypersomnia)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_guilt" value="guilt"><span>Excessive guilt / worthlessness / hopelessness</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_energy" value="energy"><span>Fatigue / energy loss</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_concentration" value="concentration"><span>Decreased concentration / indecisiveness</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_appetite" value="appetite"><span>Appetite / weight change</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_psychomotor" value="psychomotor"><span>Psychomotor agitation or retardation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_assoc" data-key="c4_mdd_assoc_suicidal" value="suicidal"><span>Suicidal ideation / thoughts of death</span></label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Total symptom count (including 1+ core)</label>
+        <input type="number" data-key="c4_mdd_count" min="5" max="9" placeholder="5–9">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Duration (weeks)</label>
+        <input type="number" data-key="c4_mdd_duration" placeholder="≥2">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c4_mdd_sev" data-key="c4_mdd_sev_mild" value="mild"><span>Mild (few symptoms, minor impairment)</span></label>
+        <label class="option-chip"><input type="radio" name="c4_mdd_sev" data-key="c4_mdd_sev_moderate" value="moderate"><span>Moderate</span></label>
+        <label class="option-chip"><input type="radio" name="c4_mdd_sev" data-key="c4_mdd_sev_severe" value="severe"><span>Severe (most symptoms, marked impairment)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Specifiers (check all that apply)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_melancholic" value="melancholic"><span>With melancholic features</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_atypical" value="atypical"><span>With atypical features</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_psychotic" value="psychotic"><span>With psychotic features</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_mixed" value="mixed"><span>With mixed features</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_peripartum" value="peripartum"><span>With peripartum onset</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_seasonal" value="seasonal"><span>With seasonal pattern</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_anxious" value="anxious"><span>With anxious distress (DSM-5-TR)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c4_mdd_spec" data-key="c4_mdd_spec_catatonic" value="catatonic"><span>With catatonia</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If psychotic features: mood-congruent vs mood-incongruent</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c4_mdd_psych_type" data-key="c4_mdd_psych_congruent" value="congruent"><span>Mood-congruent</span></label>
+        <label class="option-chip"><input type="radio" name="c4_mdd_psych_type" data-key="c4_mdd_psych_incongruent" value="incongruent"><span>Mood-incongruent</span></label>
+        <label class="option-chip"><input type="radio" name="c4_mdd_psych_type" data-key="c4_mdd_psych_na" value="na"><span>N/A</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis — organic and psychiatric mimics</label>
+      <textarea data-key="c4_mdd_differential" placeholder="1) Bipolar depression — screened for manic/hypomanic history, family history, treatment-emergent switching&#10;2) Persistent depressive disorder — chronic ≥2 years, milder&#10;3) Adjustment disorder — clear stressor, less severe&#10;4) Bereavement / prolonged grief disorder — proportionate, time-limited; >6 months and disabling → PGD&#10;5) Hypothyroid depression — TSH mandatory&#10;6) B12 deficiency, post-stroke, medication-induced — see IPS-CPG 2026 Table 4"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C5: SUBSTANCE USE DISORDER ===== -->
+<div class="card" data-id="C5">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C5</span>
+      <span class="card-title">Substance Use Disorder — Alcohol & Other Substances</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>ICD-11 four-tier hierarchy vs ICD-10 binary vs DSM-5-TR unified spectrum</h4>
+      <p>ICD-11: Episode of harmful use → Harmful pattern → Hazardous use (chapter 24) → Substance dependence. DSM-5-TR: Mild (2–3 criteria), Moderate (4–5), Severe (≥6) out of 11 criteria. Document temporal pattern, quantity/frequency, withdrawal, tolerance.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Primary substance(s)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_alcohol" value="alcohol"><span>Alcohol</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_cannabis" value="cannabis"><span>Cannabis</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_opioid" value="opioid"><span>Opioid</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_stimulant" value="stimulant"><span>Stimulant (cocaine, amphetamine)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_benzo" value="benzo"><span>Benzodiazepine / sedative-hypnotic</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_nicotine" value="nicotine"><span>Nicotine</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_inhalant" value="inhalant"><span>Inhalant</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_sub" data-key="c5_sud_other" value="other"><span>Other (specify)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Other substance (specify)</label>
+      <input type="text" data-key="c5_sud_other_spec" placeholder="e.g., tramadol, codeine, dextromethorphan">
+    </div>
+    <div class="field-group">
+      <label class="field-label">ICD-11 hierarchy level</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c5_sud_icd11" data-key="c5_sud_icd11_episode" value="episode"><span>Episode of harmful use</span></label>
+        <label class="option-chip"><input type="radio" name="c5_sud_icd11" data-key="c5_sud_icd11_pattern" value="pattern"><span>Harmful pattern of use</span></label>
+        <label class="option-chip"><input type="radio" name="c5_sud_icd11" data-key="c5_sud_icd11_dependence" value="dependence"><span>Substance dependence</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">DSM-5-TR severity (if cross-referencing)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c5_sud_dsm" data-key="c5_sud_dsm_mild" value="mild"><span>Mild (2–3 criteria)</span></label>
+        <label class="option-chip"><input type="radio" name="c5_sud_dsm" data-key="c5_sud_dsm_moderate" value="moderate"><span>Moderate (4–5 criteria)</span></label>
+        <label class="option-chip"><input type="radio" name="c5_sud_dsm" data-key="c5_sud_dsm_severe" value="severe"><span>Severe (≥6 criteria)</span></label>
+        <label class="option-chip"><input type="radio" name="c5_sud_dsm" data-key="c5_sud_dsm_na" value="na"><span>N/A</span></label>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field-group">
+        <label class="field-label">Age of first use</label>
+        <input type="number" data-key="c5_sud_age_first" placeholder="years">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Duration of regular use</label>
+        <input type="text" data-key="c5_sud_duration" placeholder="e.g., 5 years">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Quantity / frequency</label>
+      <input type="text" data-key="c5_sud_qty" placeholder="e.g., 180ml spirits daily">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Dependence syndrome criteria (ICD-11: ≥3 over 12 months; check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_drive" value="drive"><span>Strong internal drive to use</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_control" value="control"><span>Impaired control over use</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_priority" value="priority"><span>Increasing priority over other interests</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_persistence" value="persistence"><span>Persistence despite consequences</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_tolerance" value="tolerance"><span>Tolerance</span></label>
+        <label class="option-chip"><input type="checkbox" name="c5_sud_dep" data-key="c5_sud_dep_withdrawal" value="withdrawal"><span>Withdrawal phenomena</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Withdrawal symptoms documented (if applicable)</label>
+      <textarea data-key="c5_sud_withdrawal" placeholder="e.g., Alcohol: tremors, sweating, tachycardia, insomnia, anxiety, seizures (history of 2 withdrawal seizures in past)"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Complications / harm caused (physical, mental, social, occupational)</label>
+      <textarea data-key="c5_sud_harm" placeholder="e.g., Hepatic steatosis on USG; gastritis; domestic violence episodes; 3 job losses; DUIs x2; financial debt"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential: substance-induced mood/anxiety/psychotic disorder vs primary disorder</label>
+      <textarea data-key="c5_sud_differential" placeholder="e.g., Temporal relationship: depressive symptoms present only during periods of heavy use and resolve within 2–4 weeks of abstinence → favours substance-induced depressive disorder. However, first depressive episode predated substance use by 2 years → primary MDD with secondary alcohol use."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C6: ANXIETY / PANIC DISORDER ===== -->
+<div class="card" data-id="C6">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C6</span>
+      <span class="card-title">Anxiety & Panic Disorder</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Mandatory organic screen</h4>
+      <p>TSH is mandatory for all anxiety presentations. Differentials include hyperthyroidism, phaeochromocytoma (rare), cardiac arrhythmia, asthma, alcohol/benzodiazepine withdrawal, stimulant intoxication.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Anxiety disorder category (ICD-11)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_gad" value="gad"><span>Generalised anxiety disorder (6B00)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_panic" value="panic"><span>Panic disorder (6B01)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_agoraphobia" value="agoraphobia"><span>Agoraphobia (6B02)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_phobia" value="phobia"><span>Specific phobia (6B03)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_social" value="social"><span>Social anxiety disorder (6B04)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_separation" value="separation"><span>Separation anxiety (6B05)</span></label>
+        <label class="option-chip"><input type="radio" name="c6_anx_cat" data-key="c6_anx_mutism" value="mutism"><span>Selective mutism (6B06)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">For GAD: duration and worry domains</label>
+      <textarea data-key="c6_gad_detail" placeholder="e.g., Marked anxiety most days than not for 6 months. Worries about: health of children, finances, job security, mother's diabetes. Physical symptoms: motor tension (shoulder pain), autonomic overactivity (palpitations, dry mouth), subjective nervousness."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">For panic disorder: panic attack features and avoidance</label>
+      <textarea data-key="c6_panic_detail" placeholder="e.g., Recurrent unexpected panic attacks (4 in past month). Features: palpitations, sweating, trembling, chest tightness, fear of dying. Persistent worry about recurrence for 3 weeks. Avoidance of crowded buses and markets."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Panic attack symptom checklist (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_palpitations" value="palpitations"><span>Palpitations / pounding heart</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_sweating" value="sweating"><span>Sweating</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_trembling" value="trembling"><span>Trembling / shaking</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_breath" value="breath"><span>Shortness of breath</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_choking" value="choking"><span>Choking sensation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_chest" value="chest"><span>Chest pain / discomfort</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_nausea" value="nausea"><span>Nausea / abdominal distress</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_dizzy" value="dizzy"><span>Dizziness / lightheadedness</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_derealisation" value="derealisation"><span>Derealisation / depersonalisation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_numbness" value="numbness"><span>Numbness / tingling</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_chills" value="chills"><span>Chills / hot flushes</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_fear_death" value="fear_death"><span>Fear of dying</span></label>
+        <label class="option-chip"><input type="checkbox" name="c6_panic_sym" data-key="c6_panic_fear_control" value="fear_losing_control"><span>Fear of losing control / going crazy</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Duration of anxiety/panic symptoms (weeks/months)</label>
+      <input type="text" data-key="c6_anxiety_duration" placeholder="e.g., 6 months">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Organic workup and results</label>
+      <textarea data-key="c6_anxiety_organic" placeholder="TSH: 2.1 mIU/L (normal)&#10;Free T4: 1.2 ng/dL (normal) — hyperthyroidism excluded&#10;ECG: normal sinus rhythm&#10;CBC: Hb 12.8 g/dL&#10;If indicated: 24h urine catecholamines (phaeochromocytoma screen)"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis</label>
+      <textarea data-key="c6_anxiety_differential" placeholder="1) Hyperthyroidism — TSH normal, excluded&#10;2) Cardiac arrhythmia — ECG normal, excluded&#10;3) Alcohol withdrawal — no history of heavy daily use, last drink 3 days ago without symptoms&#10;4) Depression with anxious distress — depressive symptoms below threshold for MDD&#10;5) PTSD — no trauma history identified&#10;6) OCD — no obsessions or compulsions"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C7: OCD & OCRD ===== -->
+<div class="card" data-id="C7">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C7</span>
+      <span class="card-title">OCD & Obsessive-Compulsive Related Disorders</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Key discriminator: ego-dystonic + neutralising compulsions</h4>
+      <p>OCD-defining features: obsessions are intrusive, unwanted, distressing; compulsions are repetitive behaviours or mental acts performed in response; symptoms take up a substantial part of the day. BABS scale grades insight.</p>
+      <ul>
+        <li><strong>vs schizophrenia:</strong> ego-dystonic quality, no other psychotic phenomena, BABS helps.</li>
+        <li><strong>vs OCPD:</strong> ego-dystonic vs ego-syntonic perfectionism.</li>
+        <li><strong>vs ASD:</strong> rituals are anxiety-neutralisation driven, not sensory-/sameness-driven.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Obsessions documented (content, ego-dystonic quality, time consumed)</label>
+      <textarea data-key="c7_ocd_obsessions" placeholder="e.g., Contamination fears (germs from door handles, public toilets), intrusive violent images of harming family members. Both experienced as unwanted and distressing. Patient recognises as own thoughts. Time: 3–4 hours/day preoccupied with obsessions."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Compulsions documented (behavioural and mental, neutralising function)</label>
+      <textarea data-key="c7_ocd_compulsions" placeholder="e.g., Hand-washing 30–40 times/day (after touching any external surface), 3-hour showers, checking stove 15 times before leaving, mental counting rituals to neutralise violent thoughts."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Time occupied by symptoms per day</label>
+      <input type="text" data-key="c7_ocd_time" placeholder="e.g., ≥4 hours/day">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Insight specifier (ICD-11 dimensional)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c7_ocd_insight" data-key="c7_ocd_insight_good" value="good"><span>Good / fair insight</span></label>
+        <label class="option-chip"><input type="radio" name="c7_ocd_insight" data-key="c7_ocd_insight_poor" value="poor"><span>Poor insight</span></label>
+        <label class="option-chip"><input type="radio" name="c7_ocd_insight" data-key="c7_ocd_insight_absent" value="absent"><span>Absent insight (delusional beliefs)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">BABS (Brown Assessment of Beliefs Scale) score / qualitative assessment</label>
+      <input type="text" data-key="c7_ocd_babs" placeholder="e.g., BABS total score 12 — moderate overvalued ideas, fluctuating insight">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family accommodation documented</label>
+      <textarea data-key="c7_ocd_family_acc" placeholder="e.g., Mother purchases separate soap for patient; sister drives patient to avoid public transport; father has taken early retirement to supervise showers — high family accommodation enabling avoidance."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis — discriminators</label>
+      <textarea data-key="c7_ocd_differential" placeholder="1) Schizophrenia with delusion-like obsessions — excluded by fluctuating insight, absence of other psychotic phenomena, ego-dystonic quality even on delusional days&#10;2) ASD with restricted/repetitive behaviours — excluded because rituals are anxiety-driven neutralisation, not sensory/sameness-driven&#10;3) OCPD — excluded by ego-dystonic nature of obsessions vs ego-syntonic perfectionism&#10;4) Generalised anxiety — worries are real-life concerns, not ego-dystonic intrusive thoughts&#10;5) Tic disorder — motor tics without cognitive content"></textarea>
+    </div>
+  </div>
+</div>
+<!-- ===== C8: PTSD & COMPLEX PTSD ===== -->
+<div class="card" data-id="C8">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C8</span>
+      <span class="card-title">PTSD & Complex PTSD</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>CPTSD vs BPD — now an examinable differential</h4>
+      <p>ICD-11 recognises CPTSD (6B41) separately from PTSD (6B40). Requires 3 PTSD clusters PLUS 3 DSO. DSM-5-TR does not recognise CPTSD. Discriminator from BPD: trauma history (prolonged interpersonal trauma required), persistent negative self-concept vs unstable identity oscillation.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Identifiable traumatic event(s) — extremely threatening or horrific</label>
+      <textarea data-key="c8_ptsd_trauma" placeholder="e.g., Childhood sexual abuse (ages 8–12, repeated, perpetrator was uncle). Domestic violence in first marriage (physical assault x multiple occasions, threat to kill). No single acute trauma."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">PTSD core clusters present (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c8_ptsd_core" data-key="c8_ptsd_reexperiencing" value="reexperiencing"><span>Re-experiencing (intrusive memories, flashbacks, nightmares)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c8_ptsd_core" data-key="c8_ptsd_avoidance" value="avoidance"><span>Avoidance (of thoughts, memories, situations reminiscent)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c8_ptsd_core" data-key="c8_ptsd_threat" value="threat"><span>Sense of current threat (hypervigilance, exaggerated startle)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Duration of symptoms (weeks)</label>
+      <input type="number" data-key="c8_ptsd_duration" placeholder="≥ several weeks">
+    </div>
+    <div class="field-group">
+      <label class="field-label">CPTSD disturbances in self-organisation (DSO) — check all</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c8_cptsd_dso" data-key="c8_cptsd_affective" value="affective"><span>Affective dysregulation (heightened reactivity, outbursts, dissociation, numbing)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c8_cptsd_dso" data-key="c8_cptsd_self" value="self_concept"><span>Negative self-concept (diminished, defeated, worthless)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c8_cptsd_dso" data-key="c8_cptsd_interpersonal" value="interpersonal"><span>Interpersonal disturbances (difficulty sustaining relationships, feeling close)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">CPTSD vs BPD differential — documented discriminators</label>
+      <textarea data-key="c8_cptsd_vs_bpd" placeholder="Favouring CPTSD: (1) Documented prolonged interpersonal trauma in childhood — required for CPTSD, not required for BPD; (2) Persistent negative self-concept of being defeated and worthless — more characteristic of CPTSD than BPD's unstable identity oscillating between idealisation and devaluation; (3) Re-experiencing cluster — required for CPTSD, not part of BPD criteria."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">DSM-5-TR coding (if applicable — PTSD only, no CPTSD)</label>
+      <textarea data-key="c8_ptsd_dsm" placeholder="e.g., DSM-5-TR: 309.81 PTSD, with dissociative subtype (depersonalisation prominent during flashbacks). CPTSD not recognised in DSM-5-TR; would code as PTSD with prominent dissociative features and consider comorbid BPD pending longitudinal assessment."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis</label>
+      <textarea data-key="c8_ptsd_differential" placeholder="1) Acute stress reaction — within first weeks, now persistent >1 month&#10;2) Adjustment disorder — stressor less severe, not extremely threatening&#10;3) Depression — trauma-specific phenomenology distinguishes&#10;4) Panic disorder — hyperarousal is context-linked to trauma reminders&#10;5) Psychotic disorder — flashbacks misinterpreted as hallucinations; patient retains insight that flashbacks are memory-based"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C9: EATING DISORDER ===== -->
+<div class="card" data-id="C9">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C9</span>
+      <span class="card-title">Eating Disorder — Anorexia Nervosa & Related</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Mandatory BMI and organic screen</h4>
+      <p>AN criterion: significantly low body weight (BMI &lt;18.5 adults; &lt;5th centile children). Always check BMI. Differentials: depression with weight loss (no fear of weight gain), hyperthyroidism (TSH, free T4), malignancy (CBC, CRP, ESR), ARFID (no body image concern), psychotic disorder with food refusal.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Current BMI</label>
+      <input type="number" step="0.1" data-key="c9_ed_bmi" placeholder="e.g., 14.2">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Weight trajectory</label>
+      <textarea data-key="c9_ed_weight" placeholder="e.g., 52 kg → 38 kg over 12 months. Current BMI 14.2. Target weight for height: 50 kg (BMI 18.5). Percentage body weight lost: 27%."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Diagnosis category</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c9_ed_cat" data-key="c9_ed_an_restricting" value="an_restricting"><span>Anorexia nervosa, restricting subtype</span></label>
+        <label class="option-chip"><input type="radio" name="c9_ed_cat" data-key="c9_ed_an_binge_purge" value="an_binge_purge"><span>Anorexia nervosa, binge-purge subtype</span></label>
+        <label class="option-chip"><input type="radio" name="c9_ed_cat" data-key="c9_ed_bn" value="bn"><span>Bulimia nervosa (6B81)</span></label>
+        <label class="option-chip"><input type="radio" name="c9_ed_cat" data-key="c9_ed_bed" value="bed"><span>Binge-eating disorder (6B82)</span></label>
+        <label class="option-chip"><input type="radio" name="c9_ed_cat" data-key="c9_ed_arfid" value="arfid"><span>ARFID (avoidant/restrictive, no weight/shape concern)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Behaviours to prevent weight restoration (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c9_ed_beh" data-key="c9_ed_beh_restriction" value="restriction"><span>Restricted intake</span></label>
+        <label class="option-chip"><input type="checkbox" name="c9_ed_beh" data-key="c9_ed_beh_purging" value="purging"><span>Purging (vomiting, laxatives, diuretics)</span></label>
+        <label class="option-chip"><input type="checkbox" name="c9_ed_beh" data-key="c9_ed_beh_exercise" value="exercise"><span>Excessive exercise</span></label>
+        <label class="option-chip"><input type="checkbox" name="c9_ed_beh" data-key="c9_ed_beh_meds" value="meds"><span>Medications (appetite suppressants, thyroid hormone misuse)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Body image / self-evaluation assessment</label>
+      <textarea data-key="c9_ed_body_image" placeholder="e.g., Patient perceives herself as 'still fat' at BMI 14.2. Body image distortion: insists thighs are 'huge' despite visible wasting. Checks mirror 20+ times/day. Avoids sitting because it 'spreads the fat'. Low body weight is central to self-evaluation."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Medical complications and screening results</label>
+      <textarea data-key="c9_ed_medical" placeholder="e.g., Amenorrhoea 9 months. Bradycardia 48 bpm. Hypotension 90/60. Hypokalaemia 3.1 mmol/L (from purging). Osteopenia on DEXA. TSH 1.8 (normal). CBC: mild anaemia Hb 10.5. ECG: prolonged QTc 480ms."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential diagnosis — discriminators</label>
+      <textarea data-key="c9_ed_differential" placeholder="1) MDD with weight loss — excluded: no fear of weight gain, no body image distortion, appetite genuinely lost rather than actively suppressed&#10;2) Hyperthyroidism — TSH normal, no tachycardia/tremor/heat intolerance&#10;3) Malignancy — normal CRP/ESR, patient actively refuses food (vs cachexia patient's willingness to eat)&#10;4) ARFID — excluded because body image distortion and fear of weight gain are present&#10;5) OCD with food contamination — no obsessions about contamination, restriction is weight-driven"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C10: DISSOCIATIVE / FND ===== -->
+<div class="card" data-id="C10">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C10</span>
+      <span class="card-title">Dissociative / Functional Neurological Symptom Disorder</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Positive clinical signs of FND matter</h4>
+      <p>Hoover's sign (functional weakness), tremor entrainment test, dissociative seizure semiology. La belle indifference is non-specific and overrated. The workup must rule out organic neurological disease before diagnosing FND.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Dissociative disorder category (ICD-11)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_neurological" value="neurological"><span>Dissociative neurological symptom disorder (6B60)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_amnesia" value="amnesia"><span>Dissociative amnesia (6B61)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_trance" value="trance"><span>Trance disorder (6B62)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_possession" value="possession"><span>Possession trance disorder (6B63)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_did" value="did"><span>DID (6B64) / Partial DID (6B65)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_cat" data-key="c10_fnd_dpdr" value="dpdr"><span>Depersonalisation-derealisation (6B66)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Symptom type (for FNSD) — check all</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_weakness" value="weakness"><span>Functional weakness / paralysis</span></label>
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_movement" value="movement"><span>Functional movement disorder</span></label>
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_seizures" value="seizures"><span>Dissociative seizures / non-epileptic attacks</span></label>
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_sensory" value="sensory"><span>Functional sensory symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_speech" value="speech"><span>Functional speech symptoms</span></label>
+        <label class="option-chip"><input type="checkbox" name="c10_fnd_sym" data-key="c10_fnd_cognitive" value="cognitive"><span>Functional cognitive symptoms</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Positive clinical signs documented</label>
+      <textarea data-key="c10_fnd_signs" placeholder="e.g., Hoover's sign positive: give-way weakness with synchronous hip extension on contralateral side when asked to flex affected hip. Tremor entrainment: tremor changes to rhythm of contralateral tapping. No UMN or LMN signs. Normal tone and reflexes."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Investigations to rule out organic disease</label>
+      <textarea data-key="c10_fnd_workup" placeholder="e.g., MRI brain: normal. EEG: normal (no epileptiform activity during event captured on video-EEG). NCS: normal. LP: normal. Inflammatory markers normal. Structural neurological disease excluded."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Psychosocial precipitant / context</label>
+      <textarea data-key="c10_fnd_precipitant" placeholder="e.g., Sudden onset 3 days after marital argument. No prior neurological history. Family history of epilepsy (may have shaped symptom choice)."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">La belle indifference assessed</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c10_fnd_labelle" data-key="c10_fnd_labelle_present" value="present"><span>Present (noted but non-specific)</span></label>
+        <label class="option-chip"><input type="radio" name="c10_fnd_labelle" data-key="c10_fnd_labelle_absent" value="absent"><span>Absent</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential: factitious disorder vs malingering — assessment</label>
+      <textarea data-key="c10_fnd_factitious" placeholder="e.g., No demonstrable external incentive (financial, legal) → malingering unlikely. No clear investment in sick role or history of hospital shopping → factitious disorder not favoured. Diagnosis of factitious disorder made cautiously; FND is primary working diagnosis."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C11: PERSONALITY DISORDER ===== -->
+<div class="card" data-id="C11">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C11</span>
+      <span class="card-title">Personality Disorder (ICD-11 Dimensional Model)</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>The state-versus-trait trap — highest-yield viva failure</h4>
+      <p>Do NOT diagnose PD during an acute Axis I episode. A manic patient looks histrionic/grandiose; a depressed patient looks dependent/avoidant; a psychotic patient looks schizotypal. Defer PD diagnosis until Axis I episode has remitted. Document this rationale explicitly.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">PD diagnosis deferred? Reason:</label>
+      <textarea data-key="c11_pd_deferred" placeholder="e.g., PD assessment DEFERRED — patient currently in acute first-episode psychosis with prominent negative symptoms. Cannot distinguish state (psychosis-related social withdrawal) from trait (schizoid detachment). Re-evaluate at 3-month follow-up after antipsychotic treatment and symptom remission."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If PD diagnosed: pervasive disturbance in self-functioning (≥2 years)</label>
+      <textarea data-key="c11_pd_self" placeholder="Identity: unstable self-image, shifts between idealisation and devaluation. Self-worth: chronically low, contingent on others' approval. Self-direction: difficulty setting and pursuing coherent goals. Present since adolescence, across relationships, work, and social contexts."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If PD diagnosed: pervasive disturbance in interpersonal functioning (≥2 years)</label>
+      <textarea data-key="c11_pd_interpersonal" placeholder="Capacity to develop close relationships: intense but unstable, fear of abandonment, alternation between clinginess and withdrawal. Empathy: impaired, difficulty recognising others' needs. Conflict management: poor, explosive or passive-aggressive. Patterns present across family, romantic, and work relationships."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity grading</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c11_pd_sev" data-key="c11_pd_sev_mild" value="mild"><span>Mild (some harm, limited impact on functioning)</span></label>
+        <label class="option-chip"><input type="radio" name="c11_pd_sev" data-key="c11_pd_sev_moderate" value="moderate"><span>Moderate (clear harm, moderate functional impact)</span></label>
+        <label class="option-chip"><input type="radio" name="c11_pd_sev" data-key="c11_pd_sev_severe" value="severe"><span>Severe (severe harm to self/others, marked functional impairment)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Trait domain qualifiers (prominent — check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c11_pd_trait" data-key="c11_pd_trait_negative" value="negative_affectivity"><span>Negative affectivity</span></label>
+        <label class="option-chip"><input type="checkbox" name="c11_pd_trait" data-key="c11_pd_trait_detachment" value="detachment"><span>Detachment</span></label>
+        <label class="option-chip"><input type="checkbox" name="c11_pd_trait" data-key="c11_pd_trait_dissociality" value="dissociality"><span>Dissociality</span></label>
+        <label class="option-chip"><input type="checkbox" name="c11_pd_trait" data-key="c11_pd_trait_disinhibition" value="disinhibition"><span>Disinhibition</span></label>
+        <label class="option-chip"><input type="checkbox" name="c11_pd_trait" data-key="c11_pd_trait_anankastia" value="anankastia"><span>Anankastia</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Borderline pattern qualifier — evidence</label>
+      <textarea data-key="c11_pd_bord_evidence" placeholder="e.g., Borderline pattern APPLICABLE: instability of relationships (5 romantic partners in 2 years, all ended dramatically), self-image (shifts between 'amazing' and 'worthless' within hours), affect (intense mood shifts, anger outbursts), impulsivity (substance use binges, self-harm, reckless spending)."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">ICD-10 categorical equivalent (for cross-reference / legacy)</label>
+      <input type="text" data-key="c11_pd_icd10" placeholder="e.g., F60.31 Emotionally unstable personality disorder, borderline type">
+    </div>
+    <div class="field-group">
+      <label class="field-label">DSM-5-TR categorical equivalent (if cross-referencing)</label>
+      <input type="text" data-key="c11_pd_dsm" placeholder="e.g., 301.83 Borderline personality disorder (Cluster B)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential — Axis I conditions that mimic PD traits</label>
+      <textarea data-key="c11_pd_differential" placeholder="e.g., BPD vs BD-II: mood episodes in BD are discrete and episodic with inter-episode euthymia; BPD mood shifts are reactive and chronic. ASPD vs adult ADHD: ADHD has childhood onset, inattention and hyperactivity rather than conduct pattern. Schizotypal vs schizophrenia prodrome: schizotypal is stable lifelong, prodrome progresses to psychosis."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== C12: DELIRIUM & DEMENTIA ===== -->
+<div class="card" data-id="C12">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">C12</span>
+      <span class="card-title">Delirium & Neurocognitive Disorder / Dementia</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>The single most important question: "Was this person sharp last month?"</h4>
+      <p>Delirium = acute (hours–days), fluctuating, attention impaired, consciousness altered. Dementia = insidious, progressive, consciousness preserved, multiple cognitive domains affected. If acute onset + fluctuating → delirium until proved otherwise.</p>
+    </div>
+
+    <h4>Delirium (ICD-11: 6D70)</h4>
+    <div class="field-group">
+      <label class="field-label">Onset and course</label>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Onset</label>
+          <div class="chip-group">
+            <label class="option-chip"><input type="radio" name="c12_del_onset" data-key="c12_del_onset_acute" value="acute"><span>Acute (hours–days)</span></label>
+            <label class="option-chip"><input type="radio" name="c12_del_onset" data-key="c12_del_onset_insidious" value="insidious"><span>Insidious (months–years)</span></label>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Course during day</label>
+          <div class="chip-group">
+            <label class="option-chip"><input type="radio" name="c12_del_course" data-key="c12_del_course_fluctuating" value="fluctuating"><span>Fluctuating</span></label>
+            <label class="option-chip"><input type="radio" name="c12_del_course" data-key="c12_del_course_stable" value="stable"><span>Stable</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Attention and awareness disturbance</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c12_del_attention" data-key="c12_del_attention_impaired" value="impaired"><span>Impaired attention / altered awareness</span></label>
+        <label class="option-chip"><input type="radio" name="c12_del_attention" data-key="c12_del_attention_preserved" value="preserved"><span>Attention preserved / consciousness clear</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Cognitive domains affected (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c12_del_cog" data-key="c12_del_cog_orientation" value="orientation"><span>Orientation</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_del_cog" data-key="c12_del_cog_memory" value="memory"><span>Memory</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_del_cog" data-key="c12_del_cog_language" value="language"><span>Language</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_del_cog" data-key="c12_del_cog_visuospatial" value="visuospatial"><span>Visuospatial</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_del_cog" data-key="c12_del_cog_perception" value="perception"><span>Perception (hallucinations, illusions)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Perceptual disturbances</label>
+      <textarea data-key="c12_del_perceptual" placeholder="e.g., Visual hallucinations of small animals and insects. Visual illusions (curtains moving). No auditory hallucinations. Agitated by evening (sundowning), calmer by morning."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Etiology specifier</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c12_del_eti" data-key="c12_del_eti_medical" value="medical"><span>Due to disease (medical)</span></label>
+        <label class="option-chip"><input type="radio" name="c12_del_eti" data-key="c12_del_eti_substance" value="substance"><span>Due to substance / medication</span></label>
+        <label class="option-chip"><input type="radio" name="c12_del_eti" data-key="c12_del_eti_multiple" value="multiple"><span>Multiple etiologies</span></label>
+        <label class="option-chip"><input type="radio" name="c12_del_eti" data-key="c12_del_eti_unknown" value="unknown"><span>Unknown</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Identified cause / precipitant</label>
+      <textarea data-key="c12_del_cause" placeholder="e.g., Due to substance/medication — started tramadol 100mg BD for back pain 1 week ago. Also on oxybutynin (anticholinergic). UTI excluded (urine culture negative). Chest infection excluded. Medication-induced delirium most likely."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Baseline cognitive status (was patient sharp last month?)</label>
+      <textarea data-key="c12_del_baseline" placeholder="e.g., Family reports: 'He was completely fine last month, managing his own finances, cooking, reading newspaper daily.' Acute change from baseline strongly supports delirium over dementia."></textarea>
+    </div>
+
+    <h4>Dementia / Major Neurocognitive Disorder</h4>
+    <div class="field-group">
+      <label class="field-label">Etiology (ICD-11 / DSM-5-TR)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_alzheimer" value="alzheimer"><span>Alzheimer disease</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_vascular" value="vascular"><span>Vascular / cerebrovascular</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_lewy" value="lewy"><span>Lewy body disease</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_ftd" value="frontotemporal"><span>Frontotemporal</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_substance" value="substance"><span>Substance-induced</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_mixed" value="mixed"><span>Mixed / multiple etiologies</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_eti" data-key="c12_dem_unspecified" value="unspecified"><span>Unspecified</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Cognitive domains impaired (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_memory" value="memory"><span>Learning and memory</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_language" value="language"><span>Language</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_attention" value="attention"><span>Attention / complex attention</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_executive" value="executive"><span>Executive function</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_visuospatial" value="visuospatial"><span>Visuospatial</span></label>
+        <label class="option-chip"><input type="checkbox" name="c12_dem_cog" data-key="c12_dem_cog_social" value="social"><span>Social cognition</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">ADL / IADL decline documented</label>
+      <textarea data-key="c12_dem_adl" placeholder="e.g., ADL: needs prompting for bathing, requires supervision for meals (forgets to eat). IADL: stopped managing finances 1 year ago (son took over); cannot operate microwave; lost way home twice in past 6 months."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="radio" name="c12_dem_sev" data-key="c12_dem_sev_mild" value="mild"><span>Mild (independent in most ADL, IADL impaired)</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_sev" data-key="c12_dem_sev_moderate" value="moderate"><span>Moderate (ADL assistance needed)</span></label>
+        <label class="option-chip"><input type="radio" name="c12_dem_sev" data-key="c12_dem_sev_severe" value="severe"><span>Severe (fully dependent)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential — depressive pseudodementia and other mimics</label>
+      <textarea data-key="c12_dem_differential" placeholder="1) Depressive pseudodementia — mood symptoms primary, 'I don't know' answers, preserved memory on formal testing, no perceptual disturbance. Here: no mood symptoms, effortful but incorrect answers, memory impaired on testing.&#10;2) NPH — no gait apraxia or urinary incontinence&#10;3) B12/thyroid/syphilis — B12 180 (low-normal), TSH normal, RPR non-reactive&#10;4) Medication-induced — minimal anticholinergic load&#10;5) Late-onset psychosis — no hallucinations or delusions"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Reversible causes screened</label>
+      <textarea data-key="c12_dem_reversible" placeholder="TSH, B12, folate, RPR/VDRL, CBC, LFT, RFT, calcium, vitamin D, CT/MRI. Results documented above."></textarea>
+    </div>
+  </div>
+</div>
+<!-- ===== D: SIX WORKED DIFFERENTIALS ===== -->
+<div class="card" data-id="D">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">D</span>
+      <span class="card-title">Six Worked Differentials — Viva Traps</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Template for every differential answer</h4>
+      <p>State working diagnosis → name 2–3 alternatives in ranked order → give discriminating features → conclude with single most decisive feature. Do not list >3 differentials (signals confusion). Do list at least 2 (signals discipline).</p>
+    </div>
+
+    <h4>D1. Psychotic Mania vs Schizoaffective vs Schizophrenia with Mood Symptoms</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 28-year-old man, 1 month grandiose delusions, reduced sleep, pressured speech, auditory hallucinations of God, irritability. 3 years ago similar episode responded to lithium + olanzapine. Between episodes, fully himself, working as lawyer.
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis and ICD-11/10 codes</label>
+      <input type="text" data-key="d1_working" placeholder="Bipolar affective disorder type I, current episode manic with mood-congruent psychotic features, severe (ICD-11: 6A60.4 / ICD-10: F31.2)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: Schizoaffective disorder — discriminator</label>
+      <textarea data-key="d1_diff1" placeholder="Excluded because mood symptoms have been present for the entirety of the psychotic symptoms, not as a brief mood episode within a longer continuous psychotic illness."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: Schizophrenia with manic specifier — discriminator</label>
+      <textarea data-key="d1_diff2" placeholder="Excluded because there is full inter-episode recovery to premorbid functioning; temporal sequence is mood-first then psychosis-second within each episode; prior episode responded completely to mood stabiliser."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d1_key" placeholder="Full inter-episode recovery — consistent with BD, inconsistent with schizophrenia or schizoaffective disorder">
+    </div>
+
+    <h4>D2. Agitated Depression vs Mixed Mania vs Anxious Depression</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 38-year-old woman, 2-month low mood, anhedonia, early morning wakening, weight loss, profound fatigue, but also restlessness, racing thoughts that feel out of control, irritability, brief periods of feeling "wired but exhausted". No prior mania. Family history of BD in maternal aunt.
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis</label>
+      <input type="text" data-key="d2_working" placeholder="Major depressive disorder, current episode severe, with mixed features specifier (ICD-11: 6A70.3)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: Pure agitated depression without mixed features</label>
+      <textarea data-key="d2_diff1" placeholder="Alternative diagnosis. Distinguished by absence of core manic features. In this case racing thoughts and 'wired' experience tip balance toward mixed features specifier."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: Bipolar I depressive episode with mixed features</label>
+      <textarea data-key="d2_diff2" placeholder="Requires prior mania — absent here. However family history and mixed features raise suspicion of latent bipolarity. Implications: caution with antidepressant monotherapy, screen for subtle past hypomania with MDQ."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 3: Anxious depression</label>
+      <textarea data-key="d2_diff3" placeholder="Agitation is anxiety-driven rather than mood-elevation-driven. Distinguished by content of anxious symptoms (worry about specific events) vs mixed-state symptoms (distractibility, increased goal-directed activity). Here racing thoughts are not worry-based."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d2_key" placeholder="Simultaneous depression-defining symptoms PLUS racing thoughts and decreased sleep — meets mixed features specifier threshold and changes management">
+    </div>
+
+    <h4>D3. OCD vs Schizophrenia with Delusion-like Obsessions vs ASD with Rituals</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 22-year-old man, 4-year contamination concerns, hand-washing 30–40 times/day, 3-hour showers, refusal to touch door handles. Insight fluctuating: some days says "I know it's silly but I can't stop", other days insists contamination is real.
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis</label>
+      <input type="text" data-key="d3_working" placeholder="Obsessive-compulsive disorder, with poor insight specifier (ICD-11: 6B20 with poor insight)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: Schizophrenia with delusion-like obsessions</label>
+      <textarea data-key="d3_diff1" placeholder="Excluded by fluctuating insight (not persistent absent insight of delusional disorder), absence of other psychotic phenomena (no thought disorder, no FRS, no negative symptoms), ego-dystonic quality even on more delusional days (reports thoughts as intrusive and unwanted, not as truths acted on with conviction). BABS score helpful."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: ASD with restricted/repetitive behaviours</label>
+      <textarea data-key="d3_diff2" placeholder="Excluded because rituals are anxiety-driven and neutralisation-based (reduce contamination anxiety) vs ASD's stereotyped behaviours that are sensory-, regulatory-, or sameness-driven. No social-communication deficits, no developmental history of autism."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 3: OCPD</label>
+      <textarea data-key="d3_diff3" placeholder="Excluded by ego-dystonic nature of obsessions (patient knows they are excessive and resists them) vs OCPD's ego-syntonic perfectionism without intrusive obsessions."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d3_key" placeholder="Ego-dystonia + neutralising compulsions = OCD-defining">
+    </div>
+
+    <h4>D4. Anorexia Nervosa vs MDD with Weight Loss vs Hyperthyroidism vs Malignancy</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 19-year-old woman, 12-month progressive weight loss 52kg → 38kg, BMI 14.2, restricted intake ~600kcal/day, compulsive exercise 2 hours daily, amenorrhoea 9 months, layered clothing in warm weather, perceives herself as still fat.
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis</label>
+      <input type="text" data-key="d4_working" placeholder="Anorexia nervosa, restricting subtype (ICD-11: 6B80.0 / DSM-5-TR: 307.1)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: MDD with weight loss</label>
+      <textarea data-key="d4_diff1" placeholder="Excluded by active food restriction (not just appetite loss), body image distortion, and fear of weight gain. In depression-driven weight loss, appetite is genuinely lost and patient is distressed by weight loss rather than seeking it."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: Hyperthyroidism</label>
+      <textarea data-key="d4_diff2" placeholder="Screened with TSH and free T4. Distinguished by tachycardia, tremor, heat intolerance, absence of body image distortion."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 3: Malignancy / chronic illness with cachexia</label>
+      <textarea data-key="d4_diff3" placeholder="Screened with CBC, CRP, ESR, weight loss workup. Distinguished by patient's willingness to eat when offered (vs AN patient's active refusal). No constitutional symptoms of malignancy."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d4_key" placeholder="Fear of weight gain + body image distortion + active restriction = AN-defining and excludes medical mimics">
+    </div>
+
+    <h4>D5. FND vs Feigned/Factitious vs Neurological Disease</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 24-year-old woman, sudden right leg weakness 3 days after marital argument. Hoover's sign positive, normal tone and reflexes, no UMN signs. Describes weakness in dramatic terms with mildly elevated affect (la belle indifference).
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis</label>
+      <input type="text" data-key="d5_working" placeholder="Dissociative neurological symptom disorder, with motor symptoms (ICD-11: 6B60.0 / DSM-5-TR: Functional Neurological Symptom Disorder, with weakness/paralysis)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: Organic neurological disease</label>
+      <textarea data-key="d5_diff1" placeholder="Excluded by positive clinical signs of FND (Hoover's sign most reliable — demonstrates task-dependent weakness inconsistent with corticospinal tract pathology) and absence of UMN/LMN signs. MRI confirms no structural lesion."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: Factitious disorder</label>
+      <textarea data-key="d5_diff2" placeholder="Deliberate production of symptoms to assume sick role. Distinguished by absence of external incentive (vs malingering). Clinical inference; often impossible to prove definitively. Diagnosis should be made cautiously and rarely. Here: no prior hospital shopping, no inconsistent history."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 3: Malingering</label>
+      <textarea data-key="d5_diff3" placeholder="Deliberate production of symptoms for external gain (financial, legal, escape from work). Distinguished by demonstrable external incentive. Here: no ongoing legal case, no disability claim, no work avoidance incentive identified."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d5_key" placeholder="Hoover's sign positive = positive sign of FND, not merely absence of organic findings">
+    </div>
+
+    <h4>D6. Delirium vs Dementia vs Depressive Pseudodementia vs Late-Onset Psychosis vs Late-Onset Mania</h4>
+    <div class="stem-box">
+      <strong>Stem:</strong> 82-year-old man, 48 hours confusion. Previously sharp, living independently. New medication for back pain last month. Disoriented to time and place, fluctuating attention, visual hallucinations of small animals, agitated by evening, calmer by morning.
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working diagnosis</label>
+      <input type="text" data-key="d6_working" placeholder="Delirium, due to substance/medication (ICD-11: 6D70 due to substance, likely opioid analgesic)">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 1: Dementia</label>
+      <textarea data-key="d6_diff1" placeholder="Excluded by acute onset (hours–days, not months–years), fluctuating attention, altered level of consciousness. Dementia is insidious, progressive, presents with clear consciousness. 'Was he sharp last month?' — YES."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 2: Depressive pseudodementia</label>
+      <textarea data-key="d6_diff2" placeholder="Excluded by visual hallucinations, fluctuating attention, acute onset. Pseudodementia presents with persistent low mood, subjective memory complaints, slow effortful 'I don't know' answers, absence of perceptual disturbance."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 3: Late-onset psychosis</label>
+      <textarea data-key="d6_diff3" placeholder="Excluded by acute onset, fluctuating consciousness, clear precipitant (medication change). VLOP presents with persistent psychotic symptoms, clear consciousness, no fluctuating attention."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Differential 4: Late-onset mania</label>
+      <textarea data-key="d6_diff4" placeholder="Excluded by absence of mood elevation, visual (rather than auditory) hallucinations, fluctuating consciousness. Late-onset mania would show elevated/irritable mood, decreased sleep, grandiosity, pressured speech."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Single most discriminating feature</label>
+      <input type="text" data-key="d6_key" placeholder="Acute onset + fluctuating attention + identifiable precipitant = delirium-defining and demands cause-finding workup">
+    </div>
+  </div>
+</div>
+
+<!-- ===== E: 4P × BPS FORMULATION ===== -->
+<div class="card" data-id="E">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">E</span>
+      <span class="card-title">Diagnostic Formulation — 4P × Bio-Psycho-Social Grid</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Mnemonic: 4P × BPS</h4>
+      <p>Predisposing, Precipitating, Perpetuating, Protective × Biological, Psychological, Social. Twelve cells. Populate as many as the case supports. Deliver as one coherent paragraph in viva.</p>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="grid-table">
+        <thead>
+          <tr><th style="width:18%">4P ↓ / BPS →</th><th>Biological</th><th>Psychological</th><th>Social</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Predisposing</strong></td>
+            <td><textarea data-key="e_pred_bio" placeholder="Genetic loading, perinatal events, developmental delays, head injuries, family history"></textarea></td>
+            <td><textarea data-key="e_pred_psy" placeholder="Schemas, attachment patterns, temperament, prior adverse experiences, learning history"></textarea></td>
+            <td><textarea data-key="e_pred_soc" placeholder="Family structure, childhood adversity, cultural context, socioeconomic factors"></textarea></td>
+          </tr>
+          <tr>
+            <td><strong>Precipitating</strong></td>
+            <td><textarea data-key="e_precip_bio" placeholder="Recent medical illness, substance use, hormonal change, medication change, sleep disruption"></textarea></td>
+            <td><textarea data-key="e_precip_psy" placeholder="Recent loss, trauma, identity transition, schema activation event"></textarea></td>
+            <td><textarea data-key="e_precip_soc" placeholder="Recent stressor (job loss, marital, financial, migration), bereavement, role change"></textarea></td>
+          </tr>
+          <tr>
+            <td><strong>Perpetuating</strong></td>
+            <td><textarea data-key="e_perp_bio" placeholder="Untreated medical comorbidity, ongoing substance use, side effects, non-adherence"></textarea></td>
+            <td><textarea data-key="e_perp_psy" placeholder="Avoidance, safety behaviours, rumination, hopelessness, illness beliefs"></textarea></td>
+            <td><textarea data-key="e_perp_soc" placeholder="High expressed emotion, ongoing financial/relationship stress, secondary gain, treatment access barriers"></textarea></td>
+          </tr>
+          <tr>
+            <td><strong>Protective</strong></td>
+            <td><textarea data-key="e_prot_bio" placeholder="Good general health, intact organ function, no substance use, response to prior treatment"></textarea></td>
+            <td><textarea data-key="e_prot_psy" placeholder="High motivation, intact insight, resilience, problem-solving, prior good response to therapy"></textarea></td>
+            <td><textarea data-key="e_prot_soc" placeholder="Supportive family, employment, intact social networks, religious/community supports, treatment access"></textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="field-group mt-2">
+      <label class="field-label">Integrated formulation paragraph (for viva delivery)</label>
+      <div class="field-hint">
+        <strong>Template:</strong> "This [age/sex] with [primary diagnosis] has a predisposition from [biological], [psychological], and [social]. The current episode was precipitated by [biological], [psychological], and [social]. The episode is being perpetuated by [biological], [psychological], and [social]. Protective factors include [biological], [psychological], and [social]. The formulation suggests that [intervention 1] and [intervention 2] are the highest-yield interventions."
+      </div>
+      <textarea data-key="e_formulation_para" placeholder="Write the integrated formulation paragraph here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Cultural overlay / idioms of distress incorporated</label>
+      <textarea data-key="e_cultural" placeholder="e.g., Patient describes distress as 'pet mein gola' (knot in stomach) — translated as anxiety with somatisation. Family attributes cause to 'nazar lagna' (evil eye) — acknowledged without dismissal, biological model introduced alongside cultural framework."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F: CULTURAL FORMULATION ===== -->
+<div class="card" data-id="F">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">F</span>
+      <span class="card-title">Cultural Formulation — DSM-5-TR CFI</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Four domains, one high-yield example question per domain</h4>
+      <p>The CFI is a 16-item structured interview. The candidate is expected to know the four domains and one example question per domain. Full 16-item interview is a reference, not a memorisation target. The Indian context requires engagement with idioms of distress without dismissal.</p>
+    </div>
+
+    <h4>Domain 1: Cultural Definition of the Problem</h4>
+    <div class="field-group">
+      <label class="field-label">Patient's own description / label of the problem (in their language/framing)</label>
+      <textarea data-key="f_d1_desc" placeholder="e.g., Patient describes problem as 'dimaag mein hawa' (wind in the head) and 'pet mein gola' (knot in stomach). To family: 'nazar lag gayi hai' (evil eye has fallen). Uses cultural terms rather than medical labels."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Idioms of distress identified (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_pet_gola" value="pet_gola"><span>Pet mein gola (knot in stomach)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_dimaag_hawa" value="dimaag_hawa"><span>Dimaag mein hawa (wind in head)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_garmi" value="garmi"><span>Garmi chadhna (heat rising)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_sar_bhari" value="sar_bhari"><span>Sar bhari hona (heaviness of head)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_kamzori" value="kamzori"><span>Kamzori (weakness)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_dil_baith" value="dil_baith"><span>Dil baith jaana (heart sinking)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_nazar" value="nazar"><span>Nazar lagna (evil eye)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_bhoot" value="bhoot"><span>Bhoot pret (possession)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_jadu" value="jadu"><span>Jadu-tona (black magic)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_dhat" value="dhat"><span>Dhat syndrome (semen-loss anxiety)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_idiom" data-key="f_idiom_other" value="other"><span>Other (specify)</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Other idiom (specify)</label>
+      <input type="text" data-key="f_idiom_other_spec" placeholder="Describe any other cultural idiom used">
+    </div>
+
+    <h4>Domain 2: Cultural Perceptions of Cause, Context, and Support</h4>
+    <div class="field-group">
+      <label class="field-label">Cultural attributions of cause (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_evil_eye" value="evil_eye"><span>Evil eye / nazar</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_possession" value="possession"><span>Possession / bhoot pret</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_black_magic" value="black_magic"><span>Black magic / jadu-tona</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_karma" value="karma"><span>Karma / planetary influence</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_divine" value="divine"><span>Divine punishment / ancestral displeasure</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_stress" value="stress"><span>Stress / family conflict</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_biological" value="biological"><span>Biological / scientific cause</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_cause" data-key="f_cause_mixed" value="mixed"><span>Mixed attributions</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Support sources drawn upon</label>
+      <textarea data-key="f_d2_support" placeholder="e.g., Family support: mother and sister primary caregivers. Religious: visits temple weekly, priest consulted. Community: neighbours provide meals. Traditional healer: consulted baba 2 months ago for 'nazar utarna' ritual."></textarea>
+    </div>
+
+    <h4>Domain 3: Cultural Factors Affecting Self-Coping and Past Help-Seeking</h4>
+    <div class="field-group">
+      <label class="field-label">Prior help-seeking (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_faith" value="faith"><span>Faith healer / puja / religious ritual</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_traditional" value="traditional"><span>Traditional healer (baba, maulvi, etc.)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_ayush" value="ayush"><span>AYUSH practitioner</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_homeopathy" value="homeopathy"><span>Homeopathy</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_allopathy" value="allopathy"><span>Allopathic (prior psychiatrist / GP)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_self_med" value="self_med"><span>Self-medication (herbal, OTC, online)</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_family" value="family"><span>Family advice / home remedies</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_help" data-key="f_help_none" value="none"><span>No prior help sought</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">What worked, what did not, barriers to continuing</label>
+      <textarea data-key="f_d3" placeholder="e.g., Faith healing ritual provided temporary reassurance but no symptom change. Allopathic treatment (prior GP gave alprazolam 0.25mg) — helped sleep but family stopped due to fear of addiction. Barrier: stigma of psychiatric label, cost of follow-up, distance to clinic."></textarea>
+    </div>
+
+    <h4>Domain 4: Cultural Factors Affecting Current Help-Seeking</h4>
+    <div class="field-group">
+      <label class="field-label">Patient expectations and concerns about current consultation (check all)</label>
+      <div class="chip-group">
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_stigma" value="stigma"><span>Stigma of psychiatric diagnosis</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_cost" value="cost"><span>Treatment cost</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_family" value="family"><span>Family attendance / decision-maker role</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_language" value="language"><span>Language barrier</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_gender" value="gender"><span>Gender of clinician</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_side_effects" value="side_effects"><span>Concerns about medication side effects</span></label>
+        <label class="option-chip"><input type="checkbox" name="f_concern" data-key="f_concern_alliance" value="alliance"><span>Clinician-patient background mismatch</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Engagement strategy based on cultural formulation</label>
+      <textarea data-key="f_d4_strategy" placeholder="e.g., (1) Validate 'pet mein gola' as real distress while explaining biological model of anxiety; (2) Involve elder brother as family decision-maker in treatment planning; (3) Address stigma by framing treatment as 'stress management' rather than psychiatric; (4) Start with low-cost generic medications; (5) Integrate religious coping by suggesting prayer alongside CBT."></textarea>
+    </div>
+  </div>
+</div>
+<!-- ===== G: PITFALLS & EXAM TRAPS ===== -->
+<div class="card" data-id="G">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">G</span>
+      <span class="card-title">Pitfalls & Exam Traps — Self-Audit Checklist</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Systematic self-check before finalising diagnosis</h4>
+      <p>Use this checklist to audit your diagnostic documentation. Each unchecked item is a potential viva trap.</p>
+    </div>
+
+    <div class="pitfall-item">
+      <strong>Trap 1:</strong> Listing one diagnosis without ranked differential. <em>Have you named a primary working diagnosis plus 2–3 ranked alternatives with discriminators?</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap1" data-key="g_trap1_done" value="done"><span>Checked — differential documented</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap1" data-key="g_trap1_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 2:</strong> Missing Axis III (organic cause). <em>Have you forced the organic question — TSH, B12, structural causes, autoimmune encephalitis?</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap2" data-key="g_trap2_done" value="done"><span>Checked — Axis III complete</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap2" data-key="g_trap2_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 3:</strong> Missing Axis IV. <em>Have you documented psychosocial context? Even "no significant stressor identified" is an acceptable line.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap3" data-key="g_trap3_done" value="done"><span>Checked — Axis IV complete</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap3" data-key="g_trap3_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 4:</strong> Diagnosing personality disorder during acute Axis I episode. <em>State-vs-trait trap. Have you deferred PD assessment or justified why state symptoms have settled?</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap4" data-key="g_trap4_done" value="done"><span>Checked — PD timing appropriate</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap4" data-key="g_trap4_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 5:</strong> Diagnosing schizophrenia without respecting duration thresholds. <em>Brief psychotic disorder &lt;1 month; schizophreniform 1–6 months (DSM); schizophrenia ≥1 month (ICD) or ≥6 months (DSM).</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap5" data-key="g_trap5_done" value="done"><span>Checked — duration threshold respected</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap5" data-key="g_trap5_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 6:</strong> Conflating ICD-10 and ICD-11 codes. <em>F31.2 is ICD-10; 6A60.4 is ICD-11. They are not interchangeable. Pick one system per line.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap6" data-key="g_trap6_done" value="done"><span>Checked — coding consistent</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap6" data-key="g_trap6_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 7:</strong> Confusing diagnosis with formulation. <em>Diagnosis names; formulation explains. Both are required in a complete write-up.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap7" data-key="g_trap7_done" value="done"><span>Checked — both diagnosis and formulation present</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap7" data-key="g_trap7_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 8:</strong> Over-using "NOS" or "unspecified". <em>Reserve for genuinely atypical presentations, not as a way of avoiding diagnostic commitment.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap8" data-key="g_trap8_done" value="done"><span>Checked — specific diagnosis committed</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap8" data-key="g_trap8_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 9:</strong> Forgetting cultural framing. <em>A patient who describes "pet mein gola" or "nazar lagna" is giving you their explanatory model. Engage with it.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap9" data-key="g_trap9_done" value="done"><span>Checked — cultural formulation documented</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap9" data-key="g_trap9_todo" value="todo"><span>Needs review</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 10:</strong> Treating burnout as a psychiatric diagnosis. <em>ICD-11 codes burnout (QD85) as occupational phenomenon, chapter 24. If criteria for adjustment disorder, depression, or anxiety are met, diagnose those.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap10" data-key="g_trap10_done" value="done"><span>Checked — burnout not coded as mental disorder</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap10" data-key="g_trap10_todo" value="todo"><span>Needs review / N/A</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 11:</strong> Using abolished schizophrenia subtypes in ICD-11. <em>Paranoid, hebephrenic, catatonic schizophrenia are ICD-10 categories, gone in ICD-11. Use symptomatic specifiers instead.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap11" data-key="g_trap11_done" value="done"><span>Checked — specifiers used, not subtypes</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap11" data-key="g_trap11_todo" value="todo"><span>Needs review / N/A</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 12:</strong> Diagnosing AN without checking BMI. <em>BMI &lt;18.5 in adults is the criterion. A patient with cognitive features of AN at normal BMI may meet criteria for atypical anorexia or bulimia nervosa.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap12" data-key="g_trap12_done" value="done"><span>Checked — BMI documented and criterion met</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap12" data-key="g_trap12_todo" value="todo"><span>Needs review / N/A</span></label>
+      </div>
+    </div>
+    <div class="pitfall-item">
+      <strong>Trap 13:</strong> Missing Complex PTSD. <em>In the Indian context (childhood adversity, intergenerational trauma, gender-based violence) CPTSD is often more accurate than PTSD alone.</em>
+      <div class="chip-group mt-1">
+        <label class="option-chip"><input type="radio" name="g_trap13" data-key="g_trap13_done" value="done"><span>Checked — CPTSD considered if trauma history appropriate</span></label>
+        <label class="option-chip"><input type="radio" name="g_trap13" data-key="g_trap13_todo" value="todo"><span>Needs review / N/A</span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== H: SAMPLE VIVA STEMS ===== -->
+<div class="card" data-id="H">
+  <div class="card-toggle" onclick="toggleCard(this)">
+    <div class="card-toggle-left">
+      <span class="card-num">H</span>
+      <span class="card-title">Sample Viva Stems — Practice Delivery</span>
+    </div>
+    <span class="card-chevron">&#9662;</span>
+  </div>
+  <div class="card-body">
+    <div class="instruct-box">
+      <h4>Practice these stems until delivery is automatic</h4>
+      <p>These are not scripts to memorise word-for-word, but structural templates to populate with your patient's data. Deliver with diagnostic humility and commitment.</p>
+    </div>
+
+    <h4>Generic 4-Axis Stem</h4>
+    <div class="stem-box">
+      "My diagnostic formulation in this patient is as follows. Axis I: [<em>primary diagnosis with severity, course, current state, ICD-11 code, ICD-10 code if needed</em>], with [<em>comorbid diagnosis</em>] as a comorbid Axis I diagnosis. Axis II: [<em>personality disorder grading or 'no personality disorder identified, deferred until acute episode resolves'</em>] and [<em>intellectual disability if relevant</em>]. Axis III: [<em>medical conditions</em>]. Axis IV: [<em>psychosocial stressors with severity rating</em>], with current functioning estimated at [<em>GAF or WHODAS</em>]."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised 4-axis stem for this patient</label>
+      <textarea data-key="h_stem_4axis" placeholder="Populate with this patient's data and practice delivery..."></textarea>
+    </div>
+
+    <h4>Diagnosis with Ranked Differential Stem</h4>
+    <div class="stem-box">
+      "The working diagnosis is [<em>primary</em>], with [<em>differential 1</em>] and [<em>differential 2</em>] on the differential, ranked in that order. The discriminating features are [<em>feature A favouring primary over D1</em>], [<em>feature B favouring primary over D2</em>], and the single most decisive feature in this patient is [<em>feature</em>]. I would re-evaluate the diagnosis at [<em>follow-up point</em>] when [<em>pending information</em>] becomes available."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised differential stem</label>
+      <textarea data-key="h_stem_differential" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+
+    <h4>Formulation Paragraph Stem</h4>
+    <div class="stem-box">
+      "Predisposing factors include [<em>biological loading</em>], [<em>psychological vulnerability, schemas, attachment, temperament</em>], and [<em>social factors, family structure, childhood adversity</em>]. Precipitating factors are [<em>recent medical, psychological, social trigger</em>]. Perpetuating factors include [<em>ongoing biological, psychological, social factors</em>]. Protective factors are [<em>strengths in each domain</em>]. The formulation suggests that the highest-yield interventions in the immediate to short-term phase are [<em>targeted intervention 1</em>] and [<em>targeted intervention 2</em>]."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised formulation stem</label>
+      <textarea data-key="h_stem_formulation" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+
+    <h4>Cultural Formulation Stem</h4>
+    <div class="stem-box">
+      "On cultural formulation, the patient describes the problem as [<em>patient's own framing, translate idiom of distress</em>]. The cultural attribution of cause is [<em>evil eye / possession / karma / family curse / scientific explanation / mixed</em>]. Prior help-seeking has included [<em>traditional healer / faith healer / AYUSH / allopathic / self-medication / family advice</em>]. Concerns about the current consultation include [<em>stigma / cost / family attendance / language / gender of clinician</em>]. The cultural framework will inform the engagement strategy by [<em>specific intervention</em>]."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised cultural formulation stem</label>
+      <textarea data-key="h_stem_cultural" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+
+    <h4>ICD-11 vs ICD-10 Comparison Stem</h4>
+    <div class="stem-box">
+      "The primary diagnosis in ICD-11 is [<em>code, name with specifiers</em>]. In ICD-10 the corresponding code would be [<em>F-code, name</em>]. The substantive difference between the two is [<em>the relevant ICD-11 reform</em>]. In DSM-5-TR the equivalent diagnosis is [<em>code, name</em>], differing from ICD-11 in [<em>duration requirement, specifier, threshold</em>]."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised classification comparison stem</label>
+      <textarea data-key="h_stem_comparison" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+
+    <h4>Personality Disorder ICD-11 Stem</h4>
+    <div class="stem-box">
+      "The patient meets criteria for personality disorder under ICD-11. Severity is [<em>mild / moderate / severe</em>]. The trait domain qualifiers are [<em>negative affectivity / detachment / dissociality / disinhibition / anankastia</em>], with [<em>most prominent</em>] most prominent. The borderline pattern qualifier [<em>is / is not</em>] applicable, given [<em>evidence of BPD pattern</em>]. The ICD-10 categorical equivalent would have been [<em>F60.x</em>]. The diagnosis was made after the acute Axis I episode had partially resolved to avoid the state-versus-trait trap."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised PD stem</label>
+      <textarea data-key="h_stem_pd" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+
+    <h4>CPTSD vs BPD Stem</h4>
+    <div class="stem-box">
+      "In this patient with chronic affective dysregulation, negative self-concept, interpersonal difficulties, and re-experiencing of childhood abuse, the differential is between Complex PTSD (ICD-11: 6B41) and Borderline Personality Disorder. The discriminating features are: (1) [<em>documented prolonged interpersonal trauma</em>], which is a core feature of CPTSD and not required for BPD; (2) [<em>persistent negative self-concept</em>], which is more characteristic of CPTSD than the unstable identity of BPD; (3) [<em>re-experiencing cluster</em>], which is required for CPTSD and not part of BPD criteria. I favour [<em>CPTSD / BPD</em>] as the primary diagnosis. DSM-5-TR does not recognise CPTSD; in DSM-5-TR I would code this as [<em>PTSD with dissociative features / comorbid BPD</em>]."
+    </div>
+    <div class="field-group">
+      <label class="field-label">Your personalised CPTSD vs BPD stem</label>
+      <textarea data-key="h_stem_cptsd" placeholder="Populate with this patient's data..."></textarea>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.container -->
+
+<!-- BOTTOM STICKY BAR -->
+<div class="bottom-bar">
+  <div class="bottom-bar-inner">
+    <div class="save-status" id="saveStatusBottom">Last saved: never</div>
+    <div class="bottom-actions">
+      <button class="btn btn-secondary btn-sm" onclick="clearAll()" type="button">Clear All</button>
+      <button class="btn btn-primary btn-sm" onclick="exportPDF()" type="button">Export PDF</button>
+      <button class="btn btn-primary btn-sm" onclick="copySummary()" type="button">Copy Summary</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== STATE ===== */
+let autoSync = true;
+let manualEdit = false;
+const STORAGE_KEY = 'ch12_diagnosis_v1';
+const BACKUP_PREFIX = 'ch12_backup_';
+
+/* ===== DOM HELPERS ===== */
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+/* ===== ACCORDION ===== */
+function toggleCard(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('expanded');
+  const isExpanded = card.classList.contains('expanded');
+  header.setAttribute('aria-expanded', isExpanded);
+  scheduleSave();
+}
+
+/* ===== QUICK REFERENCE ===== */
+function toggleQr(id) {
+  const el = document.getElementById(id);
+  const btn = el.previousElementSibling;
+  if (el.style.display === 'none' || el.style.display === '') {
+    el.style.display = 'block';
+    btn.setAttribute('aria-expanded', 'true');
+    const arrow = btn.querySelector('.qr-arrow');
+    if (arrow) arrow.textContent = '\u25B4';
+  } else {
+    el.style.display = 'none';
+    btn.setAttribute('aria-expanded', 'false');
+    const arrow = btn.querySelector('.qr-arrow');
+    if (arrow) arrow.textContent = '\u25BE';
+  }
+  scheduleSave();
+}
+
+/* ===== AUTO-EXPANDING TEXTAREAS ===== */
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(el => {
+    el.addEventListener('input', () => resizeTextarea(el));
+    el.addEventListener('paste', () => setTimeout(() => resizeTextarea(el), 0));
+    setTimeout(() => resizeTextarea(el), 50);
+  });
+}
+
+/* ===== CHIP STYLES ===== */
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip input').forEach(input => {
+    const chip = input.closest('.option-chip');
+    if (chip) chip.classList.toggle('checked', input.checked);
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip input').forEach(input => {
+    if (input.dataset.chipInit) return;
+    input.dataset.chipInit = '1';
+    input.addEventListener('change', updateChipVisuals);
+  });
+}
+
+/* ===== SUMMARY GENERATION ===== */
+function updateSummary() {
+  if (manualEdit) return;
+  const parts = [];
+
+  const axis1p = $('[data-key="a1_axis1_primary"]')?.value.trim();
+  const axis1c = $('[data-key="a1_axis1_comorbid"]')?.value.trim();
+  if (axis1p) parts.push('Axis I: ' + axis1p + (axis1c ? '; comorbid: ' + axis1c.replace(/\n/g, ', ') : ''));
+
+  const axis2pd = $('[data-key="a1_axis2_pd"]')?.value.trim();
+  const axis2st = $('[data-key="a1_axis2_state_trait"]')?.value.trim();
+  if (axis2pd || axis2st) {
+    let ax2 = 'Axis II: ' + (axis2pd || 'No PD identified');
+    if (axis2st) ax2 += ' (' + axis2st.replace(/\n/g, ' ') + ')';
+    parts.push(ax2);
+  }
+
+  const axis3 = $('[data-key="a1_axis3"]')?.value.trim();
+  if (axis3) parts.push('Axis III: ' + axis3.replace(/\n/g, '; '));
+
+  const axis4 = $('[data-key="a1_axis4"]')?.value.trim();
+  const axis4sev = getRadioValue('a1_axis4_sev');
+  if (axis4 || axis4sev) {
+    let ax4 = 'Axis IV: ' + (axis4 ? axis4.replace(/\n/g, '; ') : '');
+    if (axis4sev) ax4 += ' [Severity: ' + axis4sev + ']';
+    parts.push(ax4);
+  }
+
+  const axis5tool = $('[data-key="a1_axis5_tool"]')?.value;
+  const axis5score = $('[data-key="a1_axis5_score"]')?.value.trim();
+  if (axis5tool || axis5score) parts.push('Axis V / Functioning: ' + (axis5tool || '') + ' ' + (axis5score || ''));
+
+  const working = $('[data-key="a2_working"]')?.value.trim();
+  if (working) parts.push('Working Diagnosis: ' + working);
+
+  const diff = $('[data-key="a2_differential"]')?.value.trim();
+  if (diff) parts.push('Differential: ' + diff.replace(/\n/g, '; '));
+
+  const disc = $('[data-key="a2_discriminator"]')?.value.trim();
+  if (disc) parts.push('Key Discriminator: ' + disc);
+
+  const form = $('[data-key="e_formulation_para"]')?.value.trim();
+  if (form) parts.push('Formulation: ' + form.replace(/\n/g, ' '));
+
+  const classSys = getRadioValue('b1_class_sys');
+  if (classSys) parts.push('Classification: ' + classSys);
+
+  const summary = parts.join('\n\n');
+  const summaryEl = document.getElementById('summaryText');
+  if (summaryEl && summaryEl.value !== summary) {
+    summaryEl.value = summary;
+    resizeTextarea(summaryEl);
+  }
+}
+
+function getRadioValue(name) {
+  const el = $(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+/* ===== SUMMARY MANUAL EDIT ===== */
+document.getElementById('summaryText').addEventListener('input', function() {
+  if (autoSync) {
+    manualEdit = true;
+    autoSync = false;
+    document.getElementById('syncStatus').textContent = 'Auto-sync: PAUSED (manual edit)';
+    document.getElementById('syncStatus').classList.add('text-warn');
+  }
+  resizeTextarea(this);
+  scheduleSave();
+});
+
+function resyncSummary() {
+  manualEdit = false;
+  autoSync = true;
+  updateSummary();
+  document.getElementById('syncStatus').textContent = 'Auto-sync: ON';
+  document.getElementById('syncStatus').classList.remove('text-warn');
+}
+
+function copySummary() {
+  const el = document.getElementById('summaryText');
+  el.select();
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = orig, 1500);
+}
+
+/* ===== LOCALSTORAGE PERSISTENCE ===== */
+function saveData() {
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    if (el.type === 'checkbox') {
+      data[el.dataset.key] = el.checked;
+    } else if (el.type === 'radio') {
+      if (el.checked) data[el.dataset.key] = el.value;
+    } else {
+      data[el.dataset.key] = el.value;
+    }
+  });
+
+  const expanded = [];
+  document.querySelectorAll('.card').forEach(c => {
+    if (c.classList.contains('expanded')) expanded.push(c.dataset.id);
+  });
+  data._expanded = expanded;
+
+  const qrOpen = [];
+  document.querySelectorAll('.qr-panel').forEach(p => {
+    if (p.style.display !== 'none' && p.style.display !== '') qrOpen.push(p.id);
+  });
+  data._qrOpen = qrOpen;
+
+  data._manualEdit = manualEdit;
+  data._timestamp = new Date().toISOString();
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    updateSaveDisplay(data._timestamp);
+  } catch (e) { console.warn('Save failed', e); }
+}
+
+function restoreData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+
+    document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+      const key = el.dataset.key;
+      if (data[key] === undefined) return;
+      if (el.type === 'checkbox') {
+        el.checked = !!data[key];
+      } else if (el.type === 'radio') {
+        el.checked = (el.value === data[key]);
+      } else {
+        el.value = data[key];
+      }
+    });
+
+    if (data._expanded) {
+      document.querySelectorAll('.card').forEach(c => {
+        c.classList.toggle('expanded', data._expanded.includes(c.dataset.id));
+      });
+    }
+
+    if (data._qrOpen) {
+      data._qrOpen.forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) {
+          panel.style.display = 'block';
+          const toggle = panel.previousElementSibling;
+          if (toggle) {
+            toggle.setAttribute('aria-expanded', 'true');
+            const arrow = toggle.querySelector('.qr-arrow');
+            if (arrow) arrow.textContent = '\u25B4';
+          }
+        }
+      });
+    }
+
+    if (data._manualEdit !== undefined) {
+      manualEdit = data._manualEdit;
+      if (manualEdit) {
+        document.getElementById('syncStatus').textContent = 'Auto-sync: PAUSED (manual edit)';
+        document.getElementById('syncStatus').classList.add('text-warn');
+      }
+    }
+
+    updateSaveDisplay(data._timestamp);
+  } catch (e) { console.warn('Restore failed', e); }
+}
+
+let saveTimer = null;
+function scheduleSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 800);
+}
+
+function initAutoSave() {
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    el.addEventListener('input', scheduleSave);
+    el.addEventListener('change', scheduleSave);
+  });
+}
+
+function updateSaveDisplay(ts) {
+  const text = ts ? 'Last saved: ' + new Date(ts).toLocaleTimeString() : 'Last saved: never';
+  document.getElementById('saveStatus').textContent = text;
+  document.getElementById('saveStatusBottom').textContent = text;
+}
+
+function clearAll() {
+  if (!confirm('Clear all data? A timestamped backup will be saved before clearing.')) return;
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    if (el.type === 'checkbox') {
+      data[el.dataset.key] = el.checked;
+    } else if (el.type === 'radio') {
+      if (el.checked) data[el.dataset.key] = el.value;
+    } else {
+      data[el.dataset.key] = el.value;
+    }
+  });
+  data._timestamp = new Date().toISOString();
+  try {
+    localStorage.setItem(BACKUP_PREFIX + Date.now(), JSON.stringify(data));
+  } catch (e) {}
+
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    if (el.type === 'checkbox') { el.checked = false; }
+    else if (el.type === 'radio') { el.checked = false; }
+    else { el.value = ''; }
+  });
+
+  document.getElementById('summaryText').value = '';
+  autoSync = true; manualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: ON';
+  document.getElementById('syncStatus').classList.remove('text-warn');
+  updateChipVisuals();
+  document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  saveData();
+}
+
+/* ===== PDF EXPORT ===== */
+function exportPDF() {
+  window.print();
+}
+
+/* ===== BEFORE PRINT ===== */
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('.card').forEach(c => c.classList.add('expanded'));
+  document.querySelectorAll('.qr-panel').forEach(p => p.style.display = 'block');
+  document.querySelectorAll('textarea').forEach(el => {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  });
+});
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  updateChipVisuals();
+  initAutoSave();
+  updateSummary();
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  }, 300);
+});
+</script>
+
+</body>
+</html>

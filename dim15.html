@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Dimensional Psychiatry Case Sheet</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f8fafc;color:#1e293b;font-size:16px;line-height:1.45}
+header{background:#0f172a;color:#fff;padding:12px 16px;position:sticky;top:0;z-index:50}
+header h1{font-size:17px;margin:0;font-weight:700}
+header p{font-size:10px;margin:2px 0 0;color:#94a3b8}
+.container{max-width:720px;margin:0 auto;padding:12px 14px 100px}
+.btn{background:#0d9488;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;width:100%;margin:4px 0}
+.btn:active{opacity:.85}
+.btn-secondary{background:#e2e8f0;color:#475569}
+.btn-danger{background:#fee2e2;color:#b91c1c}
+.btn-sm{padding:6px 10px;font-size:12px;width:auto}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 14px;border-radius:10px;font-size:12px;font-weight:600;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;white-space:nowrap}
+.tab.active{background:#0d9488;color:#fff;border-color:#0d9488}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:12px}
+.card-title{font-size:16px;font-weight:700;color:#0f172a;margin-bottom:6px}
+.card-sub{font-size:12px;color:#0d9488;font-style:italic;margin-bottom:12px}
+label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:5px;margin-top:12px}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;background:#fff;color:#1e293b;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#0d9488;box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+textarea{resize:vertical;min-height:70px;overflow:hidden}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.hint-box{background:#f8fafc;border-radius:12px;padding:12px;margin:10px 0;border-left:4px solid #0d9488}
+.hint-title{font-size:12px;font-weight:700;color:#0f172a;margin-bottom:6px}
+.hint-list{font-size:12px;color:#475569;margin:0;padding-left:18px}
+.hint-list li{margin-bottom:4px}
+.spectrum-row{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+.spectrum-name{font-size:12px;font-weight:500;color:#475569;width:140px;flex-shrink:0}
+.spectrum-bar{display:flex;gap:4px;flex-wrap:wrap}
+.spectrum-btn{width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#f1f5f9;font-size:12px;font-weight:700;color:#64748b;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.spectrum-btn.on{background:#0d9488;color:#fff;border-color:#0d9488}
+.spectrum-btn:active{transform:scale(.9)}
+.agg-bar{height:10px;border-radius:5px;background:#e2e8f0;flex:1;overflow:hidden}
+.agg-fill{height:100%;border-radius:5px;transition:width .3s}
+.agg-label{font-size:11px;color:#64748b;width:20px;text-align:right;font-weight:600}
+.pf-row{display:flex;gap:8px;margin-top:8px}
+.pf-btn{flex:1;padding:10px;border-radius:10px;border:2px solid #e2e8f0;background:#fff;font-size:13px;font-weight:600;color:#475569;cursor:pointer;text-align:center}
+.pf-btn.on{border-color:#0d9488;background:#0d9488;color:#fff}
+.pf-btn.on.low{border-color:#16a34a;background:#16a34a}
+.pf-btn.on.high{border-color:#dc2626;background:#dc2626}
+.redflag{display:flex;align-items:flex-start;gap:10px;margin:8px 0;padding:8px;background:#fef2f2;border-radius:8px}
+.redflag input{width:18px;height:18px;margin-top:1px;flex-shrink:0}
+.redflag label{margin:0;font-size:13px;color:#7f1d1d;font-weight:500}
+.sticky-actions{position:fixed;bottom:0;left:0;right:0;background:rgba(248,250,252,.95);backdrop-filter:blur(8px);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e2e8f0;z-index:40;gap:10px}
+.sticky-actions .btn{width:auto;margin:0;flex:1}
+.case-item{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px;margin-bottom:10px}
+.case-item h4{margin:0 0 4px;font-size:15px;color:#0f172a}
+.case-item small{color:#64748b;font-size:11px}
+.case-actions{display:flex;gap:8px;margin-top:10px}
+.empty{text-align:center;padding:50px 20px;color:#94a3b8}
+.empty h3{margin:0 0 6px;font-size:18px;color:#64748b}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px}
+.hidden{display:none}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar .btn{width:auto;flex:1;min-width:120px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+@media print{.sticky-actions,.tabs,.toolbar{display:none!important}body{background:#fff}.card{border:1px solid #ccc;break-inside:avoid}textarea{min-height:auto!important;height:auto!important;overflow:visible!important;display:block}.spectrum-btn{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Dimensional Case Sheet</h1>
+<p>Reading the Patient &middot; HiTOP &middot; Works Offline</p>
+</header>
+
+<div class="container">
+
+<!-- LIST VIEW -->
+<div id="view-list">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchCases" placeholder="Search cases..." oninput="renderList()">
+  </div>
+  <div id="caseList"><div class="loading" style="text-align:center;padding:40px;color:#94a3b8">Loading...</div></div>
+  <div style="height:70px"></div>
+  <div class="sticky-actions">
+    <button class="btn" onclick="newCase()">+ New Case</button>
+  </div>
+</div>
+
+<!-- EDITOR VIEW -->
+<div id="view-editor" class="hidden">
+  <div class="tabs" id="tabBar"></div>
+  <div id="formContent"></div>
+  <div style="height:70px"></div>
+  <div class="sticky-actions">
+    <button class="btn btn-secondary" onclick="goList()">Back</button>
+    <button class="btn" onclick="saveCurrent()">Save</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ========== UTILITIES ========== */
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+function qs(id) { return document.getElementById(id); }
+function val(id) { var el = qs(id); return el ? el.value : ''; }
+function setVal(id, v) { var el = qs(id); if(el) el.value = v || ''; }
+
+/* ========== DATA ========== */
+var SPECTRA = [
+  {key:'internalising',label:'Internalising',color:'#3b82f6'},
+  {key:'thoughtDisorder',label:'Thought Disorder',color:'#ef4444'},
+  {key:'disinhibitedExternalising',label:'Disinhibited Externalising',color:'#f97316'},
+  {key:'antagonisticExternalising',label:'Antagonistic Externalising',color:'#f59e0b'},
+  {key:'detachment',label:'Detachment',color:'#64748b'},
+  {key:'somatoform',label:'Somatoform',color:'#14b8a6'}
+];
+
+var TABS = [
+  {k:'patient',l:'Patient'},
+  {k:'stance',l:'Stance'},
+  {k:'appearance',l:'Appearance'},
+  {k:'speech',l:'Speech'},
+  {k:'mood',l:'Mood & Affect'},
+  {k:'thought',l:'Thought'},
+  {k:'perception',l:'Perception'},
+  {k:'cognition',l:'Cognition'},
+  {k:'insight',l:'Insight'},
+  {k:'summary',l:'Summary'},
+  {k:'export',l:'Export'}
+];
+
+var DOMAIN_HINTS = {
+  stance:{t:'Domain 1 · Stance',p:'What is this person showing me about how they are in the world? Run this in the first 60 seconds.',
+    pi:['Writing "cooperative" and moving on','Missing the withdrawn stance','Overlooking the performative stance'],
+    ta:['Withdrawn → detachment, severe internalising','Suspicious/guarded → thought disorder (paranoid), antagonistic externalising','Over-familiar/intrusive → disinhibited externalising, frontal pathology','Performative/rehearsed → high p-factor, factitious'],
+    dm:['The mute patient is not necessarily uncooperative. Run the Kirby protocol.','The guarded patient often arrives with a story.','Frontal lobe disinhibition can mimic mania.','Rehearsed does not mean dishonest. Hold it lightly.']},
+  appearance:{t:'Domain 2 · Appearance & Behaviour',p:'What would I have written if I had been unable to speak to this patient at all? (Kirby Protocol)',
+    pi:['Writing too much without interpretation','Missing self-neglect','Not running the catatonia screen'],
+    ta:['Self-neglect, drooping posture, slowed gait → internalising (depressive)','Bizarre mismatched dress → thought disorder','Bright colours, over-grooming → internalising (manic), disinhibited externalising','Carphologia, plucking → neurocognitive (delirium)'],
+    dm:['Severe depression and severe physical illness look identical at the door. Examine the body.','The mismatch is the message. Read it as form, not content.','Stimulant intoxication mimics mania. Check pupils, BP, the story.','Delirium fluctuates; the calm interview hour is not reassurance.']},
+  speech:{t:'Domain 3 · Speech',p:'If I closed my eyes and only heard this patient, what diagnosis would I be considering?',
+    pi:['Writing "normal" without elaboration','Collapsing speech with thought','Not recording parameter-by-parameter'],
+    ta:['Slow, soft, monotonous, long reaction time → internalising (depressive)','Pressured, loud, fast, hard to interrupt → internalising (manic), thought disorder','Coherent but oddly inflected, flat prosody → thought disorder, detachment','Markedly scant or absent → detachment, severe internalising, catatonia'],
+    dm:['Hypothyroidism and depression coexist; check TSH.','The amphetamine-using young adult sounds manic. Take a substance history.','Prosody is a soft sign; do not over-call it on a single sample.','Run the Kirby protocol; do not write MSE could not be assessed.']},
+  mood:{t:'Domain 4 · Mood & Affect',p:"What is this person's emotional climate, in their own language, over the past week? What am I receiving from them right now?",
+    pi:['Writing "euthymic" on a patient who is plainly not euthymic','Running mood and affect together','Missing the mood-affect mismatch'],
+    ta:['Low mood, depressed restricted affect → internalising (depressive)','Elevated mood, wide-range elated affect → internalising (manic)','Flat or blunted affect with mood-affect mismatch → thought disorder, detachment','Anxious mobile reactive affect → internalising (anxiety)','Labile opposite-pole shifts → antagonistic externalising, neurocognitive (frontal)'],
+    dm:['Anhedonia is the more specific symptom; ask.','Mixed states are missed. Look for irritability inside the elation.','The flatness can mask depression. Ask about anhedonia explicitly.','Akathisia from medication looks like agitation; check the prescription.','Post-stroke pseudobulbar affect is not depression.']},
+  perception:{t:'Domain 6 · Perception',p:'What is this patient experiencing that I am not, and where is it located in their world?',
+    pi:['Calling depersonalisation a hallucination','Calling pseudo-hallucination a true hallucination','Not documenting all ten hallucination parameters'],
+    ta:['Third-person derogatory AH persistent → thought disorder','VH of small animals, fluctuating sensorium → neurocognitive (delirium)','Tactile hallucination of insects → disinhibited externalising (substance)','Depersonalisation, derealisation → internalising (dissociative)','Pseudo-hallucination recognised as own → internalising (dissociative)'],
+    dm:['Mood-congruent AH in severe depression looks similar; the mood is the deciding signal.','The delirium is reversible and is the priority; psychiatry is downstream.','Formication is a neurocognitive/substance signal until proven otherwise.','Not a hallucination. Do not write VH+/AH+.']},
+  cognition:{t:'Domain 7 · Cognition',p:'Can this person hold the thread of the present moment? Test, do not infer.',
+    pi:['Skipping cognitive testing because the patient is articulate','Missing pseudodementia','Not testing orientation in fixed order: time, place, person'],
+    ta:['Fluctuating consciousness, inattention, disorientation → neurocognitive (delirium)','Clean consciousness, recent-memory deficit, preserved remote → neurocognitive (Alzheimer)','Inattention, working-memory weakness, slowed processing → thought disorder, p-factor','Apparent global impairment improving with motivation → internalising (pseudodementia)'],
+    dm:['The cause of delirium is medical; psychiatry is consultative.','Reversible causes of dementia, every time, before the label is given.','The cognitive picture is core, not side-effect; do not blame the medicine without checking.','Treat the depression and re-examine; the cognition often returns.']},
+  insight:{t:'Domain 8 · Insight & Judgement',p:'Does this patient know what is happening to her, and can she make a defensible decision about what to do about it?',
+    pi:['Grading insight without specifying which domain','Averaging mixed insight into a single grade','Confusing insight with capacity'],
+    ta:['Denial of illness, attribution to external causes → thought disorder, severe internalising','Intact insight, self-blaming attribution → internalising (depressive)','Insight present, judgement disrupted on a single domain → disinhibited externalising','Sees the pattern, reports inability to change → high p-factor, antagonistic externalising'],
+    dm:['Insight is not capacity. Examine capacity separately when needed.','Severe self-blame can carry suicidal intent; ask explicitly.','The single-domain disruption is often the entry point for treatment.','Recognising a pattern is not the same as changing it; do not over-credit it.']}
+};
+
+var THOUGHT_HINTS = {
+  form:{t:'Domain 5 · Thought: Form',p:'Is the thinking organised? Form is the structure regardless of content.',
+    pi:['Blurring form and content','Calling a single sentence of derailment on a yes/no question','Missing tangentiality'],
+    ta:['Derailment, drivelling, word salad → thought disorder (schizophrenia spectrum)','Pressured speech with flight of ideas → internalising (manic)','Thought insertion, withdrawal, broadcasting → thought disorder (first-rank)','Obsessions recognised as own → internalising (OCD)'],
+    dm:['Sample enough speech; do not call form on a 30-second exchange.','Flight of ideas has understandable connections; derailment does not.','Religious traditions sometimes describe similar experiences; apply the cultural test.','OCD with poor insight loads on thought disorder; check the BABS.']},
+  stream:{t:'Domain 5 · Thought: Stream',p:'What is the tempo, continuity, and goal-direction of thinking?',
+    pi:['Missing pressure of speech vs flight of ideas distinction','Calling poverty of speech mutism','Not asking for a free speech sample'],
+    ta:['Pressure of speech, flight of ideas → internalising (manic)','Poverty of thought, slow stream → internalising (depressive), negative symptoms','Circumstantiality → internalising (obsessional), epilepsy, early dementia','Perseveration → frontal lobe pathology','Thought blocking → schizophrenia spectrum'],
+    dm:['The manic patient is generating thought faster than speech can deliver.','Poverty of thought is not mutism; the words are few but grammatical.','Circumstantiality is normal for some cultures and personalities when mild.','Perseveration should send you to look for a neurological cause.']},
+  possession:{t:'Domain 5 · Thought: Possession',p:"Who owns the thoughts? Do they feel like the patient's own or inserted from outside?",
+    pi:['Missing the insight dimension in OCD','Not eliciting thought alienation','Assuming all intrusive thoughts are obsessions'],
+    ta:['Obsessions recognised as own, resisted → internalising (OCD)','Thought insertion, withdrawal, broadcasting → thought disorder','Poor-insight OCD → partly thought disorder'],
+    dm:['Most OCD patients have full insight. Ask: do you think this thought is reasonable?','Schneider first-rank symptoms are less specific than once taught but still clinically useful.','Religious traditions sometimes describe similar experiences; apply the cultural test.']},
+  content:{t:'Domain 5 · Thought: Content',p:'What are the thoughts actually about? Delusions? Suicidal ideation? Overvalued ideas?',
+    pi:['Writing "delusions present, hallucinations present" without verbatim','Missing the cultural test','Screening suicidality with a single yes/no'],
+    ta:['Persecutory delusions, fixed and systematised → thought disorder, antagonistic externalising','Grandiose, expansive content → internalising (manic)','Guilt, worthlessness, hopelessness → internalising (depressive)','Delusions of infidelity → late-life, heavy alcohol use, violence risk','Nihilism/Cotard → severe depression'],
+    dm:['Apply the cultural test every time. Communal religious experience is not delusion.','Suicidal ideation: document frequency, intent, plan, lethality, means.','Quote the patient. Translate underneath if language was not English.','Secondary delusions arise from mood; primary delusions load on schizophrenia.']}
+};
+
+function emptySpec() { return {internalising:0,thoughtDisorder:0,disinhibitedExternalising:0,antagonisticExternalising:0,detachment:0,somatoform:0}; }
+function emptyDomain() { return {obs:'',spec:emptySpec(),think:'',miss:'',work:'',pit:''}; }
+function emptyThought() { return {form:emptyDomain(),stream:emptyDomain(),possession:emptyDomain(),content:emptyDomain()}; }
+function emptyCase() {
+  var now = new Date();
+  return {
+    id: uuid(), created: now.toISOString(), updated: now.toISOString(),
+    info:{name:'',age:'',gender:'',date:now.toISOString().slice(0,10),time:now.toTimeString().slice(0,5),location:'',language:'',translator:'',informant:'',complaint:'',history:''},
+    stance:emptyDomain(),appearance:emptyDomain(),speech:emptyDomain(),mood:emptyDomain(),
+    thought:emptyThought(),perception:emptyDomain(),cognition:emptyDomain(),insight:emptyDomain(),
+    pFactor:'',keystone:'',formulation:'',
+    redFlags:{suicide:false,psychosis:false,capacity:false,organic:false,withdrawal:false},
+    suicide:{freq:'',intent:'',plan:'',lethality:'',means:'',protective:''},
+    management:''
+  };
+}
+
+var current = emptyCase();
+var cases = [];
+var activeTab = 'patient';
+var dbError = false;
+
+/* ========== STORAGE ========== */
+function saveToMemory() { cases.push(current); }
+
+function loadFromStorage() {
+  try {
+    var raw = localStorage.getItem('dimpsych_cases_v3');
+    if (raw) { cases = JSON.parse(raw); }
+  } catch(e) { console.error('Storage load error', e); }
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('dimpsych_cases_v3', JSON.stringify(cases));
+  } catch(e) { console.error('Storage save error', e); }
+}
+
+/* ========== NAVIGATION ========== */
+function showView(id) {
+  qs('view-list').className = id === 'view-list' ? '' : 'hidden';
+  qs('view-editor').className = id === 'view-editor' ? '' : 'hidden';
+}
+function goList() { showView('view-list'); renderList(); }
+function newCase() { current = emptyCase(); activeTab = 'patient'; renderTabs(); renderForm(); setupAutoResize(); showView('view-editor'); }
+function editCase(id) {
+  for (var i = 0; i < cases.length; i++) { if (cases[i].id === id) { current = JSON.parse(JSON.stringify(cases[i])); break; } }
+  activeTab = 'patient'; renderTabs(); renderForm(); setupAutoResize(); showView('view-editor');
+}
+function deleteCase(id) {
+  if (!confirm('Delete this case?')) return;
+  cases = cases.filter(function(c) { return c.id !== id; });
+  saveToStorage(); renderList();
+}
+function saveCurrent() {
+  collectForm();
+  current.updated = new Date().toISOString();
+  var found = false;
+  for (var i = 0; i < cases.length; i++) { if (cases[i].id === current.id) { cases[i] = current; found = true; break; } }
+  if (!found) cases.push(current);
+  saveToStorage();
+  alert('Saved!');
+  goList();
+}
+
+/* ========== LIST ========== */
+function renderList() {
+  var q = (qs('searchCases').value || '').toLowerCase();
+  var list = qs('caseList');
+  var filtered = cases.filter(function(c) {
+    return (c.info.name || '').toLowerCase().indexOf(q) !== -1 ||
+           (c.info.complaint || '').toLowerCase().indexOf(q) !== -1 ||
+           c.id.toLowerCase().indexOf(q) !== -1;
+  });
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty"><h3>No cases yet</h3><p>Tap New Case to start a case sheet</p><button class="btn" onclick="newCase()" style="max-width:200px;margin:10px auto">Start First Case</button></div>';
+    return;
+  }
+  list.innerHTML = filtered.map(function(c) {
+    var d = new Date(c.updated);
+    var dateStr = d.toLocaleDateString();
+    var timeStr = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    var ageGender = (c.info.age || '') + (c.info.age && c.info.gender ? 'y ' : '') + (c.info.gender || '');
+    return '<div class="case-item">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+        '<div style="flex:1;cursor:pointer" onclick="editCase(\'' + c.id + '\')">' +
+          '<h4>' + (c.info.name || 'Unnamed Patient') + '</h4>' +
+          '<small>' + dateStr + ' ' + timeStr + (ageGender ? ' &middot; ' + ageGender : '') + '</small>' +
+          (c.info.complaint ? '<div style="font-size:13px;color:#475569;margin-top:4px">' + c.info.complaint + '</div>' : '') +
+          (c.formulation ? '<div style="font-size:12px;color:#0d9488;margin-top:4px;font-style:italic">' + c.formulation.substring(0,120) + (c.formulation.length > 120 ? '...' : '') + '</div>' : '') +
+        '</div>' +
+        '<div class="case-actions">' +
+          '<button class="btn btn-sm" onclick="editCase(\'' + c.id + '\')">Edit</button>' +
+          '<button class="btn btn-sm btn-danger" onclick="deleteCase(\'' + c.id + '\')">Delete</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ========== TABS ========== */
+function renderTabs() {
+  qs('tabBar').innerHTML = TABS.map(function(t) {
+    return '<button class="tab ' + (activeTab === t.k ? 'active' : '') + '" onclick="switchTab(\'' + t.k + '\')">' + t.l + '</button>';
+  }).join('');
+}
+function switchTab(k) { collectForm(); activeTab = k; renderTabs(); renderForm(); setupAutoResize(); }
+
+/* ========== SPECTRUM ========== */
+function spectrumHTML(prefix, domain) {
+  return SPECTRA.map(function(s) {
+    var val = domain.spec[s.key];
+    var buttons = '';
+    for (var n = 0; n <= 5; n++) {
+      var isOn = val === n;
+      buttons += '<button class="spectrum-btn ' + (isOn ? 'on' : '') + '" onclick="setSpec(\'' + prefix + '\',\'' + s.key + '\',' + n + ')" style="' + (isOn ? 'background:' + s.color + ';border-color:' + s.color : '') + '">' + n + '</button>';
+    }
+    return '<div class="spectrum-row"><span class="spectrum-name">' + s.label + '</span><div class="spectrum-bar">' + buttons + '</div></div>';
+  }).join('');
+}
+
+function setSpec(prefix, specKey, val) {
+  if (prefix.indexOf('thought_') === 0) {
+    var sub = prefix.replace('thought_', '');
+    current.thought[sub].spec[specKey] = val;
+  } else {
+    current[prefix].spec[specKey] = val;
+  }
+  renderForm();
+}
+function setPF(v) { current.pFactor = v; renderForm(); }
+
+/* ========== DOMAIN CARD ========== */
+function domainCard(key, data, hint) {
+  var h = hint || {};
+  var thinkList = h.ta ? '<div class="hint-box" style="background:#eff6ff;border-left-color:#3b82f6"><div class="hint-title">Think About</div><ul class="hint-list">' + h.ta.map(function(i){return '<li>'+i+'</li>';}).join('') + '</ul></div>' : '';
+  var missList = h.dm ? '<div class="hint-box" style="background:#fffbeb;border-left-color:#f59e0b"><div class="hint-title">Don\'t Miss</div><ul class="hint-list">' + h.dm.map(function(i){return '<li>'+i+'</li>';}).join('') + '</ul></div>' : '';
+  var pitList = h.pi ? '<div class="hint-box" style="background:#fef2f2;border-left-color:#ef4444"><div class="hint-title">Pitfalls</div><ul class="hint-list">' + h.pi.map(function(i){return '<li>'+i+'</li>';}).join('') + '</ul></div>' : '';
+  return '<div class="card">' +
+    '<div class="card-title">' + (h.t || key) + '</div>' +
+    '<div class="card-sub">' + (h.p || '') + '</div>' +
+    '<label>Observation / Description</label>' +
+    '<textarea id="obs_' + key + '" rows="4" placeholder="Describe what you see...">' + (data.obs || '') + '</textarea>' +
+    '<div class="hint-box"><label style="margin-top:0">HiTOP Spectrum Loadings</label>' + spectrumHTML(key, data) + '<div style="font-size:10px;color:#94a3b8;margin-top:4px">0=none 1=mild 2=low-mod 3=moderate 4=mod-high 5=severe</div></div>' +
+    thinkList +
+    '<label>Your Think-About Notes</label><textarea id="think_' + key + '" rows="2" placeholder="Your differential notes...">' + (data.think || '') + '</textarea>' +
+    missList +
+    '<label>Your Don\'t-Miss Notes</label><textarea id="miss_' + key + '" rows="2" placeholder="Critical reminders...">' + (data.miss || '') + '</textarea>' +
+    '<label>Working Sentence</label><textarea id="work_' + key + '" rows="2" placeholder="Opening line for this domain...">' + (data.work || '') + '</textarea>' +
+    pitList +
+    '<label>Your Pitfall Avoidance</label><textarea id="pit_' + key + '" rows="2" placeholder="Self-correction notes...">' + (data.pit || '') + '</textarea>' +
+  '</div>';
+}
+
+/* ========== FORM RENDER ========== */
+function renderForm() {
+  var el = qs('formContent');
+  if (activeTab === 'patient') {
+    el.innerHTML = '<div class="card"><div class="card-title">Patient Information</div><div class="grid2">' +
+      '<div class="full"><label>Patient Name</label><input id="pi_name" value="' + (current.info.name || '') + '" placeholder="Full name"></div>' +
+      '<div><label>Age (years)</label><input id="pi_age" type="number" value="' + (current.info.age || '') + '" placeholder="Age"></div>' +
+      '<div><label>Gender</label><select id="pi_gender"><option value="">Select</option><option value="Male" ' + (current.info.gender === 'Male' ? 'selected' : '') + '>Male</option><option value="Female" ' + (current.info.gender === 'Female' ? 'selected' : '') + '>Female</option><option value="Other" ' + (current.info.gender === 'Other' ? 'selected' : '') + '>Other</option></select></div>' +
+      '<div><label>Date</label><input id="pi_date" type="date" value="' + (current.info.date || '') + '"></div>' +
+      '<div><label>Time</label><input id="pi_time" type="time" value="' + (current.info.time || '') + '"></div>' +
+      '<div class="full"><label>Location / Setting</label><input id="pi_location" value="' + (current.info.location || '') + '" placeholder="e.g. OPD, casualty, ward"></div>' +
+      '<div><label>Language</label><input id="pi_language" value="' + (current.info.language || '') + '" placeholder="Interview language"></div>' +
+      '<div><label>Translator</label><input id="pi_translator" value="' + (current.info.translator || '') + '" placeholder="None / name"></div>' +
+      '<div class="full"><label>Informant</label><input id="pi_informant" value="' + (current.info.informant || '') + '" placeholder="Patient / relative / police"></div>' +
+      '<div class="full"><label>Chief Complaint</label><textarea id="pi_complaint" rows="2" placeholder="In patient\'s own words">' + (current.info.complaint || '') + '</textarea></div>' +
+      '<div class="full"><label>History / Context</label><textarea id="pi_history" rows="4" placeholder="Relevant history, precipitating factors">' + (current.info.history || '') + '</textarea></div>' +
+    '</div></div>';
+    return;
+  }
+  if (activeTab === 'stance') { el.innerHTML = domainCard('stance', current.stance, DOMAIN_HINTS.stance); return; }
+  if (activeTab === 'appearance') { el.innerHTML = domainCard('appearance', current.appearance, DOMAIN_HINTS.appearance); return; }
+  if (activeTab === 'speech') { el.innerHTML = domainCard('speech', current.speech, DOMAIN_HINTS.speech); return; }
+  if (activeTab === 'mood') { el.innerHTML = domainCard('mood', current.mood, DOMAIN_HINTS.mood); return; }
+  if (activeTab === 'perception') { el.innerHTML = domainCard('perception', current.perception, DOMAIN_HINTS.perception); return; }
+  if (activeTab === 'cognition') { el.innerHTML = domainCard('cognition', current.cognition, DOMAIN_HINTS.cognition); return; }
+  if (activeTab === 'insight') { el.innerHTML = domainCard('insight', current.insight, DOMAIN_HINTS.insight); return; }
+  if (activeTab === 'thought') {
+    el.innerHTML = domainCard('thought_form', current.thought.form, THOUGHT_HINTS.form) +
+      domainCard('thought_stream', current.thought.stream, THOUGHT_HINTS.stream) +
+      domainCard('thought_possession', current.thought.possession, THOUGHT_HINTS.possession) +
+      domainCard('thought_content', current.thought.content, THOUGHT_HINTS.content);
+    return;
+  }
+  if (activeTab === 'summary') {
+    var allSpecs = [current.stance.spec, current.appearance.spec, current.speech.spec, current.mood.spec,
+      current.thought.form.spec, current.thought.stream.spec, current.thought.possession.spec, current.thought.content.spec,
+      current.perception.spec, current.cognition.spec, current.insight.spec];
+    var maxSpec = {};
+    SPECTRA.forEach(function(s) {
+      var maxVal = 0;
+      for (var i = 0; i < allSpecs.length; i++) { maxVal = Math.max(maxVal, allSpecs[i][s.key] || 0); }
+      maxSpec[s.key] = maxVal;
+    });
+    var agg = SPECTRA.map(function(s) {
+      var pct = (maxSpec[s.key] / 5) * 100;
+      return '<div class="spectrum-row"><span class="spectrum-name">' + s.label + '</span><div class="agg-bar"><div class="agg-fill" style="width:' + pct + '%;background:' + s.color + ';opacity:' + (maxSpec[s.key] ? 1 : 0.3) + '"></div></div><span class="agg-label">' + maxSpec[s.key] + '</span></div>';
+    }).join('');
+    el.innerHTML = '<div class="card"><div class="card-title">Summary & Formulation</div>' +
+      '<div class="hint-box"><label style="margin-top:0">Aggregate HiTOP Loadings (max across domains)</label>' + agg + '</div>' +
+      '<label>p-factor (General Severity)</label>' +
+      '<div class="pf-row">' +
+        '<button class="pf-btn ' + (current.pFactor === 'low' ? 'on low' : '') + '" onclick="setPF(\'low\')">Low</button>' +
+        '<button class="pf-btn ' + (current.pFactor === 'moderate' ? 'on' : '') + '" onclick="setPF(\'moderate\')">Moderate</button>' +
+        '<button class="pf-btn ' + (current.pFactor === 'high' ? 'on high' : '') + '" onclick="setPF(\'high\')">High</button>' +
+      '</div>' +
+      '<label>Network Keystone</label><input id="sum_keystone" value="' + (current.keystone || '') + '" placeholder="The one symptom holding everything together...">' +
+      '<label>Formulation Sentence</label><textarea id="sum_formulation" rows="3" placeholder="This patient presents with ___ loading on ___, with ___ as the keystone...">' + (current.formulation || '') + '</textarea>' +
+      '<div class="hint-box" style="background:#fef2f2;border-left-color:#dc2626">' +
+        '<label style="margin-top:0;color:#7f1d1d">Red Flags (check all that apply)</label>' +
+        '<div class="redflag"><input type="checkbox" id="rf_suicide" ' + (current.redFlags.suicide ? 'checked' : '') + '><label>Active suicidal intent with means & plan</label></div>' +
+        '<div class="redflag"><input type="checkbox" id="rf_psychosis" ' + (current.redFlags.psychosis ? 'checked' : '') + '><label>Acute psychosis / first episode / command hallucinations</label></div>' +
+        '<div class="redflag"><input type="checkbox" id="rf_capacity" ' + (current.redFlags.capacity ? 'checked' : '') + '><label>Capacity loss (decision-specific)</label></div>' +
+        '<div class="redflag"><input type="checkbox" id="rf_organic" ' + (current.redFlags.organic ? 'checked' : '') + '><label>Organic mimic (new onset &gt;50yr, neuro signs, abnormal vitals)</label></div>' +
+        '<div class="redflag"><input type="checkbox" id="rf_withdrawal" ' + (current.redFlags.withdrawal ? 'checked' : '') + '><label>Acute substance withdrawal (especially alcohol)</label></div>' +
+      '</div>' +
+      '<div class="hint-box" style="background:#fffbeb;border-left-color:#f59e0b">' +
+        '<label style="margin-top:0;color:#92400e">Suicide Risk Screen</label>' +
+        '<div class="grid2">' +
+          '<div><label style="margin-top:0">Frequency</label><input id="su_freq" value="' + (current.suicide.freq || '') + '" placeholder="Frequency..."></div>' +
+          '<div><label style="margin-top:0">Intent</label><input id="su_intent" value="' + (current.suicide.intent || '') + '" placeholder="Intent..."></div>' +
+          '<div><label style="margin-top:0">Plan / Method</label><input id="su_plan" value="' + (current.suicide.plan || '') + '" placeholder="Plan..."></div>' +
+          '<div><label style="margin-top:0">Lethality</label><input id="su_lethality" value="' + (current.suicide.lethality || '') + '" placeholder="Lethality..."></div>' +
+          '<div><label style="margin-top:0">Means / Access</label><input id="su_means" value="' + (current.suicide.means || '') + '" placeholder="Means..."></div>' +
+          '<div><label style="margin-top:0">Protective Factors</label><input id="su_protective" value="' + (current.suicide.protective || '') + '" placeholder="Protective factors..."></div>' +
+        '</div>' +
+      '</div>' +
+      '<label>Management Plan</label><textarea id="sum_management" rows="5" placeholder="Good-enough first step, talk/medicine/both, referral, follow-up...">' + (current.management || '') + '</textarea>' +
+    '</div>';
+    return;
+  }
+  if (activeTab === 'export') {
+    el.innerHTML = '<div class="card"><div class="card-title">Export & Import</div>' +
+      '<div class="toolbar">' +
+        '<button class="btn" onclick="exportJSON()">Export Case JSON</button>' +
+        '<button class="btn" onclick="exportAllJSON()">Export All JSON</button>' +
+        '<button class="btn" style="background:#dc2626" onclick="exportPDF()">Save as PDF</button>' +
+        '<button class="btn" onclick="window.print()">Print</button>' +
+      '</div>' +
+      '<div style="margin-top:12px"><label>Import Case JSON</label><input type="file" id="importFile" accept=".json" onchange="importJSON(this)"></div>' +
+      '<div class="hint-box" style="background:#eff6ff;border-left-color:#3b82f6"><div class="hint-title">About Storage</div><div style="font-size:12px;color:#1e40af">All data is stored locally in your browser (localStorage). No server. No internet needed after first open. Use JSON export to back up your cases.</div></div>' +
+    '</div>';
+  }
+  setupAutoResize();
+}
+
+/* ========== COLLECT FORM ========== */
+function collectForm() {
+  if (activeTab === 'patient') {
+    current.info.name = val('pi_name');
+    current.info.age = val('pi_age');
+    current.info.gender = val('pi_gender');
+    current.info.date = val('pi_date');
+    current.info.time = val('pi_time');
+    current.info.location = val('pi_location');
+    current.info.language = val('pi_language');
+    current.info.translator = val('pi_translator');
+    current.info.informant = val('pi_informant');
+    current.info.complaint = val('pi_complaint');
+    current.info.history = val('pi_history');
+    return;
+  }
+  var domainKeys = ['stance','appearance','speech','mood','perception','cognition','insight'];
+  if (domainKeys.indexOf(activeTab) !== -1) {
+    current[activeTab].obs = val('obs_' + activeTab);
+    current[activeTab].think = val('think_' + activeTab);
+    current[activeTab].miss = val('miss_' + activeTab);
+    current[activeTab].work = val('work_' + activeTab);
+    current[activeTab].pit = val('pit_' + activeTab);
+    return;
+  }
+  if (activeTab === 'thought') {
+    ['form','stream','possession','content'].forEach(function(sub) {
+      var key = 'thought_' + sub;
+      current.thought[sub].obs = val('obs_' + key);
+      current.thought[sub].think = val('think_' + key);
+      current.thought[sub].miss = val('miss_' + key);
+      current.thought[sub].work = val('work_' + key);
+      current.thought[sub].pit = val('pit_' + key);
+    });
+    return;
+  }
+  if (activeTab === 'summary') {
+    current.keystone = val('sum_keystone');
+    current.formulation = val('sum_formulation');
+    current.management = val('sum_management');
+    var rfSuicide = qs('rf_suicide'); current.redFlags.suicide = rfSuicide ? rfSuicide.checked : false;
+    var rfPsychosis = qs('rf_psychosis'); current.redFlags.psychosis = rfPsychosis ? rfPsychosis.checked : false;
+    var rfCapacity = qs('rf_capacity'); current.redFlags.capacity = rfCapacity ? rfCapacity.checked : false;
+    var rfOrganic = qs('rf_organic'); current.redFlags.organic = rfOrganic ? rfOrganic.checked : false;
+    var rfWithdrawal = qs('rf_withdrawal'); current.redFlags.withdrawal = rfWithdrawal ? rfWithdrawal.checked : false;
+    current.suicide.freq = val('su_freq');
+    current.suicide.intent = val('su_intent');
+    current.suicide.plan = val('su_plan');
+    current.suicide.lethality = val('su_lethality');
+    current.suicide.means = val('su_means');
+    current.suicide.protective = val('su_protective');
+  }
+}
+
+/* ========== EXPORT / IMPORT ========== */
+function exportJSON() {
+  var blob = new Blob([JSON.stringify(current, null, 2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'case-' + (current.info.name || 'patient') + '-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function exportAllJSON() {
+  var blob = new Blob([JSON.stringify(cases, null, 2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'all-cases-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importJSON(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (Array.isArray(data)) {
+        data.forEach(function(c) { if (c.id && c.info) cases.push(c); });
+        alert('Imported ' + data.length + ' cases');
+      } else if (data.id && data.info) {
+        cases.push(data);
+        alert('Imported 1 case');
+      } else { alert('Invalid file format'); }
+      saveToStorage(); renderList();
+    } catch(err) { alert('Error: ' + err.message); }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+function exportPDF() { window.print(); }
+
+/* ========== AUTO-RESIZE TEXTAREAS ========== */
+function setupAutoResize() {
+  var areas = document.querySelectorAll('textarea');
+  for (var i = 0; i < areas.length; i++) {
+    var ta = areas[i];
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+    ta.oninput = function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    };
+  }
+}
+
+/* ========== INIT ========== */
+function init() {
+  loadFromStorage();
+  renderList();
+}
+init();
+</script>
+</body>
+</html>

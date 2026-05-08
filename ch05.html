@@ -1,0 +1,3382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 05 - Past History | Psychiatry Case-Taking</title>
+<style>
+  /* ===== CSS VARIABLES & RESET ===== */
+  :root {
+    --bg-primary: #000000;
+    --bg-card: #0a0a0a;
+    --bg-elevated: #111111;
+    --bg-input: #1a1a1a;
+    --bg-hover: #222222;
+    --border: #2a2a2a;
+    --border-focus: #4a9eff;
+    --text-primary: #e8e8e8;
+    --text-secondary: #a0a0a0;
+    --text-muted: #707070;
+    --accent-blue: #4a9eff;
+    --accent-green: #4ade80;
+    --accent-amber: #fbbf24;
+    --accent-red: #f87171;
+    --accent-purple: #a78bfa;
+    --accent-cyan: #22d3ee;
+    --accent-teal: #2dd4bf;
+    --accent-rose: #fb7185;
+    --instruction-bg: rgba(74, 158, 255, 0.08);
+    --instruction-border: rgba(74, 158, 255, 0.3);
+    --pearl-bg: rgba(251, 191, 36, 0.08);
+    --pearl-border: rgba(251, 191, 36, 0.3);
+    --anchor-bg: rgba(45, 212, 191, 0.08);
+    --anchor-border: rgba(45, 212, 191, 0.3);
+    --pitfall-bg: rgba(248, 113, 113, 0.08);
+    --pitfall-border: rgba(248, 113, 113, 0.3);
+    --help-bg: rgba(167, 139, 250, 0.08);
+    --help-border: rgba(167, 139, 250, 0.3);
+    --shadow: 0 4px 24px rgba(0,0,0,0.8);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --transition: all 0.25s ease;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .app-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .app-header .subtitle {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .save-indicator {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .save-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ===== CONTAINER ===== */
+  .container { padding: 12px 14px; max-width: 600px; margin: 0 auto; }
+
+  /* ===== SUMMARY BAR ===== */
+  .summary-bar {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent-blue);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .summary-bar label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-blue);
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .summary-textarea {
+    width: 100%;
+    min-height: 60px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    resize: vertical;
+    font-family: inherit;
+    outline: none;
+  }
+
+  .summary-textarea:focus { border-color: var(--accent-blue); }
+
+  .summary-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ===== QUICK REFERENCE PANEL ===== */
+  .quick-ref-toggle {
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent-purple);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    touch-action: manipulation;
+  }
+
+  .quick-ref-toggle:active { opacity: 0.7; }
+
+  .quick-ref-toggle-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--accent-purple);
+  }
+
+  .quick-ref-toggle-text .icon { font-size: 1.25rem; }
+
+  .quick-ref-panel {
+    display: none;
+    margin-bottom: 14px;
+    animation: slideDown 0.3s ease;
+  }
+
+  .quick-ref-panel.open { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== ACCORDION ===== */
+  .accordion-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .accordion-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    min-height: 56px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: var(--transition);
+  }
+
+  .accordion-header:active { background: var(--bg-hover); }
+
+  .accordion-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .badge-a { background: var(--accent-blue); }
+  .badge-b { background: var(--accent-green); }
+  .badge-c { background: var(--accent-amber); }
+  .badge-d { background: var(--accent-red); }
+  .badge-e { background: var(--accent-purple); }
+  .badge-f { background: var(--accent-cyan); }
+
+  .accordion-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .accordion-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .accordion-icon {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+
+  .accordion-card.open .accordion-icon { transform: rotate(180deg); }
+
+  .accordion-body {
+    display: none;
+    padding: 0 14px 16px;
+    animation: slideDown 0.25s ease;
+  }
+
+  .accordion-card.open .accordion-body { display: block; }
+
+  /* ===== SUB-CARDS ===== */
+  .sub-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  .sub-card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sub-card-title .sub-icon { font-size: 1rem; opacity: 0.7; }
+
+  /* ===== FORM ELEMENTS ===== */
+  .field-group { margin-bottom: 16px; }
+
+  .field-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .field-hint {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  input[type="text"], input[type="number"], input[type="date"], input[type="week"],
+  select, textarea {
+    width: 100%;
+    min-height: 48px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus,
+  select:focus, textarea:focus { border-color: var(--border-focus); }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23707070' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 56px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: var(--transition);
+    -webkit-appearance: none;
+    appearance: none;
+    overflow: hidden;
+    resize: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.5;
+  }
+
+  textarea::placeholder {
+    color: #777777;
+    opacity: 1;
+  }
+
+  textarea:focus { border-color: var(--border-focus); }
+
+  /* Radio and Checkbox groups */
+  .options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .options-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .option-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-height: 48px;
+    cursor: pointer;
+    transition: var(--transition);
+    flex: 1 1 auto;
+    min-width: 80px;
+  }
+
+  .option-chip:active { background: var(--bg-hover); }
+
+  .option-chip.checked {
+    border-color: var(--accent-blue);
+    background: rgba(74, 158, 255, 0.12);
+  }
+
+  input[type="radio"], input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--accent-blue);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .option-text {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+
+  /* Checkbox multi-select grid */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+
+  @media (min-width: 480px) {
+    .checkbox-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  @media (min-width: 480px) {
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+  }
+
+  .data-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+
+  /* ===== INSTRUCTION BOXES ===== */
+  .instruction-box {
+    background: var(--instruction-bg);
+    border: 1px solid var(--instruction-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .instruction-box .inst-title {
+    font-weight: 700;
+    color: var(--accent-blue);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .instruction-box .inst-title .icon { font-size: 1rem; }
+
+  .instruction-box ul {
+    margin: 6px 0 0 16px;
+    color: var(--text-secondary);
+  }
+
+  .instruction-box li { margin-bottom: 3px; }
+
+  /* Exam Pearl */
+  .pearl-box {
+    background: var(--pearl-bg);
+    border: 1px solid var(--pearl-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .pearl-box .pearl-title {
+    font-weight: 700;
+    color: var(--accent-amber);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pearl-box .pearl-title .icon { font-size: 1rem; }
+
+  /* Clinical Anchor */
+  .anchor-box {
+    background: var(--anchor-bg);
+    border: 1px solid var(--anchor-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .anchor-box .anchor-title {
+    font-weight: 700;
+    color: var(--accent-teal);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .anchor-box .anchor-title .icon { font-size: 1rem; }
+
+  /* Pitfall Box */
+  .pitfall-box {
+    background: var(--pitfall-bg);
+    border: 1px solid var(--pitfall-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .pitfall-box .pitfall-title {
+    font-weight: 700;
+    color: var(--accent-red);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pitfall-box .pitfall-title .icon { font-size: 1rem; }
+
+  /* ===== HELP PANEL ===== */
+  .help-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--help-bg);
+    border: 1px solid var(--help-border);
+    color: var(--accent-purple);
+    font-size: 0.875rem;
+    cursor: pointer;
+    margin-left: 6px;
+    vertical-align: middle;
+    flex-shrink: 0;
+    touch-action: manipulation;
+  }
+
+  .help-toggle:active { opacity: 0.6; }
+
+  .help-panel {
+    display: none;
+    background: var(--help-bg);
+    border: 1px solid var(--help-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .help-panel.open { display: block; animation: slideDown 0.2s ease; }
+
+  .help-panel .help-title {
+    font-weight: 700;
+    color: var(--accent-purple);
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .help-panel .help-section {
+    margin-bottom: 10px;
+  }
+
+  .help-panel .help-section:last-child { margin-bottom: 0; }
+
+  .help-panel .help-section-title {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .help-panel code {
+    background: rgba(255,255,255,0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+  }
+
+  /* ===== TABLES ===== */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    margin: 10px 0;
+    overflow-x: auto;
+    display: block;
+  }
+
+  .data-table thead { display: none; }
+
+  .data-table tbody, .data-table tr { display: block; width: 100%; }
+
+  .data-table tr {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    padding: 10px 12px;
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .data-table td:last-child { border-bottom: none; }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  @media (min-width: 600px) {
+    .data-table { display: table; }
+    .data-table thead { display: table-header-group; }
+    .data-table tr { display: table-row; border-radius: 0; margin-bottom: 0; padding: 0; }
+    .data-table th, .data-table td { display: table-cell; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .data-table th {
+      background: var(--bg-hover);
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+    .data-table td::before { content: none; }
+  }
+
+  /* ===== EPISODE BUILDER ===== */
+  .episode-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .episode-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .episode-number {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+  }
+
+  .episode-remove {
+    background: var(--pitfall-bg);
+    border: 1px solid var(--pitfall-border);
+    color: var(--accent-red);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 36px;
+    touch-action: manipulation;
+  }
+
+  .add-episode-btn {
+    width: 100%;
+    background: rgba(74, 158, 255, 0.1);
+    border: 2px dashed var(--accent-blue);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    color: var(--accent-blue);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 52px;
+    touch-action: manipulation;
+    transition: var(--transition);
+  }
+
+  .add-episode-btn:active { background: rgba(74, 158, 255, 0.2); }
+
+  /* ===== MEDICATION BUILDER ===== */
+  .med-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+
+  .med-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .med-grid .field-group { margin-bottom: 0; }
+
+  .med-grid .field-group.full-width { grid-column: 1 / -1; }
+
+  @media (max-width: 479px) {
+    .med-grid { grid-template-columns: 1fr; }
+  }
+
+  .add-med-btn {
+    background: rgba(74, 222, 128, 0.1);
+    border: 1.5px dashed var(--accent-green);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    color: var(--accent-green);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    touch-action: manipulation;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* ===== LIFE CHART EPOCHS ===== */
+  .epoch-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  .epoch-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .epoch-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent-amber);
+    color: #000;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .epoch-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .epoch-age {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* ===== TIMELINE VISUAL ===== */
+  .timeline-visual {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin: 14px 0;
+    overflow-x: auto;
+  }
+
+  .timeline-track {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    position: relative;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline-track:last-child { border-bottom: none; }
+
+  .timeline-label {
+    min-width: 90px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding-right: 10px;
+  }
+
+  .timeline-bar-area {
+    flex: 1;
+    height: 28px;
+    position: relative;
+    background: var(--bg-input);
+    border-radius: 6px;
+  }
+
+  .timeline-bar {
+    position: absolute;
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .bar-hypomania { background: rgba(251, 191, 36, 0.35); color: #fcd34d; }
+  .bar-depression { background: rgba(74, 158, 255, 0.35); color: #93c5fd; }
+  .bar-hospital { background: rgba(248, 113, 113, 0.5); color: #fca5a5; }
+  .bar-treatment { background: rgba(74, 222, 128, 0.3); color: #86efac; }
+
+  /* ===== SAMPLE PHRASING CARDS ===== */
+  .phrasing-card {
+    background: var(--bg-elevated);
+    border-left: 3px solid var(--accent-purple);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .phrasing-card .phrasing-title {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--accent-purple);
+    margin-bottom: 6px;
+  }
+
+  .phrasing-card .phrasing-text {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    padding: 8px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .phrasing-card .phrasing-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    min-height: 44px;
+    touch-action: manipulation;
+    transition: var(--transition);
+  }
+
+  .btn:active { transform: scale(0.97); opacity: 0.85; }
+
+  .btn-primary {
+    background: var(--accent-blue);
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-success {
+    background: var(--accent-green);
+    color: #000;
+  }
+
+  .btn-danger {
+    background: var(--accent-red);
+    color: #fff;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-height: 36px;
+  }
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0 16px;
+    padding: 0 4px;
+  }
+
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-divider-text {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ===== STICKY BOTTOM BAR ===== */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    z-index: 200;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .sticky-bar .btn {
+    flex: 1;
+    max-width: 200px;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent-green);
+    color: var(--accent-green);
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* ===== CONFIRM DIALOG ===== */
+  .confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 400;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .confirm-overlay.show { display: flex; }
+
+  .confirm-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  .confirm-box .confirm-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .confirm-box .confirm-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .confirm-actions .btn { flex: 1; }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body {
+      background: #fff !important;
+      color: #000 !important;
+      padding-bottom: 0 !important;
+      font-size: 11pt !important;
+    }
+
+    .app-header, .sticky-bar, .quick-ref-toggle, .quick-ref-panel,
+    .accordion-header, .help-toggle, .help-panel, .toast,
+    .confirm-overlay, .add-episode-btn, .add-med-btn, .add-epoch-btn,
+    .episode-remove, .section-actions, .btn,
+    .summary-actions, .auto-sync-indicator { display: none !important; }
+
+    .container { padding: 0; max-width: 100%; }
+
+    .accordion-card {
+      border: 1px solid #ccc !important;
+      break-inside: avoid;
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+
+    .accordion-body { display: block !important; padding: 12px 16px !important; }
+
+    .accordion-title { font-size: 13pt !important; color: #000 !important; }
+
+    input, textarea, select {
+      border: 1px solid #999 !important;
+      background: #fff !important;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    textarea {
+      min-height: auto !important;
+      height: auto !important;
+      overflow: visible !important;
+      field-sizing: content !important;
+    }
+
+    .instruction-box, .pearl-box, .anchor-box, .pitfall-box {
+      border: 1px solid #ccc !important;
+      background: #f5f5f5 !important;
+    }
+
+    .option-chip {
+      border: 1px solid #999 !important;
+      background: #fff !important;
+    }
+
+    .option-chip.checked {
+      border: 2px solid #000 !important;
+      background: #e0e0e0 !important;
+    }
+
+    .sub-card, .episode-card, .epoch-card {
+      border: 1px solid #ccc !important;
+      break-inside: avoid;
+    }
+
+    .phrasing-card {
+      border: 1px solid #ccc !important;
+      border-left: 3px solid #666 !important;
+    }
+
+    .timeline-visual { border: 1px solid #ccc !important; }
+
+    .data-table tr { border: 1px solid #ccc !important; background: #fff !important; }
+
+    h2, h3, h4 { page-break-after: avoid; }
+
+    .section-divider { margin: 20px 0 14px; }
+
+    .section-divider::before, .section-divider::after { background: #ccc; }
+
+    .episode-card, .epoch-card, .sub-card { page-break-inside: avoid; }
+
+    /* Show hidden print headers */
+    .print-header {
+      display: block !important;
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #000;
+    }
+
+    .print-header h1 { font-size: 16pt; margin-bottom: 4px; }
+    .print-header p { font-size: 10pt; color: #555; }
+  }
+
+  .print-header { display: none; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 600px) {
+    .container { padding: 16px 20px; }
+  }
+
+  /* ===== TOUCH TARGETS ===== */
+  button, .accordion-header, .option-chip, .quick-ref-toggle {
+    min-height: 48px;
+  }
+
+  @media (pointer: coarse) {
+    button, .accordion-header, .option-chip, .quick-ref-toggle,
+    input, select, textarea, .help-toggle, .add-episode-btn,
+    .add-med-btn, .btn {
+      min-height: 52px;
+    }
+  }
+
+  /* ===== UTILITY ===== */
+  .hidden { display: none !important; }
+
+  .text-center { text-align: center; }
+
+  .mb-0 { margin-bottom: 0 !important; }
+
+  .mt-1 { margin-top: 8px; }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .tag {
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .collapsible-content {
+    display: none;
+  }
+
+  .collapsible-content.open {
+    display: block;
+    animation: slideDown 0.25s ease;
+  }
+
+  .collapsible-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+
+  .collapsible-trigger .trigger-icon {
+    transition: transform 0.2s ease;
+    font-size: 0.75rem;
+  }
+
+  .collapsible-trigger.open .trigger-icon {
+    transform: rotate(90deg);
+  }
+</style>
+</head>
+<body>
+
+<!-- Print Header -->
+<div class="print-header">
+  <h1>Chapter 05 - Past History</h1>
+  <p>Psychiatry Case-Taking Compendium | Generated from digital form</p>
+</div>
+
+<!-- App Header -->
+<header class="app-header">
+  <h1>Chapter 05 - Past History</h1>
+  <p class="subtitle">The Adult Psychiatry History-Taking Compendium</p>
+  <div class="header-meta">
+    <div class="save-indicator">
+      <span class="save-dot"></span>
+      <span id="saveStatus">Auto-saving enabled</span>
+    </div>
+    <button class="btn btn-danger btn-sm" onclick="confirmClear()">Clear All</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Auto-Generated Summary -->
+  <div class="summary-bar">
+    <label>Auto-Generated Summary (Live)</label>
+    <textarea class="summary-textarea" id="autoSummary" data-key="summary" placeholder="Auto-generated summary..." data-manual="false"></textarea>
+    <div class="summary-actions">
+      <button class="btn btn-primary btn-sm" onclick="copySummary()">
+        <span>Copy</span>
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="resyncSummary()">
+        <span>Re-sync</span>
+      </button>
+      <span class="auto-sync-indicator" id="syncIndicator" style="font-size:0.6875rem;color:var(--text-muted);display:flex;align-items:center;">
+        Auto-sync ON
+      </span>
+    </div>
+  </div>
+
+  <!-- Quick Reference Panels Toggle -->
+  <div class="quick-ref-toggle" onclick="toggleQuickRef()" role="button" aria-expanded="false">
+    <div class="quick-ref-toggle-text">
+      <span class="icon">&#128204;</span>
+      <span>Quick Reference Panels</span>
+    </div>
+    <span id="quickRefIcon" class="accordion-icon">&#9662;</span>
+  </div>
+
+  <div class="quick-ref-panel" id="quickRefPanel">
+
+    <!-- ISBD Nomenclature Table -->
+    <div class="sub-card">
+      <div class="sub-card-title">
+        <span class="sub-icon">&#128220;</span>
+        ISBD Nomenclature (Tohen et al., 2009)
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Term</th><th>Definition</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Term"><strong>Episode</strong></td>
+            <td data-label="Definition">Acute symptomatic period meeting full DSM/ICD criteria for the polarity</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Response</strong></td>
+            <td data-label="Definition">&ge;50% reduction from baseline on validated rating scale (HAM-D, MADRS, YMRS)</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Remission, syndromal</strong></td>
+            <td data-label="Definition">DSM/ICD criteria for the episode are no longer met</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Remission, symptomatic</strong></td>
+            <td data-label="Definition">Symptom score below threshold predictive of recovery</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Recovery</strong></td>
+            <td data-label="Definition">Symptomatic remission sustained for &ge;8 consecutive weeks</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Relapse</strong></td>
+            <td data-label="Definition">Return of index episode <em>before</em> recovery achieved (within 8-week remission window)</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Recurrence</strong></td>
+            <td data-label="Definition">A <em>new</em> episode occurring <em>after</em> recovery</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Switch</strong></td>
+            <td data-label="Definition">Direct transition to opposite polarity within an episode (mania &harr; depression)</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Subsyndromal</strong></td>
+            <td data-label="Definition">Persistent symptoms below syndromal threshold</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Predominant polarity</strong></td>
+            <td data-label="Definition">Polarity of &ge;2/3 of all episodes (predicts treatment response)</td>
+          </tr>
+          <tr>
+            <td data-label="Term"><strong>Functional outcome</strong></td>
+            <td data-label="Definition">Occupational, social, family functioning independent of symptomatic state</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pearl-box" style="margin-top:10px;margin-bottom:0;">
+        <div class="pearl-title"><span class="icon">&#128142;</span> EXAM PEARL</div>
+        The <strong>relapse-versus-recurrence</strong> distinction is the most often missed in viva. Relapse = same episode before recovery; Recurrence = new episode after clean recovery.
+      </div>
+    </div>
+
+    <!-- Life Chart Methods Comparison -->
+    <div class="sub-card">
+      <div class="sub-card-title">
+        <span class="sub-icon">&#128200;</span>
+        Life Chart Methods Comparison
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Method</th><th>Best For</th><th>Granularity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Method"><strong>NIMH LCM</strong><br><span style="font-size:0.75rem;color:var(--text-muted)">Post / NIMH, 1980s</span></td>
+            <td data-label="Best For">Bipolar, recurrent unipolar</td>
+            <td data-label="Granularity">Monthly (retro) / Daily (pro)</td>
+          </tr>
+          <tr>
+            <td data-label="Method"><strong>Tulsa LC</strong><br><span style="font-size:0.75rem;color:var(--text-muted)">Modern transdiagnostic</span></td>
+            <td data-label="Best For">Anxiety, eating, SUD, PTSD, PD</td>
+            <td data-label="Granularity">8 developmental epochs</td>
+          </tr>
+          <tr>
+            <td data-label="Method"><strong>Life Chart Schedule</strong><br><span style="font-size:0.75rem;color:var(--text-muted)">Susser et al. / WHO</span></td>
+            <td data-label="Best For">Schizophrenia outcome</td>
+            <td data-label="Granularity">2 time windows</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8 Epochs of Tulsa LC -->
+    <div class="sub-card">
+      <div class="sub-card-title">
+        <span class="sub-icon">&#128197;</span>
+        Tulsa Life Chart - 8 Developmental Epochs
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Epoch</th><th>Age Range</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Epoch">1</td><td data-label="Age Range">Birth to 5 years</td></tr>
+          <tr><td data-label="Epoch">2</td><td data-label="Age Range">5 to 10 years</td></tr>
+          <tr><td data-label="Epoch">3</td><td data-label="Age Range">11 to 14 years</td></tr>
+          <tr><td data-label="Epoch">4</td><td data-label="Age Range">15 to 18 years</td></tr>
+          <tr><td data-label="Epoch">5</td><td data-label="Age Range">18 to 25 years</td></tr>
+          <tr><td data-label="Epoch">6</td><td data-label="Age Range">25 to 35 years</td></tr>
+          <tr><td data-label="Epoch">7</td><td data-label="Age Range">35 to 45 years</td></tr>
+          <tr><td data-label="Epoch">8</td><td data-label="Age Range">45 to 55 years</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pitfalls Quick List -->
+    <div class="sub-card">
+      <div class="sub-card-title">
+        <span class="sub-icon">&#9888;</span>
+        Pitfalls &amp; Exam Traps
+      </div>
+      <div class="pitfall-box" style="margin-bottom:0;">
+        <ul style="margin-left:18px;color:var(--text-secondary);">
+          <li>Confusing past history with current HOPI (current episode = Ch.03)</li>
+          <li>Skipping inter-episode functioning (highest-yield schizophrenia vs BPAD discriminator)</li>
+          <li>Forgetting to draw a life chart in any episodic illness</li>
+          <li>Using "relapse" and "recurrence" interchangeably (they are NOT synonymous)</li>
+          <li>Skipping ECT history (patients/families don't volunteer it)</li>
+          <li>Not asking about TEAS (treatment-emergent affective switches)</li>
+          <li>Forgetting pregnancy/lactation in women of reproductive age</li>
+          <li>Listing medical illnesses without commenting on psychiatric implications</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Organic Mimics -->
+    <div class="sub-card">
+      <div class="sub-card-title">
+        <span class="sub-icon">&#127973;</span>
+        Organic Mimics of Psychiatric Illness
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Condition</th><th>Mimics</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Condition">Hypothyroidism</td><td data-label="Mimics">Depression</td></tr>
+          <tr><td data-label="Condition">Hyperthyroidism</td><td data-label="Mimics">Anxiety, mania</td></tr>
+          <tr><td data-label="Condition">Cushing's</td><td data-label="Mimics">Depression, psychosis</td></tr>
+          <tr><td data-label="Condition">SLE</td><td data-label="Mimics">Psychosis</td></tr>
+          <tr><td data-label="Condition">Wilson's disease</td><td data-label="Mimics">Mood + movement disorder (young adults)</td></tr>
+          <tr><td data-label="Condition">NMDA-R encephalitis</td><td data-label="Mimics">First-episode psychosis + seizures + dyskinesias</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ==================== SECTION A: PAST PSYCHIATRIC HISTORY ==================== -->
+  <div class="accordion-card open" id="cardA">
+    <div class="accordion-header" onclick="toggleAccordion('cardA')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-a">A</span>
+        <div>
+          <div class="accordion-title">Past Psychiatric History</div>
+          <div class="accordion-subtitle">Episode-by-episode chronological documentation</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="instruction-box">
+        <div class="inst-title"><span class="icon">&#128161;</span> WHY THIS MATTERS</div>
+        Past episodes are the trajectory the patient is now in. Documenting them chronologically reveals pattern, course modifiers, and treatment response. The inter-episode functioning question (&ldquo;Did you go back to fully being yourself?&rdquo;) is the highest-yield single discriminator between schizophrenia (no return to baseline) and BPAD (return to baseline).
+      </div>
+
+      <!-- Episode Builder -->
+      <div id="episodesContainer">
+        <!-- Episodes added dynamically -->
+      </div>
+
+      <button class="add-episode-btn" onclick="addEpisode()">
+        <span>+</span> Add Past Episode
+      </button>
+
+      <!-- Disorder-Specific Tailoring -->
+      <div class="section-divider">
+        <span class="section-divider-text">Disorder-Specific Tailoring</span>
+      </div>
+
+      <div class="sub-card">
+        <div class="field-group">
+          <label class="field-label">Primary Disorder Category</label>
+          <select id="primaryDisorder" onchange="updateDisorderFields(); saveData();">
+            <option value="">Select primary disorder...</option>
+            <option value="bipolar">Bipolar Disorder (I/II/Cyclothymia)</option>
+            <option value="schizophrenia">Schizophrenia / Schizoaffective</option>
+            <option value="depression">Major Depressive Disorder (recurrent)</option>
+            <option value="substance">Substance Use Disorder</option>
+            <option value="personality">Personality Disorder</option>
+            <option value="neurocognitive">Neurocognitive Disorder</option>
+            <option value="anxiety">Anxiety / OCD</option>
+            <option value="ptsd">PTSD</option>
+            <option value="eating">Eating Disorder</option>
+            <option value="other">Other / Mixed</option>
+          </select>
+        </div>
+
+        <!-- Bipolar-specific -->
+        <div id="bipolarFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Predominant Polarity (ISBD)
+              <button class="help-toggle" onclick="toggleHelp('helpPolarity',event)">&#9432;</button>
+            </label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="predominantPolarity" value="depressive" onchange="saveData()"> <span class="option-text">Depressive</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="predominantPolarity" value="manic" onchange="saveData()"> <span class="option-text">Manic</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="predominantPolarity" value="indeterminate" onchange="saveData()"> <span class="option-text">Indeterminate</span>
+              </label>
+            </div>
+            <div class="help-panel" id="helpPolarity">
+              <div class="help-title">Predominant Polarity (ISBD)</div>
+              <div class="help-section">The polarity of &ge;2/3 of all lifetime episodes. Predicts treatment response: depressive predominant &rarr; lamotrigine, quetiapine, lurasidone preferred; manic predominant &rarr; lithium, valproate preferred.</div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Rapid Cycling</label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="rapidCycling" value="none" onchange="saveData()"> <span class="option-text">None</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="rapidCycling" value="rapid" onchange="saveData()"> <span class="option-text">Rapid (&ge;4/yr)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="rapidCycling" value="ultra-rapid" onchange="saveData()"> <span class="option-text">Ultra-rapid (&ge;4/mo)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="rapidCycling" value="ultradian" onchange="saveData()"> <span class="option-text">Ultradian (within-day)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Treatment-Emergent Affective Switches (TEAS) noted?</label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="teas" value="yes" onchange="saveData()"> <span class="option-text">Yes</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="teas" value="no" onchange="saveData()"> <span class="option-text">No</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="teas" value="unknown" onchange="saveData()"> <span class="option-text">Unknown</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Life Chart Method Used
+              <button class="help-toggle" onclick="toggleHelp('helpLCMethod',event)">&#9432;</button>
+            </label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="lcMethod" value="nimh-retro" onchange="saveData()"> <span class="option-text">NIMH-LCM (retrospective)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="lcMethod" value="nimh-pro" onchange="saveData()"> <span class="option-text">NIMH-LCM (prospective)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="lcMethod" value="tulsa" onchange="saveData()"> <span class="option-text">Tulsa LC</span>
+              </label>
+            </div>
+            <div class="help-panel" id="helpLCMethod">
+              <div class="help-title">Life Chart Method Selection</div>
+              <div class="help-section"><strong>NIMH-LCM:</strong> Mood severity above/below euthymia baseline. Best for bipolar and recurrent unipolar. Monthly granularity retrospective, daily prospective.</div>
+              <div class="help-section"><strong>Tulsa LC:</strong> 8 developmental epochs with mood ratings, residences, relationships, substance exposure. Transdiagnostic.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schizophrenia-specific -->
+        <div id="schizophreniaFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Clozapine Eligibility
+              <button class="help-toggle" onclick="toggleHelp('helpClozapine',event)">&#9432;</button>
+            </label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="clozapineEligible" value="eligible" onchange="saveData()"> <span class="option-text">Eligible (&ge;2 failed trials)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="clozapineEligible" value="not-eligible" onchange="saveData()"> <span class="option-text">Not yet eligible</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="clozapineEligible" value="on-clozapine" onchange="saveData()"> <span class="option-text">Currently on clozapine</span>
+              </label>
+            </div>
+            <div class="help-panel" id="helpClozapine">
+              <div class="help-title">Clozapine Eligibility Criteria</div>
+              <div class="help-section">&ge;2 adequate trials of different antipsychotics at therapeutic dose for &ge;6 weeks each, with poor response. &ldquo;Adequate&rdquo; = therapeutic dose + sufficient duration + adherence confirmed.</div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Depot Antipsychotic History</label>
+            <div class="field-hint">Document any depot/long-acting injectable antipsychotics tried, doses, durations, response</div>
+            <textarea  id="depotHistory" placeholder="Depot history..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+        </div>
+
+        <!-- Depression-specific -->
+        <div id="depressionFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">STAR*D-Equivalent Stage
+              <button class="help-toggle" onclick="toggleHelp('helpSTARDC',event)">&#9432;</button>
+            </label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="stardStage" value="stage1" onchange="saveData()"> <span class="option-text">Stage 1 (1st AD trial)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="stardStage" value="stage2" onchange="saveData()"> <span class="option-text">Stage 2 (Switch/Augment)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="stardStage" value="stage3" onchange="saveData()"> <span class="option-text">Stage 3 (2nd Augment)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="stardStage" value="stage4" onchange="saveData()"> <span class="option-text">Stage 4 (MAOI/ECT)</span>
+              </label>
+            </div>
+            <div class="help-panel" id="helpSTARDC">
+              <div class="help-title">STAR*D Staging (Sequenced Treatment Alternatives to Relieve Depression)</div>
+              <div class="help-section"><strong>Stage 1:</strong> Citalopram monotherapy</div>
+              <div class="help-section"><strong>Stage 2:</strong> Switch to bupropion, sertraline, venlafaxine OR augment with bupropion/busPIRone</div>
+              <div class="help-section"><strong>Stage 3:</strong> Mirtazapine or nortriptyline switch/augment</div>
+              <div class="help-section"><strong>Stage 4:</strong> Tranylcypromine or venlafaxine+mirtazapine, or ECT</div>
+              <div class="help-section">Adequate trial = therapeutic dose for &ge;4-6 weeks with confirmed adherence.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Substance use-specific -->
+        <div id="substanceFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Prior Detox Episodes</label>
+            <div class="field-hint">Document each detox: substance, location, complications (DTs, seizures), year</div>
+            <textarea  id="detoxHistory" placeholder="Detox history..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Rehabilitation History</label>
+            <div class="field-hint">Inpatient/outpatient rehab programs attended, duration, outcomes</div>
+            <textarea  id="rehabHistory" placeholder="Rehab history..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Medication-Assisted Treatment (MAT/OAT)</label>
+            <div class="field-hint">Methadone, buprenorphine, naltrexone trials - doses, durations, response</div>
+            <textarea  id="matHistory" placeholder="MAT/OAT history..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Longest Period of Abstinence Achieved</label>
+            <div style="display:flex;gap:8px;">
+              <input type="number" data-key="a_longestAbstinence" id="longestAbstinence" placeholder="Duration" style="flex:1" oninput="saveData()">
+              <select data-key="a_abstinenceUnit" id="abstinenceUnit" style="flex:1" onchange="saveData()">
+                <option value="">Unit</option>
+                <option value="days">Days</option>
+                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
+                <option value="years">Years</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personality disorder-specific -->
+        <div id="personalityFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Pattern Documentation ( Crisis presentations over years matter more than single episodes )</label>
+            <div class="field-hint">Document: repeated A&E attendances, multiple short admissions, repeated DSH, crisis frequency pattern across years, relationship instability pattern</div>
+            <textarea  id="pdPattern" placeholder="Pattern documentation..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+        </div>
+
+        <!-- Neurocognitive-specific -->
+        <div id="neurocognitiveFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Vascular Risk Factor History</label>
+            <div class="checkbox-grid">
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="htn" onchange="saveData()"> <span class="option-text">Hypertension</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="dm" onchange="saveData()"> <span class="option-text">Diabetes Mellitus</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="af" onchange="saveData()"> <span class="option-text">Atrial Fibrillation</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="smoking" onchange="saveData()"> <span class="option-text">Smoking</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="hyperlipidaemia" onchange="saveData()"> <span class="option-text">Hyperlipidaemia</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="vascularRisk" value="prior-stroke" onchange="saveData()"> <span class="option-text">Prior Stroke / TIA</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anxiety/OCD-specific -->
+        <div id="anxietyFields" class="hidden">
+          <div class="field-group">
+            <label class="field-label">CBT / ERP History</label>
+            <div class="field-hint">Number of sessions, modality (individual/group), who delivered, response</div>
+            <textarea  id="cbtHistory" placeholder="CBT/ERP history..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">SSRI Trials and Durations</label>
+            <div class="field-hint">Document each SSRI/SNRI trial: drug, max dose reached, duration, response, reason for discontinuation</div>
+            <textarea  id="ssriTrials" placeholder="SSRI/SNRI trials..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION B: PAST MEDICAL & SURGICAL HISTORY ==================== -->
+  <div class="accordion-card" id="cardB">
+    <div class="accordion-header" onclick="toggleAccordion('cardB')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-b">B</span>
+        <div>
+          <div class="accordion-title">Past Medical &amp; Surgical History</div>
+          <div class="accordion-subtitle">Organic mimics, treatment contraindications, drug interactions</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="instruction-box">
+        <div class="inst-title"><span class="icon">&#128161;</span> THREE REASONS THIS MATTERS</div>
+        <ul>
+          <li><strong>Organic mimics:</strong> Hypothyroidism &rarr; depression; Hyperthyroidism &rarr; anxiety/mania; Cushing's &rarr; depression/psychosis; SLE &rarr; psychosis; Wilson's &rarr; mood + movement (young adults); NMDA-R encephalitis &rarr; first-episode psychosis with seizures</li>
+          <li><strong>Treatment selection:</strong> Renal impairment &rarr; limits lithium; Hepatic impairment &rarr; limits valproate, carbamazepine, mirtazapine; Cardiac disease &rarr; limits TCAs, QT-prolonging antipsychotics; Pregnancy &rarr; contraindicates valproate</li>
+          <li><strong>Drug interactions:</strong> SSRIs + NSAIDs/anticoagulants &rarr; bleeding; Lithium + NSAIDs/ACEi &rarr; toxicity; Carbamazepine + OCPs &rarr; contraceptive failure; Carbamazepine + warfarin &rarr; loss of anticoagulation</li>
+        </ul>
+      </div>
+
+      <div class="anchor-box">
+        <div class="anchor-title"><span class="icon">&#9875;</span> CLINICAL ANCHOR</div>
+        In the elderly, the ratio of drug interactions to therapeutic gain rises sharply. The <strong>Beers criteria</strong> and the <strong>START/STOPP framework</strong> are the bedside tools for psychotropic prescribing in older adults. Mention them by name in viva when the case is geriatric.
+      </div>
+
+      <!-- Medical Illnesses -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#127973;</span>
+          Medical Illnesses
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Major Medical Conditions (tick all that apply)</label>
+          <div class="checkbox-grid">
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="htn" onchange="saveData()"> <span class="option-text">Hypertension</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="dm" onchange="saveData()"> <span class="option-text">Diabetes Mellitus</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="hypothyroid" onchange="saveData()"> <span class="option-text">Hypothyroidism</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="hyperthyroid" onchange="saveData()"> <span class="option-text">Hyperthyroidism</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="epilepsy" onchange="saveData()"> <span class="option-text">Epilepsy / Seizures</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="head-injury" onchange="saveData()"> <span class="option-text">Head Injury (with LOC/PTA)</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="stroke" onchange="saveData()"> <span class="option-text">Stroke / CVA</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="sle" onchange="saveData()"> <span class="option-text">SLE (Lupus)</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="ms" onchange="saveData()"> <span class="option-text">Multiple Sclerosis</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="ra" onchange="saveData()"> <span class="option-text">Rheumatoid Arthritis</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="hiv" onchange="saveData()"> <span class="option-text">HIV</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="hepatitis" onchange="saveData()"> <span class="option-text">Hepatitis B/C</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="malignancy" onchange="saveData()"> <span class="option-text">Malignancy</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="cardiac" onchange="saveData()"> <span class="option-text">Cardiac Disease</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="renal" onchange="saveData()"> <span class="option-text">Renal Disease</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="hepatic" onchange="saveData()"> <span class="option-text">Hepatic Disease</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="cushing" onchange="saveData()"> <span class="option-text">Cushing's Syndrome</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="wilsons" onchange="saveData()"> <span class="option-text">Wilson's Disease</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="nmda" onchange="saveData()"> <span class="option-text">NMDA-R Encephalitis</span>
+            </label>
+            <label class="option-chip" onclick="toggleChipCheckbox(this)">
+              <input type="checkbox" name="medicalConditions" value="other-autoimmune" onchange="saveData()"> <span class="option-text">Other Autoimmune</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Other / Free-text Medical Conditions</label>
+          <div class="field-hint">Document any conditions not listed above, with onset dates, current status, and psychiatric implications</div>
+          <textarea  id="otherMedical" placeholder="Type other medical conditions here..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Psychiatric Implications of Medical Conditions
+            <button class="help-toggle" onclick="toggleHelp('helpMedImplications',event)">&#9432;</button>
+          </label>
+          <textarea  id="medPsychImplications" placeholder="Medical-psychiatric links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          <div class="help-panel" id="helpMedImplications">
+            <div class="help-title">How to Link Medical to Psychiatric</div>
+            <div class="help-section">The examiner wants the <em>link</em>, not just the list. For each condition, state: (1) organic mimic risk, (2) treatment constraint, (3) interaction risk.</div>
+            <div class="help-section">Example: &ldquo;Type 2 DM &rarr; limits olanzapine (metabolic worsening), requires baseline HbA1c monitoring, increases vascular dementia risk.&rdquo;</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Surgeries -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#129656;</span>
+          Surgical History
+        </div>
+        <div id="surgeriesContainer"></div>
+        <button class="add-med-btn" onclick="addSurgery()">+ Add Surgery</button>
+      </div>
+
+      <!-- Allergies -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#9888;</span>
+          Allergies
+        </div>
+        <div class="field-group">
+          <label class="field-label">Drug Allergies (with reaction type)</label>
+          <div class="field-hint">Drug name | Nature of reaction (rash, anaphylaxis, Stevens-Johnson, etc.) | Date first observed</div>
+          <textarea  id="drugAllergies" placeholder="Drug allergies..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Food / Environmental Allergies</label>
+          <textarea  id="otherAllergies" placeholder="List allergen and nature of reaction..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+
+      <!-- Current Medications -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#128138;</span>
+          Current Non-Psychiatric Medications
+        </div>
+        <div id="currentMedsContainer"></div>
+        <button class="add-med-btn" onclick="addCurrentMed()">+ Add Medication</button>
+        <div class="field-group" style="margin-top:12px;">
+          <label class="field-label">OTC Supplements / Herbal Preparations</label>
+          <div class="field-hint">Document all over-the-counter and herbal products (St. John's Wort, ginkgo, omega-3, etc.) - critical for interaction checking</div>
+          <textarea  id="supplements" placeholder="OTC supplements and herbals..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+
+      <!-- Endocrine / Metabolic -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#129516;</span>
+          Endocrine &amp; Metabolic Status
+        </div>
+        <div class="field-group">
+          <label class="field-label">Throid Function (most recent)</label>
+          <div class="med-grid">
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">TSH</label>
+              <input type="text" data-key="b_tsh" id="tsh" placeholder="e.g., 2.5 mIU/L" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Free T4</label>
+              <input type="text" data-key="b_freeT4" id="freeT4" placeholder="e.g., 1.2 ng/dL" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Free T3</label>
+              <input type="text" data-key="b_freeT3" id="freeT3" placeholder="e.g., 3.1 pg/mL" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Date</label>
+              <input type="date" data-key="b_thyroidDate" id="thyroidDate" onchange="saveData()">
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Vitamin Status (if known)</label>
+          <div class="med-grid">
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Vitamin B12</label>
+              <input type="text" data-key="b_vitB12" id="vitB12" placeholder="pmol/L" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Folate</label>
+              <input type="text" data-key="b_folate" id="folate" placeholder="nmol/L" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Vitamin D</label>
+              <input type="text" data-key="b_vitD" id="vitD" placeholder="nmol/L" oninput="saveData()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reproductive -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#9792;</span>
+          Reproductive History (Women of Reproductive Age)
+        </div>
+        <div class="pearl-box" style="margin-bottom:12px;">
+          <div class="pearl-title"><span class="icon">&#128142;</span> EXAM PEARL</div>
+          Forgetting to ask about pregnancy and lactation in any woman of reproductive age changes the management chapter completely. Always document.
+        </div>
+        <div class="field-group">
+          <label class="field-label">Current Pregnancy Status</label>
+          <div class="options-inline">
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="na" onchange="saveData()"> <span class="option-text">N/A (male / post-menopausal)</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="not-pregnant" onchange="saveData()"> <span class="option-text">Not pregnant</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="pregnant" onchange="saveData()"> <span class="option-text">Currently pregnant</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="planning" onchange="saveData()"> <span class="option-text">Planning pregnancy</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="lactating" onchange="saveData()"> <span class="option-text">Currently lactating</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="postpartum" onchange="saveData()"> <span class="option-text">Postpartum</span>
+            </label>
+            <label class="option-chip" onclick="selectChip(this)">
+              <input type="radio" name="pregnancyStatus" value="perimenopausal" onchange="saveData()"> <span class="option-text">Perimenopausal</span>
+            </label>
+          </div>
+        </div>
+        <div id="pregnancyDetails" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Gestational Age (if pregnant) / Weeks Postpartum</label>
+            <input type="text" data-key="b_gestationalAge" id="gestationalAge" placeholder="e.g., 16 weeks gestation / 4 weeks postpartum" oninput="saveData()">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Contraception / HRT</label>
+          <div class="field-hint">OCP type, HRT, IUD, barrier methods - critical for drug interaction checking (carbamazepine reduces OCP efficacy)</div>
+          <textarea  id="contraception" placeholder="Contraception / HRT..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION C: LIFE CHART CONSTRUCTION ==================== -->
+  <div class="accordion-card" id="cardC">
+    <div class="accordion-header" onclick="toggleAccordion('cardC')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-c">C</span>
+        <div>
+          <div class="accordion-title">Life Chart Construction</div>
+          <div class="accordion-subtitle">NIMH-LCM, Tulsa LC, visual documentation</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="instruction-box">
+        <div class="inst-title"><span class="icon">&#128161;</span> WHY LIFE CHARTS MATTER</div>
+        Episodic illnesses are about <strong>pattern, not snapshot</strong>. A life chart turns scattered episodic data into a single visual sweep showing trajectory, treatment response, hospitalisation density, and life-event coupling. Drawing a life chart unprompted in viva is a <strong>high-impact discriminator</strong> demonstrating clinical maturity.
+      </div>
+
+      <!-- Life Chart Method Selection -->
+      <div class="sub-card">
+        <div class="field-group">
+          <label class="field-label">Life Chart Method Selected</label>
+          <select data-key="c_lifeChartMethod" id="lifeChartMethod" onchange="updateLifeChartFields(); saveData();">
+            <option value="">Select method...</option>
+            <option value="nimh-retro">NIMH-LCM Retrospective (monthly)</option>
+            <option value="nimh-pro">NIMH-LCM Prospective (daily)</option>
+            <option value="tulsa">Tulsa Life Chart (8 epochs)</option>
+            <option value="lcs">Life Chart Schedule (schizophrenia)</option>
+            <option value="other">Other / Custom</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Time Span Covered</label>
+          <div class="med-grid">
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">From (age or year)</label>
+              <input type="text" data-key="c_chartFrom" id="chartFrom" placeholder="e.g., age 23 / 2015" oninput="saveData()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">To (age or year)</label>
+              <input type="text" data-key="c_chartTo" id="chartTo" placeholder="e.g., age 35 / present" oninput="saveData()">
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Key Observations from Life Chart</label>
+          <div class="field-hint">Pattern seen: depression-first? Delayed emergence of mania? Life-event coupling? Treatment response timing? Rapid cycling?</div>
+          <textarea  id="chartObservations" placeholder="Chart observations..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+
+      <!-- NIMH-LCM Fields -->
+      <div id="nimhFields" class="hidden">
+        <div class="sub-card">
+          <div class="sub-card-title">
+            <span class="sub-icon">&#128200;</span>
+            NIMH-LCM Construction
+          </div>
+
+          <div class="collapsible-trigger" onclick="toggleCollapsible(this, 'nimhInstructions')">
+            <span>Construction Instructions (7 Steps)</span>
+            <span class="trigger-icon">&#9656;</span>
+          </div>
+          <div class="collapsible-content" id="nimhInstructions">
+            <div class="instruction-box" style="margin-bottom:12px;">
+              <ol style="margin-left:18px;color:var(--text-secondary);font-size:0.8125rem;line-height:1.7;">
+                <li><strong>Set axes:</strong> Horizontal = time (months retro / days pro); Vertical = mood severity with euthymia baseline in middle</li>
+                <li><strong>Above baseline:</strong> Hypomania &rarr; Mania &rarr; Severe mania &rarr; Mania with psychosis (4 tiers)</li>
+                <li><strong>Below baseline:</strong> Depression in same 4 tiers (mild &rarr; moderate &rarr; severe &rarr; with psychotic features)</li>
+                <li><strong>Hospitalisations:</strong> Filled/darkened blocks for instant recognition</li>
+                <li><strong>Uncertain dates:</strong> Dotted outlines</li>
+                <li><strong>Treatments:</strong> Horizontal bars above mania zone (drug name + dose)</li>
+                <li><strong>Life events:</strong> Marked with impact rating -4 (very negative) to +4 (very positive)</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Severity Coding Key -->
+          <div class="field-group">
+            <label class="field-label">Severity Coding Key Used
+              <button class="help-toggle" onclick="toggleHelp('helpSeverity',event)">&#9432;</button>
+            </label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="severityCoding" value="functional" onchange="saveData()"> <span class="option-text">Functional Impairment (NIMH standard)</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="severityCoding" value="symptom" onchange="saveData()"> <span class="option-text">Symptom Intensity</span>
+              </label>
+            </div>
+            <div class="help-panel" id="helpSeverity">
+              <div class="help-title">Severity Coding Rule</div>
+              <div class="help-section">NIMH-LCM codes severity by <strong>functional impairment</strong>, not symptom intensity alone. This is the rule that gives the chart its clinical power. An episode with fewer symptoms but complete work impairment codes higher than one with many symptoms but maintained functioning.</div>
+            </div>
+          </div>
+
+          <!-- Mood Episodes for Chart -->
+          <div class="field-group">
+            <label class="field-label">Episodes Plotted on Chart</label>
+            <div class="field-hint">List each episode with: type (mania/hypomania/depression/mixed), start date, end date, severity tier, functional impact</div>
+            <textarea  id="chartEpisodes" placeholder="Episodes plotted..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+
+          <!-- Treatments Plotted -->
+          <div class="field-group">
+            <label class="field-label">Treatments Plotted (horizontal bars)</label>
+            <div class="field-hint">Drug name, dose, start date, end date, plotted as horizontal bar above mania zone</div>
+            <textarea  id="chartTreatments" placeholder="Treatments plotted..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+
+          <!-- Hospitalisations Plotted -->
+          <div class="field-group">
+            <label class="field-label">Hospitalisations Plotted (filled blocks)</label>
+            <div class="field-hint">Admission date, discharge date, voluntary/involuntary, MHCA section</div>
+            <textarea  id="chartHospitalisations" placeholder="Hospitalisations plotted..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+
+          <!-- Life Events Plotted -->
+          <div class="field-group">
+            <label class="field-label">Life Events Plotted (impact rating -4 to +4)</label>
+            <div class="field-hint">Event, date, impact rating (-4 very negative to +4 very positive)</div>
+            <textarea  id="chartLifeEvents" placeholder="Life events plotted..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+
+          <!-- Cross-check -->
+          <div class="field-group">
+            <label class="field-label">Informant Cross-Check</label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="informantCheck" value="done" onchange="saveData()"> <span class="option-text">Done - validated with family</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="informantCheck" value="not-done" onchange="saveData()"> <span class="option-text">Not done</span>
+              </label>
+              <label class="option-chip" onclick="selectChip(this)">
+                <input type="radio" name="informantCheck" value="unavailable" onchange="saveData()"> <span class="option-text">Informant unavailable</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Informant Cross-Check Notes</label>
+            <textarea  id="informantNotes" placeholder="Informant cross-check notes..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tulsa Life Chart Fields -->
+      <div id="tulsaFields" class="hidden">
+        <div class="sub-card">
+          <div class="sub-card-title">
+            <span class="sub-icon">&#128197;</span>
+            Tulsa Life Chart - 8 Epochs
+          </div>
+
+          <div class="collapsible-trigger" onclick="toggleCollapsible(this, 'tulsaInstructions')">
+            <span>Epoch Documentation Guide</span>
+            <span class="trigger-icon">&#9656;</span>
+          </div>
+          <div class="collapsible-content" id="tulsaInstructions">
+            <div class="instruction-box" style="margin-bottom:12px;">
+              For each epoch document: Mood rating (1-10; 1=worst ever, 10=best), Residences and schools, Employment/leisure, Social connections, Substance exposure, Mental health treatment, Family structure changes, Major life events with mood ratings.
+            </div>
+          </div>
+
+          <div id="epochsContainer"></div>
+        </div>
+      </div>
+
+      <!-- LCS Fields -->
+      <div id="lcsFields" class="hidden">
+        <div class="sub-card">
+          <div class="sub-card-title">
+            <span class="sub-icon">&#128203;</span>
+            Life Chart Schedule (Schizophrenia)
+          </div>
+          <div class="field-group">
+            <label class="field-label">Time Windows</label>
+            <div class="options-inline">
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="lcsWindows" value="recent-2yr" onchange="saveData()"> <span class="option-text">Past 2 years</span>
+              </label>
+              <label class="option-chip" onclick="toggleChipCheckbox(this)">
+                <input type="checkbox" name="lcsWindows" value="entire-illness" onchange="saveData()"> <span class="option-text">Entire illness</span>
+              </label>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Symptoms Domain (4 parallel domains)</label>
+            <div class="field-hint">Positive, negative, cognitive, affective symptoms over time</div>
+            <textarea  id="lcsSymptoms" placeholder="Symptoms domain..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Treatment Domain</label>
+            <div class="field-hint">Antipsychotic trials, doses, durations, response, side effects, depot history</div>
+            <textarea  id="lcsTreatment" placeholder="Treatment domain..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Residence Domain</label>
+            <div class="field-hint">Independent, supported accommodation, hostel, homeless, hospital, forensic</div>
+            <textarea  id="lcsResidence" placeholder="Residence domain..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Work / Functioning Domain</label>
+            <div class="field-hint">Employed, sheltered work, volunteering, unemployed, disability pension</div>
+            <textarea  id="lcsWork" placeholder="Work/functioning domain..." oninput="saveData(); resizeTextarea(this);"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viva Presentation -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#127908;</span>
+          Viva Presentation Notes
+        </div>
+        <div class="instruction-box">
+          <div class="inst-title"><span class="icon">&#128161;</span> HOW TO PRESENT IN VIVA</div>
+          Open with format and time span: <em>&ldquo;Sir, this is a retrospective NIMH-LCM-style life chart for this patient over [X] years, age [Y] to [Z]. Hypomanic states above baseline, depressive below. Hospitalisations as diamonds, treatments as horizontal bars, life events as marked points.&rdquo;</em><br><br>
+          Walk chronologically: onset &rarr; evolution &rarr; treatment response &rarr; switch points &rarr; hospitalisations &rarr; life-event coupling &rarr; current status.<br><br>
+          End with diagnostic implication using ISBD vocabulary: <em>&ldquo;The chart shows a [pattern], consistent with [diagnosis] and a [predominant polarity] per ISBD nomenclature.&rdquo;</em>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Your Planned Viva Opening Line</label>
+          <div class="field-hint">Practice your opening line here. Example: "Sir, this is a retrospective NIMH-LCM-style life chart for this patient over [X] years..."</div>
+          <textarea  id="vivaOpening" placeholder="Practice your opening line here..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Your Planned Viva Closing Line</label>
+          <div class="field-hint">Practice your diagnostic implication closing line here. Use ISBD vocabulary and name the predominant polarity</div>
+          <textarea  id="vivaClosing" placeholder="Closing line..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION D: PITFALLS & EXAM TRAPS ==================== -->
+  <div class="accordion-card" id="cardD">
+    <div class="accordion-header" onclick="toggleAccordion('cardD')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-d">D</span>
+        <div>
+          <div class="accordion-title">Pitfalls &amp; Exam Traps</div>
+          <div class="accordion-subtitle">Common errors to avoid</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="field-group">
+        <label class="field-label">Self-Check: Which pitfalls have I actively avoided in this assessment?</label>
+        <div class="checkbox-grid">
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="hopi-separation" onchange="saveData()"> <span class="option-text">Separated past history from current HOPI (Ch.03)</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="inter-episode" onchange="saveData()"> <span class="option-text">Documented inter-episode functioning</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="life-chart" onchange="saveData()"> <span class="option-text">Drew/constructed a life chart</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="relapse-recurrence" onchange="saveData()"> <span class="option-text">Used relapse/recurrence correctly per ISBD</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="ect" onchange="saveData()"> <span class="option-text">Asked about ECT history</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="teas" onchange="saveData()"> <span class="option-text">Asked about TEAS with antidepressant history</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="pregnancy" onchange="saveData()"> <span class="option-text">Asked about pregnancy/lactation (women of reproductive age)</span>
+          </label>
+          <label class="option-chip" onclick="toggleChipCheckbox(this)">
+            <input type="checkbox" name="pitfallCheck" value="medical-link" onchange="saveData()"> <span class="option-text">Linked medical conditions to psychiatric implications</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Additional Pitfalls / Notes</label>
+        <div class="field-hint">Document any specific pitfalls encountered, examiner feedback, or personal learning points</div>
+        <textarea  id="pitfallNotes" placeholder="Pitfall notes..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION E: SAMPLE PHRASINGS ==================== -->
+  <div class="accordion-card" id="cardE">
+    <div class="accordion-header" onclick="toggleAccordion('cardE')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-e">E</span>
+        <div>
+          <div class="accordion-title">Sample Phrasings</div>
+          <div class="accordion-subtitle">Interview questions and documentation language</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="phrasing-card">
+        <div class="phrasing-title">Episode-By-Episode Probe (Opening)</div>
+        <div class="phrasing-text">&ldquo;When was the very first time you felt unwell with anything to do with your mind, mood, or behaviour? What was happening in your life at that time?&rdquo;</div>
+        <div class="phrasing-note">Use this to anchor the chronological sequence, then work forward episode by episode.</div>
+      </div>
+
+      <div class="phrasing-card">
+        <div class="phrasing-title">Inter-Episode Functioning Probe (HIGHEST YIELD)</div>
+        <div class="phrasing-text">&ldquo;Between the time you got better from that episode and the time you became unwell again, were you fully back to yourself? Were you working? Were your relationships back to how they were before? Or did some part of you feel changed?&rdquo;</div>
+        <div class="phrasing-note">This single question does most of the diagnostic work: schizophrenia = incomplete recovery/progressive deterioration; BPAD = return to premorbid baseline.</div>
+      </div>
+
+      <div class="phrasing-card">
+        <div class="phrasing-title">Treatment Adherence Probe</div>
+        <div class="phrasing-text">&ldquo;For how long did you take the medication? Did you ever stop and start again? What made you stop?&rdquo;</div>
+        <div class="phrasing-note">Distinguish true treatment resistance from pseudo-resistance due to non-adherence.</div>
+      </div>
+
+      <div class="phrasing-card">
+        <div class="phrasing-title">ECT Probe (Patients Don't Volunteer This)</div>
+        <div class="phrasing-text">&ldquo;Have you ever been given a treatment where you were put to sleep briefly and given a small electrical impulse, sometimes called shock treatment or ECT? When was that, how many sessions, and did it help?&rdquo;</div>
+        <div class="phrasing-note">Frame non-stigmatisingly. Document: number of sessions, bilateral/unilateral, response, memory side effects.</div>
+      </div>
+
+      <div class="phrasing-card">
+        <div class="phrasing-title">Suicide Attempt / DSH Probe</div>
+        <div class="phrasing-text">&ldquo;Did you ever do anything to harm yourself, or take anything you knew could hurt you? What did you do? What did you intend to happen? What happened next?&rdquo;</div>
+        <div class="phrasing-note">Frame method, intent, outcome explicitly. Lethality = combination of method + intent. Document what happened next (A&amp;E, admission, treatment change).</div>
+      </div>
+
+      <!-- Custom Phrasings -->
+      <div class="sub-card">
+        <div class="sub-card-title">
+          <span class="sub-icon">&#9997;</span>
+          Your Own Phrasings &amp; Notes
+        </div>
+        <div id="phrasingsContainer"></div>
+        <button class="add-med-btn" onclick="addPhrasing()">+ Add Custom Phrasing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SECTION F: CROSS-REFERENCES ==================== -->
+  <div class="accordion-card" id="cardF">
+    <div class="accordion-header" onclick="toggleAccordion('cardF')">
+      <div class="accordion-header-left">
+        <span class="section-badge badge-f">F</span>
+        <div>
+          <div class="accordion-title">Cross-References</div>
+          <div class="accordion-subtitle">Links to other chapters</div>
+        </div>
+      </div>
+      <span class="accordion-icon">&#9662;</span>
+    </div>
+    <div class="accordion-body">
+
+      <div class="sub-card">
+        <div class="field-group">
+          <label class="field-label">Chapter 03 (HOPI) - Current Episode Links</label>
+          <div class="field-hint">How does the current episode fit into the overall trajectory? Is it a relapse (before recovery) or recurrence (after recovery)?</div>
+          <textarea  id="xrefCh03" placeholder="Chapter 03 links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Chapter 06 (Family History) - Heritability Notes</label>
+          <div class="field-hint">Family loading for similar disorders, genetic risk factors identified</div>
+          <textarea  id="xrefCh06" placeholder="Chapter 06 links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Chapter 12 (Diagnosis) - Course Modifiers</label>
+          <div class="field-hint">Single / recurrent / continuous / in remission / with psychotic features - how past history feeds diagnostic specifiers</div>
+          <textarea  id="xrefCh12" placeholder="Chapter 12 links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Chapter 13 (Investigations) - What to Repeat</label>
+          <div class="field-hint">At each episode: TFTs, B12/folate, drug levels, ECG, pregnancy test, metabolic monitoring</div>
+          <textarea  id="xrefCh13" placeholder="Chapter 13 links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Chapter 14 (Management) - Past Response Informs Future Choice</label>
+          <div class="field-hint">Choice of mood stabiliser depends on past response history. What worked before? What failed? What caused side effects?</div>
+          <textarea  id="xrefCh14" placeholder="Chapter 14 links..." oninput="saveData(); resizeTextarea(this);"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom padding for sticky bar -->
+  <div style="height:20px;"></div>
+</div>
+
+<!-- Sticky Bottom Bar -->
+<div class="sticky-bar">
+  <button class="btn btn-primary" onclick="exportPDF()">
+    <span>&#128424;</span> Export PDF
+  </button>
+  <button class="btn btn-success" onclick="copySummary()">
+    <span>&#128203;</span> Copy Summary
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Confirm Dialog -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-title" style="color:var(--accent-red);">Clear All Data?</div>
+    <div class="confirm-text">This will create a timestamped backup, then clear all fields. This action cannot be undone.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" onclick="cancelClear()">Cancel</button>
+      <button class="btn btn-danger" onclick="executeClear()">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CONSTANTS =====
+const SAVE_KEY = 'ch05_past_history_v1';
+const BACKUP_PREFIX = 'ch05_backup_';
+
+// ===== TEXTAREA AUTO-EXPAND =====
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(function(el) {
+    el.addEventListener('input', function() { resizeTextarea(this); });
+    el.addEventListener('paste', function() {
+      setTimeout(function() { resizeTextarea(el); }, 0);
+    });
+  });
+  setTimeout(function() {
+    document.querySelectorAll('textarea').forEach(resizeTextarea);
+  }, 50);
+}
+
+// ===== CHIP STYLES =====
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip').forEach(function(chip) {
+    var input = chip.querySelector('input[type="radio"], input[type="checkbox"]');
+    if (input) {
+      chip.classList.toggle('checked', input.checked);
+    }
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip').forEach(function(chip) {
+    if (chip.dataset.chipInit) return;
+    chip.dataset.chipInit = '1';
+    var input = chip.querySelector('input[type="radio"], input[type="checkbox"]');
+    if (!input) return;
+    input.addEventListener('change', function() {
+      if (input.type === 'radio') {
+        document.querySelectorAll('input[name="' + input.name + '"]').forEach(function(r) {
+          var c = r.closest('.option-chip');
+          if (c) c.classList.toggle('checked', r.checked);
+        });
+      } else {
+        chip.classList.toggle('checked', input.checked);
+      }
+    });
+  });
+}
+
+// ===== SAVE / RESTORE =====
+function saveData() {
+  var data = {};
+  // Save textareas and inputs by data-key
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+    data[el.dataset.key] = el.value;
+  });
+  // Save checkboxes by group
+  var cbGroups = {};
+  document.querySelectorAll('input[type="checkbox"][name]').forEach(function(el) {
+    if (!cbGroups[el.name]) cbGroups[el.name] = [];
+    if (el.checked) cbGroups[el.name].push(el.value);
+  });
+  for (var g in cbGroups) { data['_cb_' + g] = cbGroups[g]; }
+  // Save radio buttons
+  var rbGroups = {};
+  document.querySelectorAll('input[type="radio"][name]').forEach(function(el) {
+    if (el.checked) rbGroups[el.name] = el.value;
+  });
+  for (var rg in rbGroups) { data['_rb_' + rg] = rbGroups[rg]; }
+  // Save select elements by id
+  document.querySelectorAll('select[id]').forEach(function(el) {
+    data['_sel_' + el.id] = el.value;
+  });
+  // Save select elements with data-key
+  document.querySelectorAll('select[data-key]').forEach(function(el) {
+    data[el.dataset.key] = el.value;
+  });
+  // Save card/qr open states
+  data._cardStates = {};
+  document.querySelectorAll('.accordion-card').forEach(function(card) {
+    data._cardStates[card.id] = card.classList.contains('open');
+  });
+  data._qrOpen = document.getElementById('quickRefPanel').classList.contains('open');
+  // Episode data
+  data._episodes = collectEpisodes();
+  data._surgeries = collectSurgeries();
+  data._currentMeds = collectCurrentMeds();
+  data._phrasings = collectPhrasings();
+  // Summary manual edit flag
+  data._manualEdit = document.getElementById('autoSummary').dataset.manual === 'true';
+  // Save
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  var now = new Date();
+  var si = document.getElementById('saveStatus');
+  if (si) si.textContent = 'Saved ' + now.toLocaleTimeString();
+}
+
+function restoreData() {
+  var saved = localStorage.getItem(SAVE_KEY);
+  if (!saved) {
+    initDefaults();
+    return false;
+  }
+  try {
+    var data = JSON.parse(saved);
+    // Restore textareas and inputs by data-key
+    document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+      if (data[el.dataset.key] !== undefined) el.value = data[el.dataset.key];
+    });
+    // Restore checkboxes
+    for (var k in data) {
+      if (k.startsWith('_cb_')) {
+        var vals = data[k];
+        var name = k.slice(4);
+        document.querySelectorAll('input[type="checkbox"][name="' + name + '"]').forEach(function(el) {
+          el.checked = vals && vals.indexOf(el.value) !== -1;
+        });
+      }
+      if (k.startsWith('_rb_')) {
+        var rbName = k.slice(4);
+        var rb = document.querySelector('input[type="radio"][name="' + rbName + '"][value="' + data[k] + '"]');
+        if (rb) rb.checked = true;
+      }
+      if (k.startsWith('_sel_')) {
+        var selId = k.slice(5);
+        var sel = document.getElementById(selId);
+        if (sel) sel.value = data[k];
+      }
+    }
+    // Restore card states
+    if (data._cardStates) {
+      for (var cid in data._cardStates) {
+        var c = document.getElementById(cid);
+        if (c) c.classList.toggle('open', data._cardStates[cid]);
+      }
+    }
+    // Restore QR panel state
+    if (data._qrOpen) {
+      document.getElementById('quickRefPanel').classList.add('open');
+      var qri = document.getElementById('quickRefIcon');
+      if (qri) qri.style.transform = 'rotate(180deg)';
+    }
+    // Restore episodes
+    document.getElementById('episodesContainer').innerHTML = '';
+    episodeCount = 0;
+    if (data._episodes && data._episodes.length > 0) {
+      data._episodes.forEach(function(ep) { addEpisode(ep); });
+    } else {
+      addEpisode();
+    }
+    // Restore surgeries
+    document.getElementById('surgeriesContainer').innerHTML = '';
+    surgeryCount = 0;
+    if (data._surgeries) {
+      data._surgeries.forEach(function(s) { addSurgery(s); });
+    }
+    // Restore current meds
+    document.getElementById('currentMedsContainer').innerHTML = '';
+    currentMedCount = 0;
+    if (data._currentMeds && data._currentMeds.length > 0) {
+      data._currentMeds.forEach(function(m) { addCurrentMed(m); });
+    } else {
+      addCurrentMed();
+    }
+    // Restore phrasings
+    document.getElementById('phrasingsContainer').innerHTML = '';
+    phrasingCount = 0;
+    if (data._phrasings) {
+      data._phrasings.forEach(function(p) { addPhrasing(p); });
+    }
+    // Restore disorder fields visibility
+    updateDisorderFields();
+    updateLifeChartFields();
+    if (data._manualEdit) {
+      document.getElementById('autoSummary').dataset.manual = 'true';
+      var si2 = document.getElementById('syncIndicator');
+      if (si2) { si2.textContent = 'Auto-sync PAUSED'; si2.style.color = 'var(--accent-amber)'; }
+    }
+    updateChipVisuals();
+    // Re-toggle conditional sections
+    document.querySelectorAll('.episode-card').forEach(function(ep) {
+      var m = ep.id.match(/episode_(\d+)/);
+      if (m) {
+        var num = m[1];
+        toggleHospitalDetails(num);
+        toggleDSHDetails(num);
+        toggleForensicDetails(num);
+      }
+    });
+    // Restore pregnancy details visibility
+    var ps = document.querySelector('input[name="pregnancyStatus"]:checked');
+    if (ps) togglePregnancyDetails();
+    return true;
+  } catch(e) {
+    console.error('restoreData error:', e);
+    initDefaults();
+    return false;
+  }
+}
+
+function initDefaults() {
+  addEpisode();
+  addCurrentMed();
+  createEpochs();
+}
+
+function collectEpisodes() {
+  var eps = [];
+  document.querySelectorAll('.episode-card').forEach(function(ep) {
+    var m = ep.id.match(/episode_(\d+)/);
+    var epNum = m ? m[1] : '1';
+    var polarityEl = ep.querySelector('.episode-polarity');
+    var courseEl = ep.querySelector('.episode-course');
+    var epData = {
+      episodeNum: epNum,
+      age: ep.querySelector('.episode-age') ? ep.querySelector('.episode-age').value : '',
+      year: ep.querySelector('.episode-year') ? ep.querySelector('.episode-year').value : '',
+      polarity: polarityEl ? polarityEl.value : '',
+      duration: ep.querySelector('.episode-duration') ? ep.querySelector('.episode-duration').value : '',
+      severity: ep.querySelector('input[name="severity_' + epNum + '"]:checked') ? ep.querySelector('input[name="severity_' + epNum + '"]:checked').value : '',
+      psychotic: ep.querySelector('input[name="psychotic_' + epNum + '"]:checked') ? ep.querySelector('input[name="psychotic_' + epNum + '"]:checked').value : '',
+      course: courseEl ? courseEl.value : '',
+      precipitant: ep.querySelector('.episode-precipitant') ? ep.querySelector('.episode-precipitant').value : '',
+      interEpisode: ep.querySelector('input[name="interEpisode_' + epNum + '"]:checked') ? ep.querySelector('input[name="interEpisode_' + epNum + '"]:checked').value : '',
+      interDetails: ep.querySelector('.episode-inter-details') ? ep.querySelector('.episode-inter-details').value : '',
+      hospitalised: ep.querySelector('input[name="hospital_' + epNum + '"]:checked') ? ep.querySelector('input[name="hospital_' + epNum + '"]:checked').value : '',
+      admitDate: ep.querySelector('.episode-admit-date') ? ep.querySelector('.episode-admit-date').value : '',
+      admitDuration: ep.querySelector('.episode-admit-duration') ? ep.querySelector('.episode-admit-duration').value : '',
+      mhca: ep.querySelector('.episode-mhca') ? ep.querySelector('.episode-mhca').value : '',
+      dsh: ep.querySelector('input[name="dsh_' + epNum + '"]:checked') ? ep.querySelector('input[name="dsh_' + epNum + '"]:checked').value : '',
+      dshMethod: ep.querySelector('.episode-dsh-method') ? ep.querySelector('.episode-dsh-method').value : '',
+      dshIntent: ep.querySelector('.episode-dsh-intent') ? ep.querySelector('.episode-dsh-intent').value : '',
+      dshOutcome: ep.querySelector('.episode-dsh-outcome') ? ep.querySelector('.episode-dsh-outcome').value : '',
+      forensic: ep.querySelector('input[name="forensic_' + epNum + '"]:checked') ? ep.querySelector('input[name="forensic_' + epNum + '"]:checked').value : '',
+      forensicDetails: ep.querySelector('.episode-forensic-details') ? ep.querySelector('.episode-forensic-details').value : '',
+      meds: []
+    };
+    ep.querySelectorAll('.episode-meds .med-card').forEach(function(medCard) {
+      epData.meds.push({
+        drug: medCard.querySelector('.med-drug') ? medCard.querySelector('.med-drug').value : '',
+        dose: medCard.querySelector('.med-dose') ? medCard.querySelector('.med-dose').value : '',
+        duration: medCard.querySelector('.med-duration') ? medCard.querySelector('.med-duration').value : '',
+        response: medCard.querySelector('.med-response') ? medCard.querySelector('.med-response').value : '',
+        sideEffects: medCard.querySelector('.med-sideeffects') ? medCard.querySelector('.med-sideeffects').value : ''
+      });
+    });
+    eps.push(epData);
+  });
+  return eps;
+}
+
+function collectSurgeries() {
+  var s = [];
+  document.querySelectorAll('#surgeriesContainer .med-card').forEach(function(card) {
+    s.push({
+      procedure: card.querySelector('.surgery-procedure') ? card.querySelector('.surgery-procedure').value : '',
+      date: card.querySelector('.surgery-date') ? card.querySelector('.surgery-date').value : '',
+      complications: card.querySelector('.surgery-complications') ? card.querySelector('.surgery-complications').value : ''
+    });
+  });
+  return s;
+}
+
+function collectCurrentMeds() {
+  var m = [];
+  document.querySelectorAll('#currentMedsContainer .med-card').forEach(function(card) {
+    m.push({
+      drug: card.querySelector('.cmed-drug') ? card.querySelector('.cmed-drug').value : '',
+      dose: card.querySelector('.cmed-dose') ? card.querySelector('.cmed-dose').value : '',
+      freq: card.querySelector('.cmed-freq') ? card.querySelector('.cmed-freq').value : '',
+      duration: card.querySelector('.cmed-duration') ? card.querySelector('.cmed-duration').value : ''
+    });
+  });
+  return m;
+}
+
+function collectPhrasings() {
+  var p = [];
+  document.querySelectorAll('#phrasingsContainer .med-card').forEach(function(card) {
+    p.push({
+      title: card.querySelector('.phrase-title') ? card.querySelector('.phrase-title').value : '',
+      text: card.querySelector('.phrase-text') ? card.querySelector('.phrase-text').value : '',
+      note: card.querySelector('.phrase-note') ? card.querySelector('.phrase-note').value : ''
+    });
+  });
+  return p;
+}
+
+// ===== AUTO-SAVE =====
+var saveTimer;
+function initAutoSave() {
+  document.addEventListener('input', debounceSave);
+  document.addEventListener('change', debounceSave);
+}
+function debounceSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 800);
+}
+
+// ===== SUMMARY =====
+var manualEdit = false;
+document.getElementById('autoSummary').addEventListener('input', function() {
+  manualEdit = true;
+  this.dataset.manual = 'true';
+  var si = document.getElementById('syncIndicator');
+  if (si) { si.textContent = 'Auto-sync PAUSED'; si.style.color = 'var(--accent-amber)'; }
+});
+
+function updateSummary() {
+  if (manualEdit || document.getElementById('autoSummary').dataset.manual === 'true') return;
+  var parts = [];
+  var disorder = document.getElementById('primaryDisorder');
+  if (disorder && disorder.value) {
+    var labels = {
+      bipolar: 'Bipolar Disorder', schizophrenia: 'Schizophrenia', depression: 'Major Depressive Disorder',
+      substance: 'Substance Use Disorder', personality: 'Personality Disorder',
+      neurocognitive: 'Neurocognitive Disorder', anxiety: 'Anxiety/OCD', ptsd: 'PTSD',
+      eating: 'Eating Disorder', other: 'Other psychiatric disorder'
+    };
+    parts.push(labels[disorder.value] || disorder.value);
+  }
+  var episodes = document.querySelectorAll('.episode-card');
+  if (episodes.length > 0) {
+    var epDescs = [];
+    episodes.forEach(function(ep) {
+      var polarity = ep.querySelector('.episode-polarity');
+      var age = ep.querySelector('.episode-age');
+      var polText = polarity && polarity.selectedIndex >= 0 ? polarity.options[polarity.selectedIndex].text : '';
+      var ageText = age ? age.value : '';
+      if (polText && polText !== 'Select...') {
+        epDescs.push((ageText ? 'age ' + ageText + ': ' : '') + polText.toLowerCase());
+      }
+    });
+    if (epDescs.length > 0) {
+      parts.push(epDescs.length + ' documented episode(s) - ' + epDescs.join('; '));
+    }
+  }
+  var interEp = document.querySelector('input[name^="interEpisode_"]:checked');
+  if (interEp) {
+    var labels2 = { 'full-recovery': 'full inter-episode recovery', 'partial-recovery': 'partial inter-episode recovery', 'no-recovery': 'no inter-episode recovery (progressive decline)' };
+    parts.push(labels2[interEp.value] || interEp.value);
+  }
+  var medConds = document.querySelectorAll('input[name="medicalConditions"]:checked');
+  if (medConds.length > 0) {
+    var names = Array.from(medConds).map(function(c) { return c.value; }).join(', ');
+    parts.push('significant medical history: ' + names);
+  }
+  var lcMethod = document.getElementById('lifeChartMethod');
+  if (lcMethod && lcMethod.value) {
+    parts.push('life chart constructed (' + lcMethod.options[lcMethod.selectedIndex].text + ')');
+  }
+  var predPol = document.querySelector('input[name="predominantPolarity"]:checked');
+  if (predPol) parts.push(predPol.value + ' predominant polarity (ISBD)');
+  document.getElementById('autoSummary').value = parts.length > 0 ? 'PAST HISTORY: ' + parts.join('. ') + '.' : '';
+}
+
+function resyncSummary() {
+  manualEdit = false;
+  document.getElementById('autoSummary').dataset.manual = 'false';
+  var si = document.getElementById('syncIndicator');
+  if (si) { si.textContent = 'Auto-sync ON'; si.style.color = 'var(--text-muted)'; }
+  updateSummary();
+  saveData();
+  showToast('Auto-sync restored');
+}
+
+// ===== EPISODE MANAGEMENT =====
+var episodeCount = 0;
+function addEpisode(data) {
+  episodeCount++;
+  var num = data ? data.episodeNum : episodeCount;
+  var container = document.getElementById('episodesContainer');
+  var div = document.createElement('div');
+  div.className = 'episode-card';
+  div.id = 'episode_' + num;
+  var polarityOpts = '<option value="">Select...</option>' +
+    '<option value="depression"' + (data && data.polarity === 'depression' ? ' selected' : '') + '>Depression</option>' +
+    '<option value="mania"' + (data && data.polarity === 'mania' ? ' selected' : '') + '>Mania</option>' +
+    '<option value="hypomania"' + (data && data.polarity === 'hypomania' ? ' selected' : '') + '>Hypomania</option>' +
+    '<option value="mixed"' + (data && data.polarity === 'mixed' ? ' selected' : '') + '>Mixed</option>' +
+    '<option value="psychotic"' + (data && data.polarity === 'psychotic' ? ' selected' : '') + '>Psychotic (non-affective)</option>' +
+    '<option value="anxiety"' + (data && data.polarity === 'anxiety' ? ' selected' : '') + '>Anxiety Crisis</option>' +
+    '<option value="other"' + (data && data.polarity === 'other' ? ' selected' : '') + '>Other</option>';
+  var courseOpts = '<option value="">Select...</option>' +
+    '<option value="single"' + (data && data.course === 'single' ? ' selected' : '') + '>Single Episode</option>' +
+    '<option value="recurrent"' + (data && data.course === 'recurrent' ? ' selected' : '') + '>Recurrent</option>' +
+    '<option value="continuous"' + (data && data.course === 'continuous' ? ' selected' : '') + '>Continuous</option>' +
+    '<option value="partial-remission"' + (data && data.course === 'partial-remission' ? ' selected' : '') + '>In Partial Remission</option>' +
+    '<option value="full-remission"' + (data && data.course === 'full-remission' ? ' selected' : '') + '>In Full Remission</option>';
+  function selCls(name, val) { return (data && data[name] === val) ? ' checked' : ''; }
+  div.innerHTML = `
+    <div class="episode-header">
+      <span class="episode-number">Episode #${num}</span>
+      <button class="episode-remove" onclick="removeEpisode('episode_${num}')">Remove</button>
+    </div>
+    <div class="med-grid">
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Age at Onset</label>
+        <input type="number" class="episode-age" placeholder="Years" value="${data ? data.age : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Approx. Year</label>
+        <input type="number" class="episode-year" placeholder="YYYY" value="${data ? data.year : ''}" oninput="saveData()">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Polarity / Type</label>
+      <select class="episode-polarity" onchange="saveData()">${polarityOpts}</select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Duration</label>
+      <input type="text" class="episode-duration" placeholder="e.g., 6 weeks / 3 months" value="${data ? data.duration : ''}" oninput="saveData()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Severity</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.severity === 'mild' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="severity_${num}" value="mild"${selCls('severity','mild')} onchange="saveData()"> <span class="option-text">Mild</span>
+        </label>
+        <label class="option-chip${data && data.severity === 'moderate' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="severity_${num}" value="moderate"${selCls('severity','moderate')} onchange="saveData()"> <span class="option-text">Moderate</span>
+        </label>
+        <label class="option-chip${data && data.severity === 'severe' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="severity_${num}" value="severe"${selCls('severity','severe')} onchange="saveData()"> <span class="option-text">Severe</span>
+        </label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Psychotic Features?</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.psychotic === 'yes' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="psychotic_${num}" value="yes"${selCls('psychotic','yes')} onchange="saveData()"> <span class="option-text">Yes</span>
+        </label>
+        <label class="option-chip${data && data.psychotic === 'no' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="psychotic_${num}" value="no"${selCls('psychotic','no')} onchange="saveData()"> <span class="option-text">No</span>
+        </label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Course Modifier (ISBD)
+        <button class="help-toggle" onclick="toggleHelp('helpCourse_${num}',event)">&#9432;</button>
+      </label>
+      <select class="episode-course" onchange="saveData()">${courseOpts}</select>
+      <div class="help-panel" id="helpCourse_${num}">
+        <div class="help-title">ISBD Course Modifiers</div>
+        <div class="help-section"><strong>Single:</strong> One lifetime episode</div>
+        <div class="help-section"><strong>Recurrent:</strong> Multiple discrete episodes with inter-episode recovery</div>
+        <div class="help-section"><strong>Continuous:</strong> No remission between episodes</div>
+        <div class="help-section"><strong>Partial remission:</strong> Some symptoms persist below syndromal threshold</div>
+        <div class="help-section"><strong>Full remission:</strong> No symptoms present</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Precipitating Factors</label>
+      <div class="field-hint">Stressors, life events, substance use, medication changes, medical illness</div>
+      <textarea class="episode-precipitant" placeholder="Precipitating factors..." oninput="saveData(); resizeTextarea(this);">${data ? data.precipitant : ''}</textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Inter-Episode Functioning (HIGHEST YIELD)</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.interEpisode === 'full-recovery' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="interEpisode_${num}" value="full-recovery"${selCls('interEpisode','full-recovery')} onchange="saveData()"> <span class="option-text">Full recovery to baseline</span>
+        </label>
+        <label class="option-chip${data && data.interEpisode === 'partial-recovery' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="interEpisode_${num}" value="partial-recovery"${selCls('interEpisode','partial-recovery')} onchange="saveData()"> <span class="option-text">Partial / some residual</span>
+        </label>
+        <label class="option-chip${data && data.interEpisode === 'no-recovery' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="interEpisode_${num}" value="no-recovery"${selCls('interEpisode','no-recovery')} onchange="saveData()"> <span class="option-text">No recovery / progressive decline</span>
+        </label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Inter-Episode Details</label>
+      <div class="field-hint">Was the patient working? Relationships intact? Any residual symptoms? This distinguishes schizophrenia from BPAD</div>
+      <textarea class="episode-inter-details" placeholder="Inter-episode functioning details..." oninput="saveData(); resizeTextarea(this);">${data ? data.interDetails : ''}</textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Treatments Received for This Episode</label>
+      <div class="episode-meds" id="episodeMeds_${num}"></div>
+      <button class="add-med-btn" onclick="addEpisodeMed(${num})">+ Add Treatment</button>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Hospitalisation?</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.hospitalised === 'yes-voluntary' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="hospital_${num}" value="yes-voluntary"${selCls('hospitalised','yes-voluntary')} onchange="toggleHospitalDetails(${num}); saveData();"> <span class="option-text">Yes - Voluntary</span>
+        </label>
+        <label class="option-chip${data && data.hospitalised === 'yes-involuntary' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="hospital_${num}" value="yes-involuntary"${selCls('hospitalised','yes-involuntary')} onchange="toggleHospitalDetails(${num}); saveData();"> <span class="option-text">Yes - Involuntary</span>
+        </label>
+        <label class="option-chip${data && data.hospitalised === 'no' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="hospital_${num}" value="no"${selCls('hospitalised','no')} onchange="toggleHospitalDetails(${num}); saveData();"> <span class="option-text">No</span>
+        </label>
+      </div>
+    </div>
+    <div id="hospitalDetails_${num}" class="hidden">
+      <div class="med-grid">
+        <div class="field-group">
+          <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Admission Date</label>
+          <input type="date" class="episode-admit-date" onchange="saveData()">
+        </div>
+        <div class="field-group">
+          <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Duration</label>
+          <input type="text" class="episode-admit-duration" placeholder="e.g., 3 weeks" oninput="saveData()">
+        </div>
+        <div class="field-group" style="grid-column:1/-1;">
+          <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">MHCA Section (if involuntary)</label>
+          <input type="text" class="episode-mhca" placeholder="e.g., Section 2 / 3 / 136" oninput="saveData()">
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Suicide Attempt / DSH During This Episode?</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.dsh === 'yes' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="dsh_${num}" value="yes"${selCls('dsh','yes')} onchange="toggleDSHDetails(${num}); saveData();"> <span class="option-text">Yes</span>
+        </label>
+        <label class="option-chip${data && data.dsh === 'no' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="dsh_${num}" value="no"${selCls('dsh','no')} onchange="toggleDSHDetails(${num}); saveData();"> <span class="option-text">No</span>
+        </label>
+      </div>
+    </div>
+    <div id="dshDetails_${num}" class="hidden">
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Method</label>
+        <input type="text" class="episode-dsh-method" placeholder="Overdose, cutting, hanging, etc." oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Intent (0-10: 0=none, 10=definite wish to die)</label>
+        <input type="number" class="episode-dsh-intent" min="0" max="10" placeholder="0-10" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Lethality &amp; Outcome</label>
+        <div class="field-hint">Medical seriousness, ICU admission, what happened next, treatment change</div>
+        <textarea class="episode-dsh-outcome" placeholder="Lethality and outcome..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Forensic Events Related to This Episode?</label>
+      <div class="options-inline">
+        <label class="option-chip${data && data.forensic === 'yes' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="forensic_${num}" value="yes"${selCls('forensic','yes')} onchange="toggleForensicDetails(${num}); saveData();"> <span class="option-text">Yes</span>
+        </label>
+        <label class="option-chip${data && data.forensic === 'no' ? ' checked' : ''}" onclick="selectChip(this)">
+          <input type="radio" name="forensic_${num}" value="no"${selCls('forensic','no')} onchange="toggleForensicDetails(${num}); saveData();"> <span class="option-text">No</span>
+        </label>
+      </div>
+    </div>
+    <div id="forensicDetails_${num}" class="hidden">
+      <div class="field-hint">Arrests, charges, convictions, probation, forensic hospital orders, nature of offence and relationship to illness</div>
+      <textarea class="episode-forensic-details" placeholder="Forensic details..." oninput="saveData(); resizeTextarea(this);"></textarea>
+    </div>
+  `;
+  container.appendChild(div);
+  if (data && data.meds) data.meds.forEach(function(med) { addEpisodeMed(num, med); });
+  if (data && data.hospitalised && data.hospitalised.startsWith('yes')) {
+    toggleHospitalDetails(num);
+    var el = div.querySelector('.episode-admit-date'); if (el && data.admitDate) el.value = data.admitDate;
+    var el2 = div.querySelector('.episode-admit-duration'); if (el2 && data.admitDuration) el2.value = data.admitDuration;
+    var el3 = div.querySelector('.episode-mhca'); if (el3 && data.mhca) el3.value = data.mhca;
+  }
+  if (data && data.dsh === 'yes') {
+    toggleDSHDetails(num);
+    var el = div.querySelector('.episode-dsh-method'); if (el && data.dshMethod) el.value = data.dshMethod;
+    var el2 = div.querySelector('.episode-dsh-intent'); if (el2 && data.dshIntent) el2.value = data.dshIntent;
+    var el3 = div.querySelector('.episode-dsh-outcome'); if (el3 && data.dshOutcome) el3.value = data.dshOutcome;
+  }
+  if (data && data.forensic === 'yes') {
+    toggleForensicDetails(num);
+    var el = div.querySelector('.episode-forensic-details'); if (el && data.forensicDetails) el.value = data.forensicDetails;
+  }
+  setTimeout(function() { div.querySelectorAll('textarea').forEach(resizeTextarea); }, 0);
+  return div;
+}
+
+function removeEpisode(id) {
+  var el = document.getElementById(id);
+  if (el) el.remove();
+  saveData();
+}
+
+function addEpisodeMed(epNum, data) {
+  var container = document.getElementById('episodeMeds_' + epNum);
+  if (!container) return;
+  var div = document.createElement('div');
+  div.className = 'med-card';
+  div.innerHTML = `
+    <div class="med-grid">
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Drug</label>
+        <input type="text" class="med-drug" placeholder="e.g., Lithium" value="${data ? data.drug : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Dose</label>
+        <input type="text" class="med-dose" placeholder="e.g., 1000 mg" value="${data ? data.dose : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Duration</label>
+        <input type="text" class="med-duration" placeholder="e.g., 6 months" value="${data ? data.duration : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Response</label>
+        <select class="med-response" onchange="saveData()">
+          <option value="">Select</option>
+          <option value="full-remission" ${data && data.response === 'full-remission' ? 'selected' : ''}>Full Remission</option>
+          <option value="partial-response" ${data && data.response === 'partial-response' ? 'selected' : ''}>Partial Response</option>
+          <option value="no-response" ${data && data.response === 'no-response' ? 'selected' : ''}>No Response</option>
+          <option value="worsening" ${data && data.response === 'worsening' ? 'selected' : ''}>Worsening</option>
+        </select>
+      </div>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Side Effects / Adherence Notes</label>
+        <input type="text" class="med-sideeffects" placeholder="Side effects and adherence..." value="${data ? data.sideEffects : ''}" oninput="saveData()">
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm" style="margin-top:8px;width:100%;" onclick="this.closest('.med-card').remove(); saveData();">Remove Treatment</button>
+  `;
+  container.appendChild(div);
+}
+
+function toggleHospitalDetails(num) {
+  var el = document.getElementById('hospitalDetails_' + num);
+  var sel = document.querySelector('input[name="hospital_' + num + '"]:checked');
+  if (el && sel) el.classList.toggle('hidden', !sel.value.startsWith('yes'));
+}
+function toggleDSHDetails(num) {
+  var el = document.getElementById('dshDetails_' + num);
+  var sel = document.querySelector('input[name="dsh_' + num + '"]:checked');
+  if (el && sel) el.classList.toggle('hidden', sel.value !== 'yes');
+}
+function toggleForensicDetails(num) {
+  var el = document.getElementById('forensicDetails_' + num);
+  var sel = document.querySelector('input[name="forensic_' + num + '"]:checked');
+  if (el && sel) el.classList.toggle('hidden', sel.value !== 'yes');
+}
+
+// ===== SURGERY MANAGEMENT =====
+var surgeryCount = 0;
+function addSurgery(data) {
+  surgeryCount++;
+  var container = document.getElementById('surgeriesContainer');
+  var div = document.createElement('div');
+  div.className = 'med-card';
+  div.innerHTML = `
+    <div class="med-grid">
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Procedure</label>
+        <input type="text" class="surgery-procedure" placeholder="e.g., Appendectomy" value="${data ? data.procedure : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Date / Year</label>
+        <input type="text" class="surgery-date" placeholder="YYYY or MM/YYYY" value="${data ? data.date : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group" style="grid-column:1/-1;">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Complications</label>
+        <div class="field-hint">None / infection / haemorrhage / anaesthetic complications</div>
+        <input type="text" class="surgery-complications" placeholder="Complications..." value="${data ? data.complications : ''}" oninput="saveData()">
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm" style="margin-top:8px;width:100%;" onclick="this.closest('.med-card').remove(); saveData();">Remove Surgery</button>
+  `;
+  container.appendChild(div);
+}
+
+// ===== CURRENT MEDICATION MANAGEMENT =====
+var currentMedCount = 0;
+function addCurrentMed(data) {
+  currentMedCount++;
+  var container = document.getElementById('currentMedsContainer');
+  var div = document.createElement('div');
+  div.className = 'med-card';
+  div.innerHTML = `
+    <div class="med-grid">
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Drug</label>
+        <input type="text" class="cmed-drug" placeholder="e.g., Metformin" value="${data ? data.drug : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Dose</label>
+        <input type="text" class="cmed-dose" placeholder="e.g., 500 mg BD" value="${data ? data.dose : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Frequency</label>
+        <input type="text" class="cmed-freq" placeholder="e.g., Twice daily" value="${data ? data.freq : ''}" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Duration</label>
+        <input type="text" class="cmed-duration" placeholder="e.g., 2 years" value="${data ? data.duration : ''}" oninput="saveData()">
+      </div>
+    </div>
+    <button class="btn btn-danger btn-sm" style="margin-top:8px;width:100%;" onclick="this.closest('.med-card').remove(); saveData();">Remove Treatment</button>
+  `;
+  container.appendChild(div);
+}
+
+// ===== TULSA EPOCH MANAGEMENT =====
+var epochData = [
+  { num: 1, age: "Birth to 5 years" },
+  { num: 2, age: "5 to 10 years" },
+  { num: 3, age: "11 to 14 years" },
+  { num: 4, age: "15 to 18 years" },
+  { num: 5, age: "18 to 25 years" },
+  { num: 6, age: "25 to 35 years" },
+  { num: 7, age: "35 to 45 years" },
+  { num: 8, age: "45 to 55 years" }
+];
+function createEpochs() {
+  var container = document.getElementById('epochsContainer');
+  if (!container) return;
+  if (container.children.length > 0) return; // Don't recreate if already exist
+  container.innerHTML = '';
+  epochData.forEach(function(epoch) {
+    var div = document.createElement('div');
+    div.className = 'epoch-card';
+    div.id = 'epoch_' + epoch.num;
+    div.innerHTML = `
+      <div class="epoch-header">
+        <span class="epoch-number">${epoch.num}</span>
+        <div>
+          <div class="epoch-title">Epoch ${epoch.num}</div>
+          <div class="epoch-age">${epoch.age}</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Mood Rating (1-10; 1=worst ever, 10=best)</label>
+        <input type="number" class="epoch-mood" min="1" max="10" placeholder="1-10" oninput="saveData()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Residences / Schools</label>
+        <textarea class="epoch-residences" placeholder="Residences and schools..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Employment / Leisure / Hobbies</label>
+        <textarea class="epoch-employment" placeholder="Employment and hobbies..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Social Connections</label>
+        <div class="field-hint">People they felt close to, relationship quality</div>
+        <textarea class="epoch-social" placeholder="Social connections..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Substance Exposure</label>
+        <textarea class="epoch-substances" placeholder="Substance exposure..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Mental Health Treatment Received</label>
+        <div class="field-hint">Therapy, medications, hospitalisations during this epoch</div>
+        <textarea class="epoch-treatment" placeholder="Treatment received..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Family Structure Changes</label>
+        <div class="field-hint">Births, marriages, deaths, divorces, relocations</div>
+        <textarea class="epoch-family" placeholder="Family structure changes..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Major Life Events with Mood Ratings</label>
+        <div class="field-hint">Event + mood rating at the time (-4 very negative to +4 very positive)</div>
+        <textarea class="epoch-events" placeholder="Life events with mood ratings..." oninput="saveData(); resizeTextarea(this);"></textarea>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ===== PHRASING MANAGEMENT =====
+var phrasingCount = 0;
+function addPhrasing(data) {
+  phrasingCount++;
+  var container = document.getElementById('phrasingsContainer');
+  var div = document.createElement('div');
+  div.className = 'med-card';
+  div.style.cssText = 'border-left:3px solid var(--accent-purple);';
+  div.innerHTML = `
+    <div class="field-group">
+      <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Title/Context</label>
+      <input type="text" class="phrase-title" placeholder="e.g., My substance use opening question" value="${data ? data.title : ''}" oninput="saveData()">
+    </div>
+    <div class="field-group">
+      <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Phrasing</label>
+      <textarea class="phrase-text" placeholder="Write your phrasing here..." oninput="saveData(); resizeTextarea(this);">${data ? data.text : ''}</textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label" style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">Notes / When to Use</label>
+      <input type="text" class="phrase-note" placeholder="Context, patient population, caveats..." value="${data ? data.note : ''}" oninput="saveData()">
+    </div>
+    <button class="btn btn-danger btn-sm" style="width:100%;" onclick="this.closest('.med-card').remove(); saveData();">Remove Phrasing</button>
+  `;
+  container.appendChild(div);
+  setTimeout(function() { div.querySelectorAll('textarea').forEach(resizeTextarea); }, 0);
+}
+
+// ===== UI HELPERS =====
+function toggleAccordion(cardId) {
+  document.getElementById(cardId).classList.toggle('open');
+}
+function toggleQuickRef() {
+  var panel = document.getElementById('quickRefPanel');
+  var icon = document.getElementById('quickRefIcon');
+  panel.classList.toggle('open');
+  var isOpen = panel.classList.contains('open');
+  if (icon) icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+function toggleHelp(id, event) {
+  if (event) event.stopPropagation();
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+function toggleCollapsible(trigger, contentId) {
+  trigger.classList.toggle('open');
+  var content = document.getElementById(contentId);
+  if (content) content.classList.toggle('open');
+}
+function selectChip(label) {
+  var radio = label.querySelector('input[type="radio"]');
+  if (!radio) return;
+  var name = radio.name;
+  document.querySelectorAll('input[name="' + name + '"]').forEach(function(r) {
+    var c = r.closest('.option-chip');
+    if (c) c.classList.remove('checked');
+  });
+  label.classList.add('checked');
+  radio.checked = true;
+}
+function toggleChipCheckbox(label) {
+  var cb = label.querySelector('input[type="checkbox"]');
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  label.classList.toggle('checked', cb.checked);
+}
+function updateDisorderFields() {
+  var val = document.getElementById('primaryDisorder').value;
+  ['bipolar','schizophrenia','depression','substance','personality','neurocognitive','anxiety'].forEach(function(id) {
+    var el = document.getElementById(id + 'Fields');
+    if (el) el.classList.add('hidden');
+  });
+  if (val) {
+    var el = document.getElementById(val + 'Fields');
+    if (el) el.classList.remove('hidden');
+  }
+}
+function updateLifeChartFields() {
+  var val = document.getElementById('lifeChartMethod').value;
+  ['nimh','tulsa','lcs'].forEach(function(id) {
+    var el = document.getElementById(id + 'Fields');
+    if (el) el.classList.add('hidden');
+  });
+  if (val === 'nimh-retro' || val === 'nimh-pro') {
+    document.getElementById('nimhFields').classList.remove('hidden');
+  } else if (val === 'tulsa') {
+    document.getElementById('tulsaFields').classList.remove('hidden');
+  } else if (val === 'lcs') {
+    document.getElementById('lcsFields').classList.remove('hidden');
+  }
+}
+function togglePregnancyDetails() {
+  var el = document.getElementById('pregnancyDetails');
+  var sel = document.querySelector('input[name="pregnancyStatus"]:checked');
+  if (el && sel) el.classList.toggle('hidden', sel.value !== 'pregnant' && sel.value !== 'postpartum');
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ===== PDF EXPORT =====
+function exportPDF() {
+  document.querySelectorAll('.accordion-card').forEach(function(c) { c.classList.add('open'); });
+  document.getElementById('quickRefPanel').classList.add('open');
+  document.querySelectorAll('textarea').forEach(resizeTextarea);
+  window.print();
+}
+
+// ===== COPY SUMMARY =====
+function copySummary() {
+  var summary = document.getElementById('autoSummary');
+  summary.select();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(summary.value).then(function() { showToast('Summary copied!'); });
+  } else {
+    document.execCommand('copy');
+    showToast('Summary copied!');
+  }
+}
+
+// ===== CLEAR ALL =====
+function confirmClear() {
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function cancelClear() {
+  document.getElementById('confirmOverlay').classList.remove('show');
+}
+function executeClear() {
+  var data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+    data[el.dataset.key] = el.value;
+  });
+  var backupKey = BACKUP_PREFIX + new Date().toISOString().replace(/[:.]/g, '-');
+  localStorage.setItem(backupKey, JSON.stringify(data));
+  localStorage.removeItem(SAVE_KEY);
+  document.getElementById('episodesContainer').innerHTML = '';
+  document.getElementById('surgeriesContainer').innerHTML = '';
+  document.getElementById('currentMedsContainer').innerHTML = '';
+  document.getElementById('phrasingsContainer').innerHTML = '';
+  document.querySelectorAll('input, textarea, select').forEach(function(el) {
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = false;
+      var chip = el.closest('.option-chip');
+      if (chip) chip.classList.remove('checked');
+    } else {
+      el.value = '';
+    }
+  });
+  var ec = document.getElementById('epochsContainer');
+  if (ec) ec.innerHTML = '';
+  manualEdit = false;
+  var si = document.getElementById('syncIndicator');
+  if (si) { si.textContent = 'Auto-sync ON'; si.style.color = 'var(--text-muted)'; }
+  var as = document.getElementById('autoSummary');
+  if (as) as.dataset.manual = 'false';
+  episodeCount = 0; surgeryCount = 0; currentMedCount = 0; phrasingCount = 0;
+  addEpisode(); addCurrentMed(); createEpochs();
+  cancelClear();
+  showToast('All data cleared. Backup saved.');
+  var ss = document.getElementById('saveStatus');
+  if (ss) ss.textContent = 'Cleared - new session';
+}
+
+// ===== DOMContentLoaded =====
+document.addEventListener('DOMContentLoaded', function() {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  setTimeout(function() {
+    document.querySelectorAll('textarea').forEach(resizeTextarea);
+  }, 300);
+});
+
+// ===== beforeprint =====
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('.accordion-card').forEach(function(c) { c.classList.add('open'); });
+  document.getElementById('quickRefPanel').classList.add('open');
+  document.querySelectorAll('textarea').forEach(resizeTextarea);
+});
+
+// ===== beforeunload =====
+window.addEventListener('beforeunload', function() { saveData(); });
+</script>
+
+</body>
+</html>

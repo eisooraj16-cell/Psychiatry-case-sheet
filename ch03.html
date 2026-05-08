@@ -1,0 +1,2657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 03 — History of Presenting Illness (HOPI)</title>
+<style>
+  /* ===== CSS VARIABLES & RESET ===== */
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-card: #111111;
+    --bg-input: #1a1a1a;
+    --bg-hover: #1f1f1f;
+    --border: #2a2a2a;
+    --border-focus: #444444;
+    --text-primary: #f0f0f0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #888888;
+    --accent: #4fc3f7;
+    --accent-dim: #3a9bc4;
+    --accent-bg: rgba(79,195,247,0.08);
+    --danger: #ff5252;
+    --danger-bg: rgba(255,82,82,0.08);
+    --success: #69f0ae;
+    --warning: #ffd740;
+    --warning-bg: rgba(255,215,64,0.08);
+    --info: #82b1ff;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.6);
+    --touch-min: 52px;
+    --font-base: 16px;
+    --font-sm: 14px;
+    --font-lg: 18px;
+    --font-xl: 22px;
+    --space-xs: 6px;
+    --space-sm: 10px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    font-size: var(--font-base);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 100px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-md) var(--space-lg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .app-header h1 {
+    font-size: var(--font-xl);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .app-header .subtitle {
+    font-size: var(--font-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .save-indicator {
+    font-size: var(--font-sm);
+    color: var(--success);
+    margin-top: var(--space-xs);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .save-indicator.visible {
+    opacity: 1;
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+  }
+
+  /* ===== SUMMARY BOX ===== */
+  .summary-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .summary-box h2 {
+    font-size: var(--font-lg);
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .summary-actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  /* ===== QUICK REF ===== */
+  .quick-ref {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-lg);
+    overflow: hidden;
+  }
+
+  .quick-ref-header {
+    background: var(--bg-secondary);
+    padding: var(--space-md);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: var(--touch-min);
+  }
+
+  .quick-ref-header h3 {
+    font-size: var(--font-lg);
+    font-weight: 600;
+  }
+
+  .quick-ref-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .quick-ref.open .quick-ref-body {
+    max-height: 5000px;
+  }
+
+  .quick-ref-content {
+    padding: var(--space-md);
+  }
+
+  .chevron {
+    transition: transform 0.3s;
+    font-size: var(--font-lg);
+    color: var(--text-muted);
+  }
+
+  .quick-ref.open .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ===== ACCORDION CARD ===== */
+  .accordion {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-md);
+    overflow: hidden;
+  }
+
+  .accordion-header {
+    background: var(--bg-secondary);
+    padding: var(--space-md);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: var(--touch-min);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .accordion.open .accordion-header {
+    border-bottom-color: var(--border);
+  }
+
+  .accordion-header h3 {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .accordion-header .badge {
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: var(--font-sm);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+  }
+
+  .accordion.open .accordion-body {
+    max-height: 15000px;
+  }
+
+  .accordion-content {
+    padding: var(--space-md);
+  }
+
+  /* ===== INSTRUCTION / PITFALL BOXES ===== */
+  .instruction-box {
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  .instruction-box h4 {
+    color: var(--accent);
+    font-size: var(--font-base);
+    margin-bottom: var(--space-xs);
+  }
+
+  .instruction-box ul {
+    margin-left: var(--space-md);
+    color: var(--text-secondary);
+  }
+
+  .instruction-box li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .pitfall-box {
+    background: var(--warning-bg);
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  .pitfall-box h4 {
+    color: var(--warning);
+    font-size: var(--font-base);
+    margin-bottom: var(--space-xs);
+  }
+
+  .pitfall-box ul {
+    margin-left: var(--space-md);
+    color: var(--text-secondary);
+  }
+
+  /* ===== FORM ELEMENTS ===== */
+  .field-group {
+    margin-bottom: var(--space-lg);
+  }
+
+  .field-label {
+    display: block;
+    font-size: var(--font-base);
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+  }
+
+  .field-hint {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    word-wrap: break-word;
+  }
+
+  .help-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: var(--font-sm);
+    cursor: pointer;
+    margin-left: var(--space-sm);
+    vertical-align: middle;
+    min-height: unset;
+  }
+
+  .help-panel {
+    display: none;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  .help-panel.open {
+    display: block;
+  }
+
+  .help-panel h5 {
+    color: var(--accent);
+    margin-bottom: var(--space-xs);
+  }
+
+  .help-panel .sample-phrase {
+    background: var(--bg-input);
+    border-radius: 6px;
+    padding: var(--space-sm);
+    margin: var(--space-xs) 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    border-left: 2px solid var(--accent-dim);
+  }
+
+  /* Text inputs */
+  input[type="text"],
+  input[type="number"],
+  input[type="date"] {
+    width: 100%;
+    min-height: var(--touch-min);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: var(--font-base);
+    padding: var(--space-sm) var(--space-md);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus {
+    border-color: var(--accent);
+  }
+
+  /* ===== TEXTAREA (per spec) ===== */
+  textarea {
+    width: 100%;
+    min-height: 56px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: var(--font-base);
+    padding: var(--space-sm) var(--space-md);
+    line-height: 1.6;
+    outline: none;
+    overflow: hidden;
+    resize: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  textarea:focus {
+    border-color: var(--accent);
+  }
+
+  textarea::placeholder {
+    color: #777777;
+    opacity: 1;
+  }
+
+  /* ===== OPTION CHIPS ===== */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  @media (min-width: 480px) {
+    .options-grid.grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .options-grid.grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .option-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: var(--touch-min);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .option-chip:active {
+    background: var(--bg-hover);
+  }
+
+  .option-chip.checked {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+
+  .option-chip input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .checkmark {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--text-muted);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .radio-circle {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .option-chip.checked .checkmark {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .option-chip.checked .checkmark::after {
+    content: "✓";
+    color: var(--bg-primary);
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .option-chip.checked .radio-circle {
+    border-color: var(--accent);
+  }
+
+  .option-chip.checked .radio-circle::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .option-text {
+    font-size: var(--font-base);
+    color: var(--text-primary);
+  }
+
+  /* ===== RATING SCALE ===== */
+  .rating-scale {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .rating-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: var(--font-base);
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+  }
+
+  .rating-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+
+  .rating-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+    padding: 0 var(--space-xs);
+  }
+
+  /* Inline row / grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 480px) {
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 480px) {
+    .grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  /* Sub-section headers */
+  .sub-header {
+    font-size: var(--font-lg);
+    font-weight: 600;
+    margin: var(--space-lg) 0 var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  .sub-sub-header {
+    font-size: var(--font-base);
+    font-weight: 600;
+    margin: var(--space-md) 0 var(--space-sm);
+    color: var(--text-secondary);
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    min-height: var(--touch-min);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-base);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: opacity 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg-primary);
+  }
+
+  .btn-secondary {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .btn-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+  }
+
+  .btn-small {
+    min-height: 40px;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  /* ===== STICKY BOTTOM BAR ===== */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: var(--space-sm) var(--space-md);
+    z-index: 100;
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  }
+
+  .sticky-bar .btn {
+    flex: 1;
+    max-width: 200px;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-lg);
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .modal h3 {
+    margin-bottom: var(--space-md);
+  }
+
+  .modal p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+  }
+
+  /* ===== TABLE STYLES ===== */
+  .data-table-wrap {
+    overflow-x: auto;
+    margin: var(--space-md) 0;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-sm);
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--space-sm);
+    text-align: left;
+    border: 1px solid var(--border);
+    word-wrap: break-word;
+  }
+
+  .data-table th {
+    background: var(--bg-secondary);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .data-table td {
+    color: var(--text-secondary);
+  }
+
+  /* ===== MNEMONIC / TAG ===== */
+  .mnemonic {
+    display: inline-block;
+    background: var(--accent-bg);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: var(--font-sm);
+    letter-spacing: 0.5px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: var(--space-lg) 0;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .container {
+      padding: var(--space-md);
+    }
+    .app-header {
+      padding: var(--space-sm) var(--space-md);
+    }
+    .rating-option {
+      min-width: 44px;
+      padding: var(--space-sm);
+    }
+  }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body {
+      background: #fff !important;
+      color: #000 !important;
+      padding-bottom: 0 !important;
+      overflow-x: visible !important;
+    }
+
+    .app-header,
+    .sticky-bar,
+    .accordion-header,
+    .quick-ref-header,
+    .summary-actions,
+    .help-toggle,
+    .btn,
+    .modal-overlay,
+    .save-indicator {
+      display: none !important;
+    }
+
+    .accordion,
+    .quick-ref,
+    .summary-box {
+      border: 1px solid #ccc !important;
+      page-break-inside: avoid;
+    }
+
+    .accordion-body,
+    .quick-ref-body {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    .accordion-content,
+    .quick-ref-content {
+      display: block !important;
+    }
+
+    .option-chip {
+      background: #f5f5f5 !important;
+      border: 1px solid #ddd !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .option-chip.checked {
+      background: #e3f2fd !important;
+      border: 1px solid #2196f3 !important;
+    }
+
+    textarea,
+    input {
+      background: #fff !important;
+      border: 1px solid #ccc !important;
+      color: #000 !important;
+      overflow: visible !important;
+      height: auto !important;
+      min-height: 40px !important;
+      resize: none !important;
+    }
+
+    .instruction-box {
+      background: #f5f5f5 !important;
+      border-left: 3px solid #2196f3 !important;
+    }
+
+    .pitfall-box {
+      background: #fff8e1 !important;
+      border-left: 3px solid #ffc107 !important;
+    }
+
+    .field-hint {
+      border: 1px dashed #aaa !important;
+      color: #555 !important;
+    }
+
+    .accordion {
+      page-break-before: always;
+    }
+    .accordion:first-of-type {
+      page-break-before: auto;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Chapter 03 — History of Presenting Illness (HOPI)</h1>
+  <div class="subtitle">The Adult Psychiatry History-Taking Compendium &bull; Diagnostic Engine of the Case</div>
+  <div class="save-indicator" id="saveIndicator">Saved</div>
+</header>
+
+<div class="container">
+
+<!-- LIVE SUMMARY -->
+<div class="summary-box">
+  <h2>Live HOPI Summary</h2>
+  <div class="instruction-box">
+    <h4>OPCRAST Mnemonic</h4>
+    <p><span class="mnemonic">O</span>nset, <span class="mnemonic">P</span>recipitant, <span class="mnemonic">C</span>ourse, <span class="mnemonic">R</span>isk, <span class="mnemonic">A</span>ssociated disturbances, <span class="mnemonic">S</span>ymptoms, <span class="mnemonic">T</span>reatment. The summary builds automatically as you fill each section. You can edit it directly &mdash; auto-sync will pause until you press Re-sync.</p>
+  </div>
+  <textarea data-key="liveSummary" id="liveSummary" class="field-textarea" placeholder="Summary will auto-generate as you fill the form..."></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-secondary btn-small" onclick="resyncSummary()">Re-sync</button>
+    <button class="btn btn-primary btn-small" onclick="copySummary()">Copy to Clipboard</button>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE PANELS -->
+<div class="quick-ref open" id="qrMnemonic" data-qr="mnemonic">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <h3>OPCRAST &amp; Key Mnemonics</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="quick-ref-body">
+    <div class="quick-ref-content">
+      <p><strong>OPCRAST</strong> &mdash; For the index HOPI presentation: <span class="mnemonic">O</span>nset, <span class="mnemonic">P</span>recipitant, <span class="mnemonic">C</span>ourse, <span class="mnemonic">R</span>isk (current), <span class="mnemonic">A</span>ssociated disturbances (biological functions + functional impact), <span class="mnemonic">S</span>ymptoms in chronological order, <span class="mnemonic">T</span>reatment received this episode.</p>
+      <p style="margin-top:var(--space-sm);"><strong>Biological sweep order:</strong> Sleep &rarr; Appetite &rarr; Weight &rarr; Energy &rarr; Libido &rarr; Diurnal variation &rarr; Bowel/bladder</p>
+      <p style="margin-top:var(--space-sm);"><strong>Suicide screen (Patterson ladder):</strong> 1. Life not worth living &rarr; 2. Wish not to wake &rarr; 3. Thoughts of doing something &rarr; 4. Plan &rarr; 5. Steps taken &rarr; 6. What stops you (protective factors)</p>
+    </div>
+  </div>
+</div>
+
+<div class="quick-ref" id="qrOnset" data-qr="onset">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <h3>Onset &amp; Course Taxonomy</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="quick-ref-body">
+    <div class="quick-ref-content">
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Onset</th><th>Timeframe</th><th>Differential shift</th></tr></thead>
+          <tbody>
+            <tr><td>Abrupt</td><td>Within 48 hours</td><td>Organic, delirium, drug-induced, brief psychotic, mania</td></tr>
+            <tr><td>Acute</td><td>Hours to 2 weeks</td><td>Organic, mania, substance-related, brief psychotic</td></tr>
+            <tr><td>Sub-acute</td><td>Over a few weeks</td><td>Depression, anxiety, some psychotic</td></tr>
+            <tr><td>Insidious</td><td>Weeks to months</td><td>Schizophrenia, recurrent depression, dementia, personality decompensation</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Course</th><th>Definition</th></tr></thead>
+          <tbody>
+            <tr><td>Episodic</td><td>Discrete symptomatic periods with intervening normalcy</td></tr>
+            <tr><td>Continuous</td><td>Unremitting baseline symptoms</td></tr>
+            <tr><td>Fluctuating</td><td>Periodic exacerbations on a continuous baseline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="quick-ref" id="qrCGI" data-qr="cgi">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <h3>CGI-Severity (CGI-S) 1&ndash;7 Scale</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="quick-ref-body">
+    <div class="quick-ref-content">
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Score</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Normal, not at all ill</td></tr>
+            <tr><td>2</td><td>Borderline mentally ill</td></tr>
+            <tr><td>3</td><td>Mildly ill</td></tr>
+            <tr><td>4</td><td>Moderately ill</td></tr>
+            <tr><td>5</td><td>Markedly ill</td></tr>
+            <tr><td>6</td><td>Severely ill</td></tr>
+            <tr><td>7</td><td>Among the most extremely ill patients</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="quick-ref" id="qrDisorders" data-qr="disorders">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <h3>Disorder-Specific Tailoring Quick-View</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="quick-ref-body">
+    <div class="quick-ref-content">
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Disorder</th><th>Onset typical</th><th>Key discriminator</th><th>CGI-S typical</th></tr></thead>
+          <tbody>
+            <tr><td>Schizophrenia / FEP</td><td>Insidious</td><td>Prodrome, first-rank symptoms</td><td>5&ndash;6</td></tr>
+            <tr><td>Mania / Bipolar I</td><td>Acute (&le;1 week)</td><td>Reduced sleep need (not insomnia)</td><td>5&ndash;6</td></tr>
+            <tr><td>MDD severe/melancholic</td><td>Insidious</td><td>Diurnal variation, early waking, psychomotor slowing</td><td>4&ndash;5</td></tr>
+            <tr><td>Alcohol use disorder</td><td>Insidious escalation</td><td>QFD, longest abstinence, harm continuation</td><td>4&ndash;5</td></tr>
+            <tr><td>Panic disorder</td><td>Acute, remembered date</td><td>Sudden fear peak 10 min, cardiology workup</td><td>3&ndash;4</td></tr>
+            <tr><td>OCD</td><td>Insidious, long delay</td><td>Ego-dystonia, time spent, family accommodation</td><td>4&ndash;5</td></tr>
+            <tr><td>PTSD</td><td>Post-trauma</td><td>4 DSM-5 clusters, identifiable trauma</td><td>4&ndash;5</td></tr>
+            <tr><td>Anorexia nervosa</td><td>Insidious</td><td>BMI trajectory, preserved hunger, body image distortion</td><td>5&ndash;6</td></tr>
+            <tr><td>FND / Dissociative</td><td>Acute, stress-coupled</td><td>La belle indiff&eacute;rence, model/template, Hoover&rsquo;s sign</td><td>3&ndash;4</td></tr>
+            <tr><td>BPD</td><td>Chronic baseline + acute decomp</td><td>Identity disturbance, idealisation-devaluation, chronic emptiness</td><td>4&ndash;5</td></tr>
+            <tr><td>Delirium</td><td>Abrupt</td><td>Fluctuating, sundowning, visual hallucinations</td><td>5&ndash;6</td></tr>
+            <tr><td>Dementia</td><td>Insidious</td><td>Progressive, clear consciousness</td><td>4&ndash;5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION A — NIMHANS FRAMEWORK
+     ======================== -->
+<div class="accordion open" id="secA" data-card="A">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">A</span> NIMHANS Framework</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+
+      <div class="instruction-box">
+        <h4>Why this section matters</h4>
+        <p>The NIMHANS proforma is the backbone of the HOPI. A detailed, coherent account from onset to consultation with chronological evolution is required. The first six items are verbatim from the proforma; the four extensions are mandated by IPS Karnataka 2023 consensus.</p>
+      </div>
+
+      <!-- A1: Onset -->
+      <div class="sub-header" id="A1">A1. Mode of Onset</div>
+      <div class="instruction-box">
+        <h4>Diagnostic significance</h4>
+        <ul>
+          <li>Abrupt/acute onset &rarr; organic, delirium, drug-induced psychosis, autoimmune encephalitis, post-ictal, brief psychotic disorder, mania, substance-related.</li>
+          <li>Insidious onset &rarr; schizophrenia, recurrent depression, dementia, personality decompensation.</li>
+          <li>The taxonomy is exam-defensible: timeline is your first defence of the differential.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Mode of onset <button class="help-toggle" onclick="toggleHelp('helpA1')">ℹ️</button></label>
+        <div class="help-panel" id="helpA1">
+          <h5>Sample phrasing</h5>
+          <div class="sample-phrase">&ldquo;Start from the last time you felt fully like yourself, and walk me forward.&rdquo;</div>
+          <div class="sample-phrase">&ldquo;What was the last day you felt fully like yourself? Not perfect, just yourself. The version your family would recognise.&rdquo;</div>
+          <p style="margin-top:var(--space-sm);"><strong>Exam pearl:</strong> If patient and family cannot name &ldquo;the last day fully yourself&rdquo;, onset is by definition insidious.</p>
+        </div>
+        <div class="options-grid" id="onsetMode">
+          <label class="option-chip" onclick="selectRadio(this,'onsetMode')">
+            <input type="radio" name="onsetMode" value="Abrupt, within 48 hours" data-key="onsetMode">
+            <span class="radio-circle"></span>
+            <span class="option-text">Abrupt &mdash; within 48 hours</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'onsetMode')">
+            <input type="radio" name="onsetMode" value="Acute, within hours to 2 weeks" data-key="onsetMode_acute">
+            <span class="radio-circle"></span>
+            <span class="option-text">Acute &mdash; hours to 2 weeks</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'onsetMode')">
+            <input type="radio" name="onsetMode" value="Sub-acute, over a few weeks" data-key="onsetMode_subacute">
+            <span class="radio-circle"></span>
+            <span class="option-text">Sub-acute &mdash; over a few weeks</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'onsetMode')">
+            <input type="radio" name="onsetMode" value="Insidious, over weeks to months" data-key="onsetMode_insidious">
+            <span class="radio-circle"></span>
+            <span class="option-text">Insidious &mdash; weeks to months</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Date of onset / last day fully self</label>
+          <input type="date" data-key="onsetDate" id="onsetDate">
+        </div>
+        <div>
+          <label class="field-label">Duration (calculated from anchor)</label>
+          <input type="text" data-key="onsetDuration" id="onsetDuration" placeholder="e.g., 4 months, 2 weeks">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Onset description (patient/family words)</label>
+        <div class="field-hint">Describe exactly how the illness began, in the patient&rsquo;s or family&rsquo;s own words. This is the anchor of the entire HOPI narrative.</div>
+        <textarea data-key="onsetDesc" id="onsetDesc" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Prodrome description <button class="help-toggle" onclick="toggleHelp('helpProdrome')">ℹ️</button></label>
+        <div class="help-panel" id="helpProdrome">
+          <h5>Common pitfall</h5>
+          <p>Patient and family under-report the prodrome in schizophrenia and depression because it was unremarkable in retrospect. The &ldquo;last day fully yourself&rdquo; anchor is the corrective.</p>
+        </div>
+        <div class="field-hint">Any pre-morbid changes: social withdrawal, dropping grades, sleep-wake reversal, suspiciousness, irritability. Document with approximate dates.</div>
+        <textarea data-key="prodromeDesc" id="prodromeDesc" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A2: Precipitating Factors -->
+      <div class="sub-header" id="A2">A2. Precipitating Factors</div>
+      <div class="instruction-box">
+        <h4>How it shifts the differential</h4>
+        <ul>
+          <li>Precipitants are <strong>not</strong> causes. Use the diathesis-stress framework.</li>
+          <li>Always ascertain: did the event <em>precede</em> the illness or was it a <em>consequence</em>?</li>
+          <li>Job loss <em>after</em> illness onset is a marker, not a trigger.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Precipitating event identified?</label>
+        <div class="options-grid" id="precipIdentified">
+          <label class="option-chip" onclick="selectRadio(this,'precipIdentified')">
+            <input type="radio" name="precipIdentified" value="Yes" data-key="precip_yes">
+            <span class="radio-circle"></span>
+            <span class="option-text">Yes</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'precipIdentified')">
+            <input type="radio" name="precipIdentified" value="No" data-key="precip_no">
+            <span class="radio-circle"></span>
+            <span class="option-text">No</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'precipIdentified')">
+            <input type="radio" name="precipIdentified" value="Unclear" data-key="precip_unclear">
+            <span class="radio-circle"></span>
+            <span class="option-text">Unclear</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Precipitant categories (multiple allowed)</label>
+        <div class="options-grid grid-2" id="precipTypes">
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="Physical (febrile illness, head injury, surgery, parturition)" data-key="precip_physical">
+            <span class="checkmark"></span>
+            <span class="option-text">Physical (febrile illness, head injury, surgery, parturition)</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="Psychological (bereavement, exam failure, trauma)" data-key="precip_psych">
+            <span class="checkmark"></span>
+            <span class="option-text">Psychological (bereavement, exam failure, trauma)</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="Social (migration, marriage, financial loss, job loss)" data-key="precip_social">
+            <span class="checkmark"></span>
+            <span class="option-text">Social (migration, marriage, financial loss, job loss)</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="Substance-related" data-key="precip_substance">
+            <span class="checkmark"></span>
+            <span class="option-text">Substance-related</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="Medical illness onset/medication change" data-key="precip_medical">
+            <span class="checkmark"></span>
+            <span class="option-text">Medical illness onset / medication change</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="precipTypes" value="None identified" data-key="precip_none">
+            <span class="checkmark"></span>
+            <span class="option-text">None identified</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Precipitant details &amp; temporal relationship <button class="help-toggle" onclick="toggleHelp('helpPrecip')">ℹ️</button></label>
+        <div class="help-panel" id="helpPrecip">
+          <h5>Documentation rule</h5>
+          <p>Write: &ldquo;The precipitant for the index episode was [X], on a background of [diathesis].&rdquo; Never write: &ldquo;caused by [X].&rdquo;</p>
+          <div class="sample-phrase">&ldquo;The job loss occurred 2 weeks after mood symptoms began; it is therefore a marker of functional impact, not a trigger.&rdquo;</div>
+        </div>
+        <div class="field-hint">Describe the event, date, and whether it preceded or followed symptom onset. Always state the temporal direction: did the stressor come before the first symptom, or after?</div>
+        <textarea data-key="precipDetails" id="precipDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A3: Course -->
+      <div class="sub-header" id="A3">A3. Course of Illness</div>
+      <div class="instruction-box">
+        <h4>What to document</h4>
+        <ul>
+          <li>Episodic, continuous, or fluctuating.</li>
+          <li>Has the symptom phenotype evolved? (e.g., positive symptoms &rarr; apathy/blunting in later schizophrenia).</li>
+          <li>Consider a graphic life chart if useful (cross-reference Chapter 05).</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Overall course</label>
+        <div class="options-grid" id="courseType">
+          <label class="option-chip" onclick="selectRadio(this,'courseType')">
+            <input type="radio" name="courseType" value="Episodic" data-key="course_episodic">
+            <span class="radio-circle"></span>
+            <span class="option-text">Episodic &mdash; discrete periods with intervening normalcy</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'courseType')">
+            <input type="radio" name="courseType" value="Continuous" data-key="course_continuous">
+            <span class="radio-circle"></span>
+            <span class="option-text">Continuous &mdash; unremitting baseline</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'courseType')">
+            <input type="radio" name="courseType" value="Fluctuating" data-key="course_fluctuating">
+            <span class="radio-circle"></span>
+            <span class="option-text">Fluctuating &mdash; periodic exacerbations on continuous baseline</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Course details &amp; phenotype evolution</label>
+        <div class="field-hint">Describe the pattern of illness, any periods of recovery, and whether symptom type has changed over time. Note if positive symptoms evolved into negative symptoms.</div>
+        <textarea data-key="courseDetails" id="courseDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A4: Symptoms Chronology -->
+      <div class="sub-header" id="A4">A4. Symptoms in Chronological Order</div>
+      <div class="instruction-box">
+        <h4>Why chronology is the temporal architecture of diagnosis</h4>
+        <ul>
+          <li>What came first: mood change or psychosis? Substance use or depression? Sleep disturbance or suicidal thinking?</li>
+          <li>Sequence distinguishes primary mood disorder with secondary psychotic features vs. primary psychotic illness with secondary mood features.</li>
+          <li>This distinction reshapes the entire treatment plan.</li>
+        </ul>
+      </div>
+      <div class="pitfall-box">
+        <h4>Exam trap</h4>
+        <ul>
+          <li>Patients reflexively start with what is most distressing today. Your job is to anchor them to the first day and walk forward. A backward-built timeline is almost always wrong.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Symptom chronology (walk forward from onset) <button class="help-toggle" onclick="toggleHelp('helpChron')">ℹ️</button></label>
+        <div class="help-panel" id="helpChron">
+          <h5>How to document</h5>
+          <p>Write as a timeline: Week 0 &rarr; sleep change; Week 2 &rarr; low mood; Week 4 &rarr; anhedonia; Week 6 &rarr; passive SI; Week 8 &rarr; active SI with plan.</p>
+          <p><strong>Viva tip:</strong> Lead with onset, course, and the symptom that defines the index episode. Then build forward in time.</p>
+        </div>
+        <div class="field-hint">List each symptom with its approximate date relative to onset, in forward chronological order. What came first, what followed, and how did the constellation build up over time?</div>
+        <textarea data-key="symptomChronology" id="symptomChronology" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A5: Associated Disturbances -->
+      <div class="sub-header" id="A5">A5. Associated Disturbances</div>
+      <div class="instruction-box">
+        <h4>Biological functions + functional impact cluster</h4>
+        <p>The specific nature of the disturbance and the degree of disability must both be recorded. Ask in order: Sleep &rarr; Appetite &rarr; Weight &rarr; Energy &rarr; Libido &rarr; Diurnal variation &rarr; Bowel/bladder.</p>
+      </div>
+
+      <div class="sub-sub-header">Sleep</div>
+      <div class="field-group">
+        <label class="field-label">Sleep pattern <button class="help-toggle" onclick="toggleHelp('helpSleep')">ℹ️</button></label>
+        <div class="help-panel" id="helpSleep">
+          <h5>Manic disambiguation</h5>
+          <p>Sleeps 3 hours and feels rested &rarr; reduced need for sleep (manic).</p>
+          <p>Sleeps 3 hours and feels exhausted &rarr; insomnia (depressive/anxious).</p>
+          <div class="sample-phrase">&ldquo;How has your sleep been? How long are you sleeping? When you wake up, do you feel rested or exhausted?&rdquo;</div>
+        </div>
+        <div class="options-grid grid-2" id="sleepPattern">
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Initial insomnia" data-key="sleep_initial">
+            <span class="checkmark"></span>
+            <span class="option-text">Initial insomnia</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Middle insomnia" data-key="sleep_middle">
+            <span class="checkmark"></span>
+            <span class="option-text">Middle insomnia</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Terminal insomnia / early waking" data-key="sleep_terminal">
+            <span class="checkmark"></span>
+            <span class="option-text">Terminal insomnia / early waking</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Hypersomnia" data-key="sleep_hyper">
+            <span class="checkmark"></span>
+            <span class="option-text">Hypersomnia</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Reduced need for sleep (manic)" data-key="sleep_reduced">
+            <span class="checkmark"></span>
+            <span class="option-text">Reduced need for sleep (manic discriminator)</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Sleep-wake reversal" data-key="sleep_reversal">
+            <span class="checkmark"></span>
+            <span class="option-text">Sleep-wake reversal</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="Nightmares / distressing dreams" data-key="sleep_nightmares">
+            <span class="checkmark"></span>
+            <span class="option-text">Nightmares / distressing dreams</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="sleepPattern" value="No sleep disturbance" data-key="sleep_none">
+            <span class="checkmark"></span>
+            <span class="option-text">No sleep disturbance</span>
+          </label>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Typical bedtime &rarr; sleep onset time</label>
+          <input type="text" data-key="sleepBedtime" id="sleepBedtime" placeholder="e.g., 10 PM &rarr; 2 AM">
+        </div>
+        <div>
+          <label class="field-label">Wake time / total sleep hours</label>
+          <input type="text" data-key="sleepWake" id="sleepWake" placeholder="e.g., 5 AM, 3 hours total">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Sleep details</label>
+        <div class="field-hint">Document sleep quality, daytime fatigue, naps, any sleep aids used. Include the manic disambiguator: does the patient feel rested or exhausted on waking?</div>
+        <textarea data-key="sleepDetails" id="sleepDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-sub-header">Appetite &amp; Weight</div>
+      <div class="grid-3">
+        <div>
+          <label class="field-label">Appetite</label>
+          <div class="options-grid" id="appetiteChange">
+            <label class="option-chip" onclick="selectRadio(this,'appetiteChange')">
+              <input type="radio" name="appetiteChange" value="Increased" data-key="appetite_inc">
+              <span class="radio-circle"></span>
+              <span class="option-text">Increased</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'appetiteChange')">
+              <input type="radio" name="appetiteChange" value="Decreased" data-key="appetite_dec">
+              <span class="radio-circle"></span>
+              <span class="option-text">Decreased</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'appetiteChange')">
+              <input type="radio" name="appetiteChange" value="Unchanged" data-key="appetite_same">
+              <span class="radio-circle"></span>
+              <span class="option-text">Unchanged</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Weight change (kg)</label>
+          <input type="number" data-key="weightChangeKg" id="weightChangeKg" placeholder="e.g., -5 or +3">
+        </div>
+        <div>
+          <label class="field-label">Over what duration?</label>
+          <input type="text" data-key="weightDuration" id="weightDuration" placeholder="e.g., 6 weeks">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Appetite/weight details</label>
+        <div class="field-hint">Describe nature of change, any compensatory behaviours (purging, excessive exercise), BMI trajectory if relevant. For anorexia, note whether hunger is preserved but actively overridden (discriminator from depression).</div>
+        <textarea data-key="appetiteDetails" id="appetiteDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-sub-header">Energy &amp; Libido</div>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Energy level</label>
+          <div class="options-grid" id="energyLevel">
+            <label class="option-chip" onclick="selectRadio(this,'energyLevel')">
+              <input type="radio" name="energyLevel" value="Normal" data-key="energy_normal">
+              <span class="radio-circle"></span>
+              <span class="option-text">Normal</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'energyLevel')">
+              <input type="radio" name="energyLevel" value="Reduced" data-key="energy_reduced">
+              <span class="radio-circle"></span>
+              <span class="option-text">Reduced</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'energyLevel')">
+              <input type="radio" name="energyLevel" value="Increased" data-key="energy_increased">
+              <span class="radio-circle"></span>
+              <span class="option-text">Increased</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Libido / sexual interest</label>
+          <div class="options-grid" id="libidoLevel">
+            <label class="option-chip" onclick="selectRadio(this,'libidoLevel')">
+              <input type="radio" name="libidoLevel" value="Normal" data-key="libido_normal">
+              <span class="radio-circle"></span>
+              <span class="option-text">Normal</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'libidoLevel')">
+              <input type="radio" name="libidoLevel" value="Reduced" data-key="libido_reduced">
+              <span class="radio-circle"></span>
+              <span class="option-text">Reduced / absent</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'libidoLevel')">
+              <input type="radio" name="libidoLevel" value="Increased" data-key="libido_increased">
+              <span class="radio-circle"></span>
+              <span class="option-text">Increased / disinhibited</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">Diurnal Variation &amp; Other</div>
+      <div class="field-group">
+        <label class="field-label">Diurnal variation</label>
+        <div class="options-grid" id="diurnalVariation">
+          <label class="option-chip" onclick="selectRadio(this,'diurnalVariation')">
+            <input type="radio" name="diurnalVariation" value="Worse in morning" data-key="diurnal_am">
+            <span class="radio-circle"></span>
+            <span class="option-text">Worse in morning (melancholic discriminator)</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'diurnalVariation')">
+            <input type="radio" name="diurnalVariation" value="Worse in evening" data-key="diurnal_pm">
+            <span class="radio-circle"></span>
+            <span class="option-text">Worse in evening</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'diurnalVariation')">
+            <input type="radio" name="diurnalVariation" value="No variation" data-key="diurnal_none">
+            <span class="radio-circle"></span>
+            <span class="option-text">No clear variation</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Bowel/bladder and other biological symptoms</label>
+        <div class="field-hint">Bowel changes, urinary symptoms, menstrual changes (if applicable), other somatic symptoms. Ask about constipation, cold intolerance, diaphoresis.</div>
+        <textarea data-key="biologicalOther" id="biologicalOther" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-sub-header">Functional Impact (Social &amp; Occupational)</div>
+      <div class="field-group">
+        <label class="field-label">Degree of disability <button class="help-toggle" onclick="toggleHelp('helpImpact')">ℹ️</button></label>
+        <div class="help-panel" id="helpImpact">
+          <h5>Scoring functional impact</h5>
+          <p>Mild = some reduction in performance; Moderate = significant reduction but still attending; Severe = unable to attend work/college; Total = completely stopped.</p>
+          <p>Severity is the functional impairment the symptoms cause, not the symptom count alone.</p>
+        </div>
+        <div class="options-grid" id="disabilityLevel">
+          <label class="option-chip" onclick="selectRadio(this,'disabilityLevel')">
+            <input type="radio" name="disabilityLevel" value="Mild" data-key="disability_mild">
+            <span class="radio-circle"></span>
+            <span class="option-text">Mild &mdash; some reduction in performance</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'disabilityLevel')">
+            <input type="radio" name="disabilityLevel" value="Moderate" data-key="disability_mod">
+            <span class="radio-circle"></span>
+            <span class="option-text">Moderate &mdash; significant reduction, still attending</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'disabilityLevel')">
+            <input type="radio" name="disabilityLevel" value="Severe" data-key="disability_severe">
+            <span class="radio-circle"></span>
+            <span class="option-text">Severe &mdash; unable to attend most duties</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'disabilityLevel')">
+            <input type="radio" name="disabilityLevel" value="Total" data-key="disability_total">
+            <span class="radio-circle"></span>
+            <span class="option-text">Total &mdash; completely stopped (work, college, social)</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Functional impact details</label>
+        <div class="field-hint">Describe specific impact on occupation, education, relationships, self-care, finances. Include number of days absent from work/college if applicable.</div>
+        <textarea data-key="functionalDetails" id="functionalDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A6: Organic Screen -->
+      <div class="sub-header" id="A6">A6. Organic Screen</div>
+      <div class="instruction-box">
+        <h4>Why screen everyone</h4>
+        <p>NIMHANS notes these are particularly important in the elderly but should be asked of every patient. The index episode may be the first presentation of an organic illness.</p>
+      </div>
+      <div class="options-grid grid-2" id="organicScreen">
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="History of head trauma" data-key="org_trauma">
+          <span class="checkmark"></span>
+          <span class="option-text">History of head trauma</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Febrile illness around onset" data-key="org_fever">
+          <span class="checkmark"></span>
+          <span class="option-text">Febrile illness around onset</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Headache" data-key="org_headache">
+          <span class="checkmark"></span>
+          <span class="option-text">Headache</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Vomiting" data-key="org_vomit">
+          <span class="checkmark"></span>
+          <span class="option-text">Vomiting</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Confusion / disorientation" data-key="org_confusion">
+          <span class="checkmark"></span>
+          <span class="option-text">Confusion / disorientation</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Memory disturbance" data-key="org_memory">
+          <span class="checkmark"></span>
+          <span class="option-text">Memory disturbance</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Seizures" data-key="org_seizures">
+          <span class="checkmark"></span>
+          <span class="option-text">Seizures</span>
+        </label>
+        <label class="option-chip" onclick="toggleCheckbox(this)">
+          <input type="checkbox" name="organicScreen" value="Focal neurological signs" data-key="org_focal">
+          <span class="checkmark"></span>
+          <span class="option-text">Focal neurological signs</span>
+        </label>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Physical illnesses (HTN, DM, thyroid, etc.)</label>
+        <div class="field-hint">List current or past physical illnesses with relevance to psychiatric presentation. Include medications currently taken for physical conditions.</div>
+        <textarea data-key="physicalIllnesses" id="physicalIllnesses" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Substance use screen (current episode)</label>
+        <div class="field-hint">Screen for alcohol, tobacco, cannabis, opioids, stimulants, benzodiazepines, OTCs. Document quantity/frequency if applicable.</div>
+        <textarea data-key="substanceUseScreen" id="substanceUseScreen" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A7: Treatment -->
+      <div class="sub-header" id="A7">A7. Treatment Received During This Episode</div>
+      <div class="pitfall-box">
+        <h4>Common pitfall</h4>
+        <ul>
+          <li>Not asking about informal, AYUSH, or faith-based treatment. In Indian patients these are the rule, not the exception.</li>
+          <li>Drug interactions (St John&rsquo;s Wort with SSRIs, heavy metals in Ayurvedic preparations, Datura anticholinergic ingestions) are common and missed.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Formal psychiatric treatment <button class="help-toggle" onclick="toggleHelp('helpTreat')">ℹ️</button></label>
+        <div class="help-panel" id="helpTreat">
+          <h5>What to document for each agent</h5>
+          <p>Drug name, dose, duration, response (partial / full / none), adherence (good / partial / poor), side effects. Include psychotherapy, ECT, hospitalisation.</p>
+          <div class="sample-phrase">&ldquo;Before you came here, did you see anyone else for this &mdash; a doctor, a homeopath, a vaidya, a faith healer? Did you take anything for it &mdash; tablets, drops, oils?&rdquo;</div>
+        </div>
+        <div class="field-hint">For each drug: name | dose | duration | response (partial/full/none) | adherence (good/partial/poor) | side effects. Include start and stop dates.</div>
+        <textarea data-key="formalTreatment" id="formalTreatment" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Informal / AYUSH / faith-based treatment</label>
+        <div class="field-hint">Describe any non-allopathic treatment, practitioner details, substances taken, duration, perceived response. Ask specifically about faith healers, homeopaths, Ayurvedic practitioners, and family remedies.</div>
+        <textarea data-key="informalTreatment" id="informalTreatment" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Psychotherapy / ECT / Hospitalisation this episode</label>
+        <div class="field-hint">Document type, number of sessions/days, dates, and response. Note involuntary admissions and MHCA sections if applicable.</div>
+        <textarea data-key="otherTreatment" id="otherTreatment" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A8: Risk -->
+      <div class="sub-header" id="A8">A8. Current Risk Assessment</div>
+      <div class="instruction-box">
+        <h4>Current risk only</h4>
+        <p>Past attempts and deliberate self-harm belong in Chapter 05 (Past History). This section captures current suicide/self-harm, harm to others, self-neglect, and wandering risk.</p>
+      </div>
+      <div class="pitfall-box">
+        <h4>Documentation trap</h4>
+        <ul>
+          <li>Documenting &ldquo;no SI&rdquo; without documenting how it was asked is unsafe documentation. Write the laddered question and answer verbatim where possible.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Suicide screen &mdash; Patterson laddered framework <button class="help-toggle" onclick="toggleHelp('helpSuicide')">ℹ️</button></label>
+        <div class="help-panel" id="helpSuicide">
+          <h5>Laddered questions (ask in order, document each)</h5>
+          <div class="sample-phrase">1. &ldquo;Has it ever felt like life isn&rsquo;t worth living?&rdquo;</div>
+          <div class="sample-phrase">2. &ldquo;Have you wished you wouldn&rsquo;t wake up?&rdquo;</div>
+          <div class="sample-phrase">3. &ldquo;Have you thought of actually doing something to end your life?&rdquo;</div>
+          <div class="sample-phrase">4. &ldquo;Have you thought about how you would do it?&rdquo;</div>
+          <div class="sample-phrase">5. &ldquo;Have you taken any steps towards it &mdash; bought anything, written anything, said goodbye?&rdquo;</div>
+          <div class="sample-phrase">6. &ldquo;What stops you?&rdquo; (protective factors)</div>
+        </div>
+        <div class="field-hint">Document EACH question asked and the answer given verbatim. Do not write &ldquo;no SI&rdquo; without the question. Include the final question about protective factors.</div>
+        <textarea data-key="suicideScreen" id="suicideScreen" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Harm to others screen</label>
+        <div class="sample-phrase" style="margin-bottom:var(--space-sm)">&ldquo;Has there been any time in this illness when you&rsquo;ve felt like hurting someone, or felt that someone needed to be hurt because of what they were doing to you?&rdquo;</div>
+        <div class="field-hint">Document the exact question asked and the verbatim answer. Note any delusion-driven accusation or command hallucination content.</div>
+        <textarea data-key="harmOthers" id="harmOthers" placeholder="Type here..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Self-neglect</label>
+          <div class="options-grid" id="selfNeglect">
+            <label class="option-chip" onclick="selectRadio(this,'selfNeglect')">
+              <input type="radio" name="selfNeglect" value="Present" data-key="neglect_present">
+              <span class="radio-circle"></span>
+              <span class="option-text">Present</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'selfNeglect')">
+              <input type="radio" name="selfNeglect" value="Absent" data-key="neglect_absent">
+              <span class="radio-circle"></span>
+              <span class="option-text">Absent</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Wandering / elopement risk</label>
+          <div class="options-grid" id="wanderingRisk">
+            <label class="option-chip" onclick="selectRadio(this,'wanderingRisk')">
+              <input type="radio" name="wanderingRisk" value="Present" data-key="wander_present">
+              <span class="radio-circle"></span>
+              <span class="option-text">Present</span>
+            </label>
+            <label class="option-chip" onclick="selectRadio(this,'wanderingRisk')">
+              <input type="radio" name="wanderingRisk" value="Absent" data-key="wander_absent">
+              <span class="radio-circle"></span>
+              <span class="option-text">Absent</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Risk summary and current protective factors</label>
+        <div class="field-hint">Summarise current risk level, protective factors (family support, religious beliefs, children), and immediate safety plan if applicable. Include capacity for safe discharge if relevant.</div>
+        <textarea data-key="riskSummary" id="riskSummary" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A9: Legal -->
+      <div class="sub-header" id="A9">A9. Legal Issues Related to This Episode</div>
+      <div class="field-group">
+        <label class="field-label">Legal issues</label>
+        <div class="options-grid grid-2" id="legalIssues">
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="Police involvement" data-key="legal_police">
+            <span class="checkmark"></span>
+            <span class="option-text">Police involvement</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="MHCA Section 100/103 admission" data-key="legal_mhca">
+            <span class="checkmark"></span>
+            <span class="option-text">MHCA Section 100/103 admission</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="Certification" data-key="legal_cert">
+            <span class="checkmark"></span>
+            <span class="option-text">Certification</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="Capacity assessment needed" data-key="legal_capacity">
+            <span class="checkmark"></span>
+            <span class="option-text">Capacity assessment needed</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="Accusations made under delusion" data-key="legal_accuse">
+            <span class="checkmark"></span>
+            <span class="option-text">Accusations made under delusion</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="legalIssues" value="None" data-key="legal_none">
+            <span class="checkmark"></span>
+            <span class="option-text">None</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Legal details</label>
+        <div class="field-hint">Document dates, sections invoked, current legal status, court dates, and any capacity assessment outcomes.</div>
+        <textarea data-key="legalDetails" id="legalDetails" placeholder="Type here..."></textarea>
+      </div>
+
+      <!-- A10: Severity -->
+      <div class="sub-header" id="A10">A10. Severity Rating</div>
+      <div class="instruction-box">
+        <h4>CGI-S + scale-based instruments</h4>
+        <p>Conflating severity with symptom count is a common error. Severity is the functional impairment the symptoms cause, scored on CGI or a validated instrument.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">CGI-Severity (1&ndash;7)</label>
+        <div class="rating-scale" id="cgiSeverity">
+          <button type="button" class="rating-option" data-rating="1" onclick="selectRating(this,'cgiSeverity')">1</button>
+          <button type="button" class="rating-option" data-rating="2" onclick="selectRating(this,'cgiSeverity')">2</button>
+          <button type="button" class="rating-option" data-rating="3" onclick="selectRating(this,'cgiSeverity')">3</button>
+          <button type="button" class="rating-option" data-rating="4" onclick="selectRating(this,'cgiSeverity')">4</button>
+          <button type="button" class="rating-option" data-rating="5" onclick="selectRating(this,'cgiSeverity')">5</button>
+          <button type="button" class="rating-option" data-rating="6" onclick="selectRating(this,'cgiSeverity')">6</button>
+          <button type="button" class="rating-option" data-rating="7" onclick="selectRating(this,'cgiSeverity')">7</button>
+        </div>
+        <div class="rating-labels">
+          <span>Normal</span><span>Borderline</span><span>Mild</span><span>Moderate</span><span>Marked</span><span>Severe</span><span>Extreme</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Scale-based instruments administered</label>
+        <div class="options-grid grid-2" id="scalesUsed">
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="HAM-D" data-key="scale_hamd">
+            <span class="checkmark"></span>
+            <span class="option-text">HAM-D</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="MADRS" data-key="scale_madrs">
+            <span class="checkmark"></span>
+            <span class="option-text">MADRS</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="YMRS" data-key="scale_ymrs">
+            <span class="checkmark"></span>
+            <span class="option-text">YMRS</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="PANSS" data-key="scale_panss">
+            <span class="checkmark"></span>
+            <span class="option-text">PANSS</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="Y-BOCS" data-key="scale_ybocs">
+            <span class="checkmark"></span>
+            <span class="option-text">Y-BOCS</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="HAM-A" data-key="scale_hama">
+            <span class="checkmark"></span>
+            <span class="option-text">HAM-A</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="CGI-I" data-key="scale_cgii">
+            <span class="checkmark"></span>
+            <span class="option-text">CGI-Improvement</span>
+          </label>
+          <label class="option-chip" onclick="toggleCheckbox(this)">
+            <input type="checkbox" name="scalesUsed" value="Other" data-key="scale_other">
+            <span class="checkmark"></span>
+            <span class="option-text">Other (specify in notes)</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Scale scores &amp; notes</label>
+        <div class="field-hint">Enter scores, dates of administration, and any scale-specific observations. Note pre- and post-treatment scores if available.</div>
+        <textarea data-key="scaleScores" id="scaleScores" placeholder="Type here..."></textarea>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION B — WHY IT MATTERS
+     ======================== -->
+<div class="accordion" id="secB" data-card="B">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">B</span> Why It Matters (Diagnostic Engine)</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <div class="instruction-box">
+        <h4>The HOPI is the diagnostic engine of the case</h4>
+        <p>The differential is built here, the formulation hinges here, and the management plan in Chapter 14 is downstream of decisions made in this chapter, or mistakes made in it.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Leading differential after HOPI elicitation</label>
+        <div class="field-hint">Your leading differential based on onset, course, and chronology. State with confidence level.</div>
+        <textarea data-key="diffLeading" id="diffLeading" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Differential alternatives (ranked)</label>
+        <div class="field-hint">Alternative diagnoses with supporting and refuting features from HOPI. What findings argue against each alternative?</div>
+        <textarea data-key="diffAlternatives" id="diffAlternatives" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Key discriminating features</label>
+        <div class="field-hint">Which features in this HOPI point toward one diagnosis over another? Focus on temporal sequence, biological markers, and treatment response.</div>
+        <textarea data-key="diffDiscriminators" id="diffDiscriminators" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Diathesis-stress formulation note</label>
+        <div class="field-hint">Document the pre-existing vulnerability and the stressor interplay. Remember: precipitants are NOT causes. Frame as &ldquo;the precipitant was [X], on a background of [diathesis].&rdquo;</div>
+        <textarea data-key="diathesisNote" id="diathesisNote" placeholder="Type here..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION C — HOW TO ELICIT
+     ======================== -->
+<div class="accordion" id="secC" data-card="C">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">C</span> How to Elicit (Interview Phases)</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+
+      <div class="sub-header">C1. Free Narrative Phase (3&ndash;5 min, uninterrupted)</div>
+      <div class="instruction-box">
+        <h4>Why silence is data</h4>
+        <ul>
+          <li>The patient is telling you what they think the problem is, in the order they think it occurred. That order is itself diagnostic information.</li>
+          <li>Resist the urge to clarify, summarise, or redirect.</li>
+          <li>Use only minimal continuers: &ldquo;mm&rdquo;, &ldquo;go on&rdquo;, a nod.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Opening prompt used</label>
+        <div class="options-grid" id="openingPrompt">
+          <label class="option-chip" onclick="selectRadio(this,'openingPrompt')">
+            <input type="radio" name="openingPrompt" value="Tell me, in your own words, what&rsquo;s been going on." data-key="open_v1">
+            <span class="radio-circle"></span>
+            <span class="option-text">&ldquo;Tell me, in your own words, what&rsquo;s been going on.&rdquo;</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'openingPrompt')">
+            <input type="radio" name="openingPrompt" value="Take me through what brought you here today, from the very beginning." data-key="open_v2">
+            <span class="radio-circle"></span>
+            <span class="option-text">&ldquo;Take me through what brought you here today, from the very beginning.&rdquo;</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'openingPrompt')">
+            <input type="radio" name="openingPrompt" value="Start from the last time you felt fully like yourself, and walk me forward." data-key="open_v3">
+            <span class="radio-circle"></span>
+            <span class="option-text">&ldquo;Start from the last time you felt fully like yourself, and walk me forward.&rdquo;</span>
+          </label>
+          <label class="option-chip" onclick="selectRadio(this,'openingPrompt')">
+            <input type="radio" name="openingPrompt" value="Other" data-key="open_other">
+            <span class="radio-circle"></span>
+            <span class="option-text">Other (specify below)</span>
+          </label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Other opening prompt (if used)</label>
+        <input type="text" data-key="openingPromptOther" id="openingPromptOther" placeholder="e.g., Kannada or Hindi opening...">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Free narrative summary (patient&rsquo;s own story)</label>
+        <div class="field-hint">Summarise the uninterrupted narrative as the patient told it, preserving their language and order. This is the raw data from which the HOPI is built.</div>
+        <textarea data-key="freeNarrative" id="freeNarrative" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Duration of free narrative (minutes)</label>
+        <input type="number" data-key="narrativeDuration" id="narrativeDuration" placeholder="e.g., 4">
+      </div>
+
+      <div class="sub-header">C2. Systematic Funnelling Phase</div>
+      <div class="instruction-box">
+        <h4>The funnel structure</h4>
+        <p>For each symptom domain mentioned: <strong>Open</strong> &rarr; <strong>Focused</strong> &rarr; <strong>Closed</strong>. This converts a vague complaint into a documentable, scoreable, time-stamped phenomenon.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Symptoms funnelled (list each)</label>
+        <div class="field-hint">For each symptom: open question used &rarr; focused questions &rarr; closed quantification (date, frequency, severity, triggers). Document in the order funnelled.</div>
+        <textarea data-key="funnelledSymptoms" id="funnelledSymptoms" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C3. Completion Phase &mdash; Review of Psychiatric Systems</div>
+      <div class="instruction-box">
+        <h4>Why completion is mandatory</h4>
+        <ul>
+          <li>Patients leave out symptoms that are ego-syntonic, shameful, illegal, or that they have come to consider normal.</li>
+          <li>A &ldquo;no&rdquo; is documented as a no &mdash; this is the bridge to Chapter 04 (Negative History).</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Standard sweep &mdash; domains screened and responses <button class="help-toggle" onclick="toggleHelp('helpSweep')">ℹ️</button></label>
+        <div class="help-panel" id="helpSweep">
+          <h5>Standard sweep domains</h5>
+          <p>Mood (depression, mania, anxiety, irritability) &rarr; Psychotic phenomena (hallucinations, delusions, thought possession) &rarr; OCD phenomena &rarr; Trauma and PTSD phenomena &rarr; Eating, weight, body image &rarr; Substance use (alcohol, tobacco, cannabis, opioids, stimulants, benzodiazepines, OTCs) &rarr; Suicide and self-harm &rarr; Harm to others &rarr; Sleep &rarr; Appetite &rarr; Weight &rarr; Energy &rarr; Libido &rarr; Cognitive symptoms.</p>
+          <p>Every one gets a screening question regardless of presentation.</p>
+        </div>
+        <div class="field-hint">Document each domain, the screening question asked, and the response (positive or negative). Write negative findings as &ldquo;screened, denied&rdquo; not just &ldquo;no.&rdquo;</div>
+        <textarea data-key="psychSystemsSweep" id="psychSystemsSweep" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C4. Mode-of-Onset Elicitation</div>
+      <div class="field-group">
+        <label class="field-label">Anchor question response</label>
+        <div class="field-hint">Patient&rsquo;s exact response to &ldquo;What was the last day you felt fully like yourself?&rdquo; If patient cannot answer, document family response. If neither can answer, onset is insidious by definition.</div>
+        <textarea data-key="anchorResponse" id="anchorResponse" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C5. Biological Functions Micro-Funnel</div>
+      <div class="instruction-box">
+        <h4>Order: Sleep &rarr; Appetite &rarr; Weight &rarr; Energy &rarr; Libido &rarr; Diurnal variation &rarr; Bowel/bladder</h4>
+        <p>Sleep is the highest-yield. The manic disambiguator: &ldquo;Do you feel rested or exhausted?&rdquo;</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Biological functions &mdash; documented as a fluent block</label>
+        <div class="field-hint">Write as a single fluent paragraph in viva-ready prose. Include the manic disambiguator for sleep, and ask about diurnal variation explicitly.</div>
+        <textarea data-key="bioMicroFunnel" id="bioMicroFunnel" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C6. Risk Micro-Funnel (Patterson Framework)</div>
+      <div class="instruction-box">
+        <h4>Asked late, after rapport is established, and asked directly</h4>
+        <p>Move from passive ideation &rarr; active ideation &rarr; plan &rarr; means &rarr; intent &rarr; rehearsal &rarr; protective factors. Document the question asked and the answer given, verbatim.</p>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Risk micro-funnel documentation</label>
+        <div class="field-hint">Laddered questions and verbatim answers, plus protective factors. Include the question AND the answer for each step. Never write &ldquo;denied SI&rdquo; without the question.</div>
+        <textarea data-key="riskMicroFunnel" id="riskMicroFunnel" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C7. Collateral Micro-Protocol</div>
+      <div class="pitfall-box">
+        <h4>Missing collateral is a critical error</h4>
+        <ul>
+          <li>In psychosis, mania, and neurocognitive cases the patient cannot give the HOPI alone.</li>
+          <li>Interview the informant separately on at least 3 points: (1) timeline of onset, (2) behavioural change at home, (3) any risk events not disclosed.</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Collateral source &amp; relationship</label>
+        <input type="text" data-key="collateralSource" id="collateralSource" placeholder="e.g., Father, Mother, Spouse">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Collateral interview points</label>
+        <div class="field-hint">(1) Timeline confirmation or discrepancy, (2) Behavioural changes observed at home, (3) Risk events not disclosed by patient. Document verbatim quotes where possible.</div>
+        <textarea data-key="collateralNotes" id="collateralNotes" placeholder="Type here..."></textarea>
+      </div>
+
+      <div class="sub-header">C8. Transition Phrases Out of HOPI</div>
+      <div class="field-group">
+        <label class="field-label">Into Past History (Ch 05)</label>
+        <div class="sample-phrase">&ldquo;Before this episode began, has there been any time in your life when you&rsquo;ve felt anything similar, even if much milder?&rdquo;</div>
+        <div class="field-hint">Document patient&rsquo;s response to transition into past history. Note any prior episodes even if milder.</div>
+        <textarea data-key="transitionPast" id="transitionPast" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Into Family History (Ch 06)</label>
+        <div class="sample-phrase">&ldquo;Has anyone in your family ever had anything like what you are going through, or any other mental health condition?&rdquo;</div>
+        <div class="field-hint">Document response and note which relatives, what conditions, and treatment history if volunteered.</div>
+        <textarea data-key="transitionFamily" id="transitionFamily" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">MSE observations interleaved during HOPI</label>
+        <div class="field-hint">Speech (rate, volume, pressure), thought form (linear, tangential, circumstantial), affect (range, congruence), psychomotor activity (retardation, agitation) observed throughout the interview.</div>
+        <textarea data-key="mseInterleaved" id="mseInterleaved" placeholder="Type here..."></textarea>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION D — DISORDER-SPECIFIC TAILORING
+     ======================== -->
+<div class="accordion" id="secD" data-card="D">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">D</span> Disorder-Specific Tailoring</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <div class="instruction-box">
+        <h4>Viva-ready prose templates</h4>
+        <p>Each block below is a worked template for the index episode. Use these as checklists to ensure your HOPI captures the discriminating features, biological functions, impact, and treatment for the presenting condition.</p>
+      </div>
+
+      <div class="sub-sub-header">D1. Schizophrenia / First-Episode Psychosis</div>
+      <div class="field-group">
+        <label class="field-label">FEP template checklist</label>
+        <div class="options-grid grid-2" id="fepChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Prodrome duration documented" data-key="fep_prodrome"><span class="checkmark"></span><span class="option-text">Prodrome duration documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Social withdrawal / functional decline" data-key="fep_social"><span class="checkmark"></span><span class="option-text">Social withdrawal / functional decline</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="First-rank symptoms documented" data-key="fep_frs"><span class="checkmark"></span><span class="option-text">First-rank symptoms documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Sleep-wake reversal" data-key="fep_sleep"><span class="checkmark"></span><span class="option-text">Sleep-wake reversal</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Occupational impact total" data-key="fep_occ"><span class="checkmark"></span><span class="option-text">Occupational impact total</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Risk: self-neglect" data-key="fep_neglect"><span class="checkmark"></span><span class="option-text">Risk: self-neglect documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Informal/faith treatment" data-key="fep_informal"><span class="checkmark"></span><span class="option-text">Informal/faith treatment asked</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fepChecklist" value="Collateral from family" data-key="fep_collateral"><span class="checkmark"></span><span class="option-text">Collateral from family obtained</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D2. Mania / Bipolar I (Current Manic Episode)</div>
+      <div class="field-group">
+        <label class="field-label">Mania template checklist</label>
+        <div class="options-grid grid-2" id="maniaChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Acute onset ≤1 week" data-key="man_onset"><span class="checkmark"></span><span class="option-text">Acute onset &le;1 week, family-dated</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Reduced sleep need (not insomnia)" data-key="man_sleep"><span class="checkmark"></span><span class="option-text">Reduced sleep need (NOT insomnia)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Increased goal-directed activity" data-key="man_goal"><span class="checkmark"></span><span class="option-text">Increased goal-directed activity</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Financial / sexual / legal harm" data-key="man_harm"><span class="checkmark"></span><span class="option-text">Financial / sexual / legal risk documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Pressured speech, irritability" data-key="man_speech"><span class="checkmark"></span><span class="option-text">Pressured speech, irritability when contradicted</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="maniaChecklist" value="Insight absent / poor" data-key="man_insight"><span class="checkmark"></span><span class="option-text">Insight absent/poor; family bulk of history</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D3. Major Depressive Disorder (Severe, Melancholic)</div>
+      <div class="field-group">
+        <label class="field-label">MDD template checklist</label>
+        <div class="options-grid grid-2" id="mddChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Insidious onset weeks-months" data-key="mdd_onset"><span class="checkmark"></span><span class="option-text">Insidious onset over weeks to months</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Anhedonia documented" data-key="mdd_anhed"><span class="checkmark"></span><span class="option-text">Anhedonia in patient&rsquo;s own words</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Early morning waking" data-key="mdd_emw"><span class="checkmark"></span><span class="option-text">Early morning waking (terminal insomnia)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Diurnal variation worse AM" data-key="mdd_diur"><span class="checkmark"></span><span class="option-text">Diurnal variation worse in morning</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Psychomotor slowing" data-key="mdd_psych"><span class="checkmark"></span><span class="option-text">Psychomotor slowing observed</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Pervasive guilt" data-key="mdd_guilt"><span class="checkmark"></span><span class="option-text">Pervasive guilt about minor events</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="Active SI with plan" data-key="mdd_si"><span class="checkmark"></span><span class="option-text">Active SI with plan; current risk significant</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="mddChecklist" value="No formal psychiatric treatment" data-key="mdd_notreat"><span class="checkmark"></span><span class="option-text">No formal psychiatric treatment this episode</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D4. Alcohol Use Disorder</div>
+      <div class="field-group">
+        <label class="field-label">Alcohol HOPI &mdash; six required questions <button class="help-toggle" onclick="toggleHelp('helpAlcohol')">ℹ️</button></label>
+        <div class="help-panel" id="helpAlcohol">
+          <h5>The six questions</h5>
+          <p>1. When did use start? &nbsp; 2. How did it escalate? &nbsp; 3. Current QFD? &nbsp; 4. Longest voluntary abstinence? &nbsp; 5. What happened on previous quit attempts? &nbsp; 6. Harm despite known harm?</p>
+        </div>
+        <div class="options-grid grid-2" id="alcoholChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Age of first use" data-key="alc_first"><span class="checkmark"></span><span class="option-text">Age of first use documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Escalation pattern" data-key="alc_escal"><span class="checkmark"></span><span class="option-text">Escalation pattern (social &rarr; daily)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Current QFD" data-key="alc_qfd"><span class="checkmark"></span><span class="option-text">Current QFD (quantity-frequency-duration)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Longest abstinence" data-key="alc_abst"><span class="checkmark"></span><span class="option-text">Longest voluntary abstinence ever</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Previous quit attempts" data-key="alc_quit"><span class="checkmark"></span><span class="option-text">Previous quit attempts / withdrawal history</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Harm continuation" data-key="alc_harm"><span class="checkmark"></span><span class="option-text">Harm continuation despite known harm</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Tolerance / morning relief" data-key="alc_tol"><span class="checkmark"></span><span class="option-text">Tolerance / morning relief drinking</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="alcoholChecklist" value="Motivation stage" data-key="alc_motiv"><span class="checkmark"></span><span class="option-text">Motivation stage (Prochaska-DiClemente)</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D5. Panic Disorder / Anxiety</div>
+      <div class="field-group">
+        <label class="field-label">Panic template checklist</label>
+        <div class="options-grid grid-2" id="panicChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="First attack dated precisely" data-key="pan_date"><span class="checkmark"></span><span class="option-text">First attack dated precisely (day-level)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="Sudden discrete fear peak ~10 min" data-key="pan_peak"><span class="checkmark"></span><span class="option-text">Sudden discrete fear peak ~10 min</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="Somatic symptoms documented" data-key="pan_somatic"><span class="checkmark"></span><span class="option-text">Somatic symptoms (palpitations, chest tightness, paraesthesiae, derealisation)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="Cardiology workup normal" data-key="pan_cardio"><span class="checkmark"></span><span class="option-text">Cardiology workup normal (if done)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="Agoraphobic avoidance" data-key="pan_agora"><span class="checkmark"></span><span class="option-text">Agoraphobic avoidance documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="panicChecklist" value="Anticipatory anxiety" data-key="pan_anticip"><span class="checkmark"></span><span class="option-text">Anticipatory anxiety between attacks</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D6. OCD and Related</div>
+      <div class="field-group">
+        <label class="field-label">OCD template checklist</label>
+        <div class="options-grid grid-2" id="ocdChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Obsession content in own words" data-key="ocd_content"><span class="checkmark"></span><span class="option-text">Obsession content in patient&rsquo;s own words</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Ego-dystonic recognition" data-key="ocd_egodys"><span class="checkmark"></span><span class="option-text">Ego-dystonic recognition documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Neutralising compulsions" data-key="ocd_comp"><span class="checkmark"></span><span class="option-text">Neutralising compulsions described</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Time spent per day" data-key="ocd_time"><span class="checkmark"></span><span class="option-text">Time spent per day on rituals (hours)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Family accommodation" data-key="ocd_family"><span class="checkmark"></span><span class="option-text">Family accommodation level</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ocdChecklist" value="Insight level (BABS)" data-key="ocd_insight"><span class="checkmark"></span><span class="option-text">Insight level (BABS if available)</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D7. PTSD / Trauma-Related</div>
+      <div class="field-group">
+        <label class="field-label">PTSD template checklist</label>
+        <div class="options-grid grid-2" id="ptsdChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="Identifiable trauma named and dated" data-key="ptsd_trauma"><span class="checkmark"></span><span class="option-text">Identifiable trauma named and dated</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="Intrusion cluster" data-key="ptsd_intr"><span class="checkmark"></span><span class="option-text">Intrusion cluster (recollections, nightmares, flashbacks)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="Avoidance cluster" data-key="ptsd_avoid"><span class="checkmark"></span><span class="option-text">Avoidance cluster (internal / external)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="NACM cluster" data-key="ptsd_nacm"><span class="checkmark"></span><span class="option-text">NACM cluster (negative alterations in cognition/mood)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="Hyperarousal cluster" data-key="ptsd_hyper"><span class="checkmark"></span><span class="option-text">Hyperarousal cluster (hypervigilance, startle, irritability, concentration)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="ptsdChecklist" value="Functional / occupational impact" data-key="ptsd_func"><span class="checkmark"></span><span class="option-text">Functional/occupational impact from avoidance</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D8. Anorexia Nervosa (Restricting Type)</div>
+      <div class="field-group">
+        <label class="field-label">AN template checklist</label>
+        <div class="options-grid grid-2" id="anChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="Restriction onset and progression" data-key="an_restrict"><span class="checkmark"></span><span class="option-text">Restriction onset and progression documented</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="Body image distortion" data-key="an_body"><span class="checkmark"></span><span class="option-text">Body image distortion / fear of weight gain</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="Food rituals and exercise" data-key="an_rituals"><span class="checkmark"></span><span class="option-text">Food rituals and compensatory exercise</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="BMI trajectory" data-key="an_bmi"><span class="checkmark"></span><span class="option-text">BMI trajectory (starting &rarr; current)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="Amenorrhoea / menstrual history" data-key="an_mens"><span class="checkmark"></span><span class="option-text">Amenorrhoea / menstrual history</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="anChecklist" value="Preserved hunger vs. genuine loss" data-key="an_hunger"><span class="checkmark"></span><span class="option-text">Preserved hunger (actively overridden) vs genuine appetite loss</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D9. Dissociative / Functional Neurological Disorder</div>
+      <div class="field-group">
+        <label class="field-label">FND template checklist</label>
+        <div class="options-grid grid-2" id="fndChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="Acute onset stress-coupled" data-key="fnd_acute"><span class="checkmark"></span><span class="option-text">Acute onset with temporal coupling to stressor</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="Model/template identified" data-key="fnd_model"><span class="checkmark"></span><span class="option-text">Model / template identified (relative with similar deficit, prior medical exposure)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="La belle indifference" data-key="fnd_labelle"><span class="checkmark"></span><span class="option-text">La belle indiff&eacute;rence (affect out of proportion)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="Inconsistent neurology" data-key="fnd_neuro"><span class="checkmark"></span><span class="option-text">Inconsistent neurology on exam (e.g., Hoover&rsquo;s sign)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="Selective dissociation" data-key="fnd_select"><span class="checkmark"></span><span class="option-text">Selective dissociation (preserved sleep, appetite, libido)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="fndChecklist" value="Risk: further functional decline" data-key="fnd_risk"><span class="checkmark"></span><span class="option-text">Risk: further functional decline documented</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D10. Personality Disorder (BPD-Emphasised)</div>
+      <div class="field-group">
+        <label class="field-label">BPD template checklist <button class="help-toggle" onclick="toggleHelp('helpBPD')">ℹ️</button></label>
+        <div class="help-panel" id="helpBPD">
+          <h5>Framing note</h5>
+          <p>In BPD the &ldquo;episode&rdquo; framing breaks down. The HOPI captures the decompensation against the chronic baseline. Say this explicitly in viva: &ldquo;This is a case of chronic dysregulation with acute decompensation, not a discrete episode in the manic-or-depressive sense.&rdquo;</p>
+        </div>
+        <div class="options-grid grid-2" id="bpdChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Acute decompensation trigger" data-key="bpd_trigger"><span class="checkmark"></span><span class="option-text">Acute decompensation trigger (relationship rupture, perceived abandonment)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Identity disturbance" data-key="bpd_identity"><span class="checkmark"></span><span class="option-text">Identity disturbance chronic</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Idealisation-devaluation" data-key="bpd_ideal"><span class="checkmark"></span><span class="option-text">Idealisation-devaluation in relationships</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Chronic emptiness" data-key="bpd_empty"><span class="checkmark"></span><span class="option-text">Chronic emptiness</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Impulsivity" data-key="bpd_impulse"><span class="checkmark"></span><span class="option-text">Impulsivity (spending, sex, substance, eating)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Recurrent self-harm / DSH" data-key="bpd_dsh"><span class="checkmark"></span><span class="option-text">Recurrent self-harm / DSH history</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Mood lability hours-days" data-key="bpd_labile"><span class="checkmark"></span><span class="option-text">Mood lability hours-to-days</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="bpdChecklist" value="Transient stress-related psychosis" data-key="bpd_psych"><span class="checkmark"></span><span class="option-text">Transient stress-related paranoid / dissociative symptoms</span></label>
+        </div>
+      </div>
+
+      <div class="sub-sub-header">D11. Neurocognitive &mdash; Delirium vs. Dementia</div>
+      <div class="field-group">
+        <label class="field-label">Neurocognitive template checklist <button class="help-toggle" onclick="toggleHelp('helpCognitive')">ℹ️</button></label>
+        <div class="help-panel" id="helpCognitive">
+          <h5>Single most important question</h5>
+          <p>Acuity of onset determines delirium vs dementia. Delirium = abrupt (hours&ndash;days), fluctuating, sundowning, visual hallucinations, impaired attention. Dementia = insidious (months&ndash;years), progressive, clear consciousness.</p>
+        </div>
+        <div class="options-grid grid-2" id="cognitiveChecklist">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Onset acuity established" data-key="cog_acuity"><span class="checkmark"></span><span class="option-text">Onset acuity established (delirium vs dementia)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Fluctuation documented" data-key="cog_fluct"><span class="checkmark"></span><span class="option-text">Fluctuation documented (delirium: lucid AM, worse PM)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Consciousness clarity" data-key="cog_conscious"><span class="checkmark"></span><span class="option-text">Consciousness clarity (discriminator: dementia = clear)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Attention testable" data-key="cog_attention"><span class="checkmark"></span><span class="option-text">Attention testable / severely impaired</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Visual hallucinations" data-key="cog_visual"><span class="checkmark"></span><span class="option-text">Visual hallucinations (common in delirium)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="BPSD features" data-key="cog_bpsd"><span class="checkmark"></span><span class="option-text">BPSD features (wandering, accusations, aggression)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Trigger identified" data-key="cog_trigger"><span class="checkmark"></span><span class="option-text">Trigger identified (UTI, meds, surgery, infection)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="cognitiveChecklist" value="Informant is primary historian" data-key="cog_informant"><span class="checkmark"></span><span class="option-text">Informant is primary historian (patient cannot give HOPI)</span></label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION E — PITFALLS & EXAM TRAPS
+     ======================== -->
+<div class="accordion" id="secE" data-card="E">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">E</span> Pitfalls &amp; Exam Traps</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <div class="pitfall-box"><h4>1. Confusing HOPI with Past History</h4><ul><li>The index episode lives here. Prior episodes, even closely preceding ones, live in Chapter 05.</li><li>Boundary: the last clean recovery (ISBD Tohen 2009 vocabulary). If no recovery between previous and current, they are part of the same continuous illness and belong together in HOPI.</li></ul></div>
+      <div class="pitfall-box"><h4>2. Letting the patient set the chronology backward</h4><ul><li>Patients reflexively start with what is most distressing today.</li><li>Anchor them to the first day and walk forward. A backward-built timeline is almost always wrong.</li></ul></div>
+      <div class="pitfall-box"><h4>3. Calling a precipitant a cause</h4><ul><li>The diathesis-stress trap. Examiners will challenge &ldquo;his depression was caused by job loss.&rdquo;</li><li>Reframe: &ldquo;The precipitant for the index episode was job loss, on a background of [diathesis].&rdquo;</li></ul></div>
+      <div class="pitfall-box"><h4>4. Missing the prodrome</h4><ul><li>Especially in schizophrenia and depression, patient and family under-report the prodrome.</li><li>The &ldquo;last day fully yourself&rdquo; anchor is the corrective.</li></ul></div>
+      <div class="pitfall-box"><h4>5. Skipping the biological functions cluster</h4><ul><li>Sleep, appetite, weight, energy, libido, and diurnal variation must be asked in every HOPI regardless of presentation.</li><li>They are diagnostically discriminating, scoreable, and trackable across treatment.</li></ul></div>
+      <div class="pitfall-box"><h4>6. Documenting &ldquo;no SI&rdquo; without the question</h4><ul><li>A risk denial is meaningful only if the question was asked.</li><li>Write the laddered question and the answer, verbatim where possible.</li></ul></div>
+      <div class="pitfall-box"><h4>7. Missing collateral when the patient lacks insight</h4><ul><li>In psychosis, mania, and neurocognitive cases the patient cannot give the HOPI.</li><li>The candidate who tries to construct it from the patient alone produces an unusable case.</li></ul></div>
+      <div class="pitfall-box"><h4>8. Not asking about informal, AYUSH, or faith-based treatment</h4><ul><li>In Indian patients these are the rule, not the exception.</li><li>Drug interactions (St John&rsquo;s Wort + SSRIs, heavy metals, anticholinergic Datura) are common and missed.</li></ul></div>
+      <div class="pitfall-box"><h4>9. Conflating severity with symptom count</h4><ul><li>Severity is the functional impairment the symptoms cause, scored on CGI or validated instrument.</li><li>Not the number of symptoms ticked.</li></ul></div>
+      <div class="pitfall-box"><h4>10. Forgetting treatment-emergent affective switching</h4><ul><li>A patient who had hypomania while on an SSRI in the index episode is a different case.</li><li>Cross-reference Chapter 05 for formal definition and diagnostic implications.</li></ul></div>
+      <div class="field-group">
+        <label class="field-label">Self-check: which pitfalls did I actively avoid in this HOPI?</label>
+        <div class="options-grid grid-2" id="pitfallsAvoided">
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Kept index episode separate from past history" data-key="pit_separate"><span class="checkmark"></span><span class="option-text">Kept index episode separate from past history</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Built chronology forward from anchor" data-key="pit_forward"><span class="checkmark"></span><span class="option-text">Built chronology forward from anchor</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Used diathesis-stress framing" data-key="pit_diathesis"><span class="checkmark"></span><span class="option-text">Used diathesis-stress framing (not cause)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Captured prodrome" data-key="pit_prodrome"><span class="checkmark"></span><span class="option-text">Captured prodrome with anchor date</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Completed biological sweep" data-key="pit_bio"><span class="checkmark"></span><span class="option-text">Completed biological sweep (all 6+ domains)</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Documented SI questions verbatim" data-key="pit_si"><span class="checkmark"></span><span class="option-text">Documented SI questions and answers verbatim</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Obtained collateral where needed" data-key="pit_collat"><span class="checkmark"></span><span class="option-text">Obtained collateral where needed</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Asked informal/AYUSH treatment" data-key="pit_ayush"><span class="checkmark"></span><span class="option-text">Asked informal / AYUSH / faith-based treatment</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Rated severity by function not count" data-key="pit_severity"><span class="checkmark"></span><span class="option-text">Rated severity by function / CGI, not symptom count</span></label>
+          <label class="option-chip" onclick="toggleCheckbox(this)"><input type="checkbox" name="pitfallsAvoided" value="Screened for antidepressant-induced switching" data-key="pit_switch"><span class="checkmark"></span><span class="option-text">Screened for antidepressant-induced switching</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION F — SAMPLE PHRASINGS
+     ======================== -->
+<div class="accordion" id="secF" data-card="F">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">F</span> Sample Phrasings</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <div class="sub-sub-header">Opening Prompts (use one)</div>
+      <div class="sample-phrase">&ldquo;Tell me, in your own words, what&rsquo;s been going on.&rdquo;</div>
+      <div class="sample-phrase">&ldquo;Take me through what brought you here today, from the very beginning.&rdquo;</div>
+      <div class="sample-phrase">&ldquo;Start from the last time you felt fully like yourself, and walk me forward.&rdquo;</div>
+
+      <div class="sub-sub-header">The &ldquo;Last Day Fully Yourself&rdquo; Anchor</div>
+      <div class="sample-phrase">&ldquo;What was the last day you felt fully like yourself? Not perfect, just yourself. The version of you that your family would recognise.&rdquo;</div>
+
+      <div class="sub-sub-header">Mood Probe</div>
+      <div class="sample-phrase">English: &ldquo;How has your mood been over the last few weeks?&rdquo;</div>
+      <div class="sample-phrase">Hindi: &ldquo;pichhle kuch hafton mein aapka mann kaisa raha hai?&rdquo;</div>
+
+      <div class="sub-sub-header">Sleep Probe (with manic disambiguation)</div>
+      <div class="sample-phrase">&ldquo;How has your sleep been? How long are you sleeping at night? When you wake up, do you feel rested, or do you feel exhausted?&rdquo;</div>
+      <div class="sample-phrase">Disambiguator: sleeps 4 hours and feels rested = reduced need (manic); sleeps 4 hours and exhausted = insomnia (depressive/anxious).</div>
+
+      <div class="sub-sub-header">Biological Functions Sweep</div>
+      <div class="sample-phrase">&ldquo;How has your appetite been? Has your weight changed? How is your energy through the day? Has there been any change in your interest in physical intimacy? Is there any time of day when you feel better or worse?&rdquo;</div>
+
+      <div class="sub-sub-header">Hallucination Screen</div>
+      <div class="sample-phrase">English: &ldquo;Have you had any experiences that seemed unusual, hearing things or seeing things that other people did not?&rdquo;</div>
+      <div class="sample-phrase">Hindi: &ldquo;kya aapko aisi awaazein sunai deti hain jo doosron ko nahin sunai detin?&rdquo;</div>
+
+      <div class="sub-sub-header">Suicide Screen (Patterson Ladder)</div>
+      <div class="sample-phrase">1. &ldquo;Has it ever felt like life isn&rsquo;t worth living?&rdquo;</div>
+      <div class="sample-phrase">2. &ldquo;Have you wished you wouldn&rsquo;t wake up?&rdquo;</div>
+      <div class="sample-phrase">3. &ldquo;Have you thought of actually doing something to end your life?&rdquo;</div>
+      <div class="sample-phrase">4. &ldquo;Have you thought about how you would do it?&rdquo;</div>
+      <div class="sample-phrase">5. &ldquo;Have you taken any steps towards it, bought anything, written anything, said goodbye to anyone?&rdquo;</div>
+      <div class="sample-phrase">6. &ldquo;What stops you?&rdquo;</div>
+
+      <div class="sub-sub-header">Harm to Others Screen</div>
+      <div class="sample-phrase">&ldquo;Has there been any time in this illness when you&rsquo;ve felt like hurting someone, or felt that someone needed to be hurt because of what they were doing to you?&rdquo;</div>
+
+      <div class="sub-sub-header">Substance Use Screen (Conversational)</div>
+      <div class="sample-phrase">&ldquo;How much do you drink in a typical week, and how often? When did you last have a drink? Have you ever felt you needed to cut down? Has anyone in the family ever told you to cut down?&rdquo;</div>
+      <div class="sample-phrase">&ldquo;Apart from alcohol, have you ever tried anything else &mdash; cannabis, opium, brown sugar, anything injected, anything you sniffed, sleeping pills you bought without a prescription?&rdquo;</div>
+
+      <div class="sub-sub-header">Insight Check</div>
+      <div class="sample-phrase">Hindi: &ldquo;aapko lagta hai ki kuch problem hai? agar haan, to aap kya samajhte hain ki problem kya hai?&rdquo;</div>
+
+      <div class="sub-sub-header">Informal / AYUSH Treatment Probe</div>
+      <div class="sample-phrase">&ldquo;Before you came here, did you see anyone else for this, a doctor, a homeopath, a vaidya, a faith healer, anyone in the family who suggested something? Did you take anything for it, tablets, drops, oils, anything from a shop?&rdquo;</div>
+
+      <div class="sub-sub-header">Transition into Past History</div>
+      <div class="sample-phrase">&ldquo;Before this episode began, has there been any time in your life when you&rsquo;ve felt anything similar, even if much milder?&rdquo;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================
+     SECTION G — CROSS-REFERENCES
+     ======================== -->
+<div class="accordion" id="secG" data-card="G">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <h3><span class="badge">G</span> Cross-References &amp; Notes</h3>
+    <span class="chevron">&#9662;</span>
+  </div>
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <div class="instruction-box">
+        <h4>Chapter links for integrated case construction</h4>
+        <ul>
+          <li><strong>Ch 02 (Chief Complaints)</strong> &mdash; chronological complaints list that opens the case</li>
+          <li><strong>Ch 04 (Negative History)</strong> &mdash; symptoms HOPI screened for and ruled out</li>
+          <li><strong>Ch 05 (Past History)</strong> &mdash; ISBD Tohen 2009 nomenclature, boundary between index and prior episodes, life chart protocols</li>
+          <li><strong>Ch 06 (Family History)</strong> &mdash; the diathesis behind the diathesis-stress framing of precipitants</li>
+          <li><strong>Ch 11 (MSE)</strong> &mdash; cross-sectional companion to longitudinal HOPI; viva-prose blocks complement disorder blocks in Section D</li>
+          <li><strong>Ch 12 (Diagnosis)</strong> &mdash; HOPI is the primary input to diagnostic formulation</li>
+          <li><strong>Ch 13 (Investigations)</strong> &mdash; first-episode workup and severity scales (HAM-D, MADRS, YMRS, PANSS, Y-BOCS, HAM-A)</li>
+          <li><strong>Ch 14 (Management)</strong> &mdash; index-episode treatment plan built on HOPI symptom chronology and prior treatment response</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Clinician notes / reminders for cross-referencing</label>
+        <div class="field-hint">Note any chapters to revisit, missing links, or reminders for case integration. Use this as a running todo list while building the case.</div>
+        <textarea data-key="crossRefNotes" id="crossRefNotes" placeholder="Type here..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- spacer for sticky bar -->
+<div style="height:80px;"></div>
+
+</div><!-- /container -->
+
+<!-- STICKY BOTTOM BAR -->
+<div class="sticky-bar">
+  <button class="btn btn-secondary" onclick="exportPDF()">Export PDF</button>
+  <button class="btn btn-primary" onclick="copySummary()">Copy Summary</button>
+  <button class="btn btn-danger" onclick="openClearModal()">Clear All</button>
+</div>
+
+<!-- CLEAR CONFIRMATION MODAL -->
+<div class="modal-overlay" id="clearModal">
+  <div class="modal">
+    <h3>Clear all data?</h3>
+    <p>This will erase all entered data. A timestamped backup will be saved before clearing. This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeClearModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmClear()">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== TEXTAREA RESIZE (per spec) ===== */
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+/* ===== INIT AUTO-EXPAND ===== */
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(function(el) {
+    el.addEventListener('input', function() { resizeTextarea(this); });
+    el.addEventListener('paste', function() {
+      var self = this;
+      setTimeout(function() { resizeTextarea(self); }, 0);
+    });
+  });
+  setTimeout(function() {
+    document.querySelectorAll('textarea').forEach(resizeTextarea);
+  }, 50);
+}
+
+/* ===== CHIP VISUALS ===== */
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip').forEach(function(chip) {
+    var input = chip.querySelector('input');
+    if (input) {
+      chip.classList.toggle('checked', input.checked);
+    }
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip').forEach(function(chip) {
+    if (chip.dataset.chipInit) return;
+    chip.dataset.chipInit = '1';
+    var input = chip.querySelector('input');
+    if (input) {
+      input.addEventListener('change', updateChipVisuals);
+    }
+  });
+}
+
+/* ===== ACCORDION / QUICK REF TOGGLE ===== */
+function toggleAccordion(header) {
+  var card = header.closest('.accordion');
+  card.classList.toggle('open');
+}
+
+function toggleQuickRef(header) {
+  var panel = header.closest('.quick-ref');
+  panel.classList.toggle('open');
+}
+
+function toggleHelp(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+/* ===== RADIO / CHECKBOX ===== */
+function selectRadio(label, groupName) {
+  var container = label.closest('.options-grid');
+  container.querySelectorAll('.option-chip').forEach(function(item) {
+    var inp = item.querySelector('input[name="' + groupName + '"]');
+    if (inp) {
+      item.classList.remove('checked');
+      inp.checked = false;
+    }
+  });
+  label.classList.add('checked');
+  var input = label.querySelector('input');
+  if (input) input.checked = true;
+  updateSummary();
+  queueSave();
+}
+
+function toggleCheckbox(label) {
+  var input = label.querySelector('input');
+  if (!input) return;
+  input.checked = !input.checked;
+  label.classList.toggle('checked', input.checked);
+  updateSummary();
+  queueSave();
+}
+
+/* ===== RATING SCALE ===== */
+function selectRating(btn, groupId) {
+  var container = document.getElementById(groupId);
+  if (!container) return;
+  container.querySelectorAll('.rating-option').forEach(function(b) {
+    b.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+  updateSummary();
+  queueSave();
+}
+
+/* ===== SUMMARY ===== */
+var summaryManuallyEdited = false;
+var liveSummary = document.getElementById('liveSummary');
+
+if (liveSummary) {
+  liveSummary.addEventListener('input', function() {
+    summaryManuallyEdited = true;
+    resizeTextarea(this);
+  });
+}
+
+function updateSummary() {
+  if (summaryManuallyEdited) return;
+  var parts = [];
+
+  var onsetMode = getRadioValue('onsetMode');
+  var onsetDate = val('onsetDate');
+  var onsetDuration = val('onsetDuration');
+  var onsetDesc = val('onsetDesc');
+  if (onsetMode || onsetDate || onsetDuration) {
+    parts.push('Onset: ' + [onsetMode, onsetDate, onsetDuration, onsetDesc].filter(Boolean).join('; '));
+  }
+
+  var precip = getRadioValue('precipIdentified');
+  var precipTypes = getCheckedValues('precipTypes');
+  var precipDetails = val('precipDetails');
+  if (precip || precipTypes.length || precipDetails) {
+    parts.push('Precipitant: ' + [precip, precipTypes.join(', '), precipDetails].filter(Boolean).join('; '));
+  }
+
+  var course = getRadioValue('courseType');
+  var courseDet = val('courseDetails');
+  if (course || courseDet) {
+    parts.push('Course: ' + [course, courseDet].filter(Boolean).join('; '));
+  }
+
+  var chron = val('symptomChronology');
+  if (chron) parts.push('Symptom chronology: ' + chron);
+
+  var bio = [];
+  var sleep = getCheckedValues('sleepPattern');
+  var appetite = getRadioValue('appetiteChange');
+  var weight = val('weightChangeKg');
+  var energy = getRadioValue('energyLevel');
+  var libido = getRadioValue('libidoLevel');
+  var diurnal = getRadioValue('diurnalVariation');
+  if (sleep.length) bio.push('Sleep: ' + sleep.join(', '));
+  if (appetite) bio.push('Appetite: ' + appetite);
+  if (weight) bio.push('Weight change: ' + weight + ' kg');
+  if (energy) bio.push('Energy: ' + energy);
+  if (libido) bio.push('Libido: ' + libido);
+  if (diurnal) bio.push('Diurnal variation: ' + diurnal);
+  var bioOther = val('biologicalOther');
+  if (bioOther) bio.push(bioOther);
+  if (bio.length) parts.push('Biological functions: ' + bio.join('; '));
+
+  var disability = getRadioValue('disabilityLevel');
+  var funcDet = val('functionalDetails');
+  if (disability || funcDet) {
+    parts.push('Functional impact: ' + [disability, funcDet].filter(Boolean).join('; '));
+  }
+
+  var organic = getCheckedValues('organicScreen');
+  var physical = val('physicalIllnesses');
+  var substance = val('substanceUseScreen');
+  if (organic.length || physical || substance) {
+    parts.push('Organic screen: ' + [organic.join(', '), physical, substance].filter(Boolean).join('; '));
+  }
+
+  var formalTreat = val('formalTreatment');
+  var informalTreat = val('informalTreatment');
+  if (formalTreat || informalTreat) {
+    parts.push('Treatment this episode: ' + [formalTreat, informalTreat].filter(Boolean).join('; '));
+  }
+
+  var suicide = val('suicideScreen');
+  var harm = val('harmOthers');
+  var riskSum = val('riskSummary');
+  if (suicide || harm || riskSum) {
+    parts.push('Current risk: ' + [suicide, harm, riskSum].filter(Boolean).join('; '));
+  }
+
+  var legal = getCheckedValues('legalIssues');
+  if (legal.length) parts.push('Legal: ' + legal.join(', '));
+
+  var cgi = getRatingValue('cgiSeverity');
+  if (cgi) parts.push('CGI-S: ' + cgi);
+
+  var diffLead = val('diffLeading');
+  if (diffLead) parts.push('Leading differential: ' + diffLead);
+
+  var summary = parts.length ? parts.join('.\n') + '.' : '';
+  if (liveSummary) {
+    liveSummary.value = summary;
+    resizeTextarea(liveSummary);
+  }
+}
+
+function resyncSummary() {
+  summaryManuallyEdited = false;
+  updateSummary();
+}
+
+function copySummary() {
+  if (!liveSummary) return;
+  var text = liveSummary.value;
+  if (!text) { alert('Summary is empty'); return; }
+  navigator.clipboard.writeText(text).then(function() {
+    alert('Summary copied to clipboard');
+  });
+}
+
+/* ===== HELPERS ===== */
+function val(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+function getRadioValue(name) {
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+function getCheckedValues(name) {
+  return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(function(el) {
+    return el.value;
+  });
+}
+function getRatingValue(groupId) {
+  var selected = document.querySelector('#' + groupId + ' .rating-option.selected');
+  return selected ? selected.textContent : '';
+}
+
+/* ===== LOCALSTORAGE PERSISTENCE (per spec) ===== */
+var STORAGE_KEY = 'ch03_hopi_v1';
+var BACKUP_PREFIX = 'ch03_backup_';
+var SAVE_INTERVAL = 800;
+var saveTimer = null;
+var lastSaved = null;
+
+function saveData() {
+  var data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+    var key = el.getAttribute('data-key');
+    if (!key) return;
+    if (el.type === 'checkbox') {
+      data[key] = el.checked;
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  // Save rating scale selections
+  var cgiBtn = document.querySelector('#cgiSeverity .rating-option.selected');
+  if (cgiBtn) data._cgiSeverity = cgiBtn.getAttribute('data-rating') || cgiBtn.textContent;
+
+  // Save card and QR panel open states
+  data._openCards = [];
+  document.querySelectorAll('.accordion[data-card]').forEach(function(card) {
+    if (card.classList.contains('open')) {
+      data._openCards.push(card.getAttribute('data-card'));
+    }
+  });
+  data._openQRs = [];
+  document.querySelectorAll('.quick-ref[data-qr]').forEach(function(qr) {
+    if (qr.classList.contains('open')) {
+      data._openQRs.push(qr.getAttribute('data-qr'));
+    }
+  });
+
+  data._manualEdit = summaryManuallyEdited;
+  data._timestamp = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  lastSaved = new Date();
+  showSaveIndicator();
+}
+
+function showSaveIndicator() {
+  var ind = document.getElementById('saveIndicator');
+  if (!ind) return;
+  ind.textContent = 'Saved ' + lastSaved.toLocaleTimeString();
+  ind.classList.add('visible');
+  setTimeout(function() {
+    ind.classList.remove('visible');
+  }, 2000);
+}
+
+function queueSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, SAVE_INTERVAL);
+}
+
+function restoreData() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+
+    // Restore field values
+    document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+      var key = el.getAttribute('data-key');
+      if (!(key in data)) return;
+      if (el.type === 'checkbox') {
+        el.checked = !!data[key];
+      } else if (el.type === 'radio') {
+        if (data[key] === el.value) el.checked = true;
+      } else {
+        el.value = data[key] || '';
+      }
+    });
+
+    // Restore CGI rating
+    if (data._cgiSeverity) {
+      var cgiContainer = document.getElementById('cgiSeverity');
+      if (cgiContainer) {
+        cgiContainer.querySelectorAll('.rating-option').forEach(function(opt) {
+          opt.classList.toggle('selected', (opt.getAttribute('data-rating') || opt.textContent) === String(data._cgiSeverity));
+        });
+      }
+    }
+
+    // Restore card open states
+    if (data._openCards && Array.isArray(data._openCards)) {
+      document.querySelectorAll('.accordion[data-card]').forEach(function(card) {
+        card.classList.toggle('open', data._openCards.indexOf(card.getAttribute('data-card')) !== -1);
+      });
+    }
+
+    // Restore QR open states
+    if (data._openQRs && Array.isArray(data._openQRs)) {
+      document.querySelectorAll('.quick-ref[data-qr]').forEach(function(qr) {
+        qr.classList.toggle('open', data._openQRs.indexOf(qr.getAttribute('data-qr')) !== -1);
+      });
+    }
+
+    if (data._manualEdit) summaryManuallyEdited = true;
+
+    // Resize textareas after restore
+    setTimeout(function() {
+      document.querySelectorAll('textarea').forEach(resizeTextarea);
+    }, 100);
+  } catch (e) {
+    console.error('Restore error', e);
+  }
+}
+
+function initAutoSave() {
+  document.querySelectorAll('textarea, input').forEach(function(el) {
+    el.addEventListener('input', queueSave);
+    el.addEventListener('change', queueSave);
+  });
+}
+
+function openClearModal() {
+  document.getElementById('clearModal').classList.add('open');
+}
+function closeClearModal() {
+  document.getElementById('clearModal').classList.remove('open');
+}
+function confirmClear() {
+  var data = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) data = JSON.parse(raw);
+  } catch (e) {}
+  var backupKey = BACKUP_PREFIX + Date.now();
+  localStorage.setItem(backupKey, JSON.stringify(data));
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('input, textarea').forEach(function(el) {
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = false;
+    } else {
+      el.value = '';
+    }
+  });
+  document.querySelectorAll('.option-chip').forEach(function(item) {
+    item.classList.remove('checked');
+  });
+  document.querySelectorAll('.rating-option').forEach(function(opt) {
+    opt.classList.remove('selected');
+  });
+  summaryManuallyEdited = false;
+  updateSummary();
+  closeClearModal();
+}
+
+/* ===== PDF EXPORT ===== */
+function exportPDF() {
+  document.querySelectorAll('.accordion').forEach(function(a) { a.classList.add('open'); });
+  document.querySelectorAll('.quick-ref').forEach(function(q) { q.classList.add('open'); });
+  setTimeout(function() {
+    window.print();
+  }, 300);
+}
+
+/* ===== BEFORE PRINT ===== */
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('textarea').forEach(resizeTextarea);
+  document.querySelectorAll('.accordion').forEach(function(a) { a.classList.add('open'); });
+  document.querySelectorAll('.quick-ref').forEach(function(q) { q.classList.add('open'); });
+});
+
+/* ===== DOMContentLoaded (exact order per spec) ===== */
+document.addEventListener('DOMContentLoaded', function() {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  // Final safety resize
+  setTimeout(function() {
+    document.querySelectorAll('textarea').forEach(resizeTextarea);
+  }, 300);
+});
+</script>
+
+</body>
+</html>

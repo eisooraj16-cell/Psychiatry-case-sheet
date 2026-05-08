@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Psychiatry Case Sheet</title>
+<link rel="manifest" href="manifest.json">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,sans-serif;background:#0a0a0a;color:#e8e8e8;line-height:1.6;font-size:16px;min-height:100dvh;overflow-x:hidden;max-width:100vw}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+input:focus,textarea:focus,select:focus{outline:2px solid #4fc3f7;outline-offset:2px}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+.app{max-width:100%;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+.app-header{background:#0a0a0a;border-bottom:1px solid #222;padding:12px 14px;position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.header-title{font-size:1rem;font-weight:700;color:#4fc3f7;letter-spacing:-0.01em;white-space:nowrap}
+.header-case{font-size:0.78rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;text-align:center}
+.header-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;padding:8px 14px;border-radius:10px;font-weight:600;font-size:0.82rem;transition:all .15s;white-space:nowrap}
+.btn:active{transform:scale(0.97);opacity:0.9}
+.btn-primary{background:#4fc3f7;color:#000}
+.btn-primary:hover{background:#6fd4ff}
+.btn-secondary{background:#1a1a1a;color:#ccc;border:1px solid #333}
+.btn-secondary:hover{background:#252525;color:#fff}
+.btn-danger{background:#ff5252;color:#fff}
+.btn-ghost{background:transparent;color:#888}
+.btn-ghost:hover{color:#fff}
+.btn-sm{min-height:34px;padding:6px 10px;font-size:0.78rem}
+.btn svg,.btn-icon{width:16px;height:16px;flex-shrink:0}
+.main{flex:1;max-width:960px;margin:0 auto;width:100%;padding:14px;position:relative}
+.empty-state{text-align:center;padding:40px 20px}
+.empty-state h2{font-size:1.5rem;color:#4fc3f7;margin-bottom:8px}
+.empty-state p{color:#666;font-size:0.9rem;margin-bottom:24px}
+.empty-actions{display:flex;flex-direction:column;gap:10px;max-width:280px;margin:0 auto}
+.case-bar{background:#111;border:1px solid #222;border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.case-bar-info{flex:1;min-width:0}
+.case-bar-name{font-size:1.05rem;font-weight:700;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.case-bar-date{font-size:0.75rem;color:#666;margin-top:2px}
+.case-bar-actions{display:flex;gap:6px;flex-shrink:0}
+.progress-overview{margin-bottom:16px}
+.progress-bar-bg{height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,#4fc3f7,#34d399);border-radius:4px;transition:width .4s ease}
+.progress-text{font-size:0.72rem;color:#666;margin-top:4px;text-align:right}
+.chapter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:600px){.chapter-grid{grid-template-columns:repeat(3,1fr)}}
+.chapter-card{background:#111;border:1px solid #222;border-radius:14px;padding:14px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+.chapter-card:hover{border-color:#4fc3f7;transform:translateY(-1px)}
+.chapter-card:active{transform:scale(0.98)}
+.chapter-card.special{border-color:#0d9488;background:#0a1f1f}
+.chapter-card.special:hover{border-color:#14b8a6}
+.chapter-card-top{display:flex;align-items:center;gap:8px}
+.chapter-num{width:30px;height:30px;border-radius:8px;background:#1a2332;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;color:#4fc3f7;flex-shrink:0}
+.chapter-card.special .chapter-num{background:#0d3330;border-color:#0d9488;color:#14b8a6}
+.chapter-icon{font-size:1.3rem}
+.chapter-title{font-size:0.85rem;font-weight:600;color:#e8e8e8;line-height:1.3}
+.chapter-desc{font-size:0.72rem;color:#666;line-height:1.4;flex:1}
+.chapter-progress{height:4px;background:#1a1a1a;border-radius:2px;overflow:hidden;margin-top:4px}
+.chapter-progress-fill{height:100%;border-radius:2px;transition:width .3s}
+.chapter-progress-fill.low{background:#ff5252}
+.chapter-progress-fill.mid{background:#ffb74d}
+.chapter-progress-fill.high{background:#34d399}
+.chapter-status{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.chapter-status.done{background:#34d399;color:#000}
+.chapter-status.partial{background:#ffb74d;color:#000}
+.chapter-status.empty{background:#222;color:#666}
+.action-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px;background:#111;border:1px solid #222;border-radius:14px}
+.action-bar .btn{flex:1;min-width:0}
+.iframe-wrap{position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:#0a0a0a;display:none;flex-direction:column}
+.iframe-wrap.open{display:flex}
+.iframe-header{background:#0a0a0a;border-bottom:1px solid #222;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;z-index:10}
+.iframe-header-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.iframe-header-title{font-size:0.9rem;font-weight:600;color:#e8e8e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iframe-header-actions{display:flex;gap:6px;flex-shrink:0}
+.iframe-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;position:relative;min-height:0}
+.iframe-body iframe{width:100%;min-height:100%;border:none;background:#000;display:block}
+.secnav-btn{position:fixed;bottom:20px;right:16px;z-index:400;width:52px;height:52px;border-radius:50%;background:#4fc3f7;color:#000;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 16px rgba(79,195,247,0.3);cursor:pointer;border:none;transition:all .2s}
+.secnav-btn:hover{transform:scale(1.05)}
+.secnav-btn:active{transform:scale(0.95)}
+.secnav-btn.hidden{display:none}
+.secnav-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+.secnav-overlay.open{display:flex}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.secnav-sheet{background:#111;border:1px solid #333;border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:70vh;display:flex;flex-direction:column;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.secnav-header{padding:16px 20px;border-bottom:1px solid #222;display:flex;align-items:center;justify-content:space-between}
+.secnav-header h3{font-size:1rem;color:#4fc3f7}
+.secnav-close{width:32px;height:32px;border-radius:50%;background:#222;color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border:none}
+.secnav-close:active{background:#333}
+.secnav-list{overflow-y:auto;padding:8px 16px 24px;flex:1}
+.secnav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;margin-bottom:4px}
+.secnav-item:hover{background:#1a1a1a}
+.secnav-item:active{background:#222}
+.secnav-item-check{width:22px;height:22px;border-radius:50%;border:2px solid #444;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.secnav-item-check.done{background:#34d399;border-color:#34d399;color:#000}
+.secnav-item-check.partial{background:#ffb74d;border-color:#ffb74d;color:#000}
+.secnav-item-text{font-size:0.88rem;color:#ccc;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.secnav-item-num{font-size:0.72rem;color:#666;flex-shrink:0;font-weight:600}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#222;color:#fff;padding:10px 18px;border-radius:10px;font-size:0.85rem;z-index:600;opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap;border:1px solid #333}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.file-input{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  .app-header,.action-bar,.secnav-btn,.iframe-header{display:none!important}
+  .iframe-wrap{position:static;display:block!important}
+  .iframe-body{overflow:visible}
+  .iframe-body iframe{height:auto;min-height:100vh}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header class="app-header" id="appHeader">
+  <div class="header-inner">
+    <span class="header-title">Psychiatry Case Sheet</span>
+    <span class="header-case" id="headerCase"></span>
+    <div class="header-actions">
+      <button class="btn btn-sm btn-secondary" id="btnLoadTop" onclick="triggerLoad()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Load
+      </button>
+    </div>
+  </div>
+</header>
+<main class="main" id="mainContent">
+  <div class="empty-state" id="emptyState">
+    <h2>Psychiatry Case Sheet</h2>
+    <p>Adult Psychiatry History-Taking Compendium<br>+ Dimensional Formulation</p>
+    <div class="empty-actions">
+      <button class="btn btn-primary" onclick="newCase()" style="min-height:52px;font-size:1rem">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Case
+      </button>
+      <button class="btn btn-secondary" onclick="triggerLoad()" style="min-height:48px">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Load Existing Case
+      </button>
+    </div>
+    <p style="margin-top:20px;font-size:0.75rem;color:#444">Works fully offline after first open. No data leaves your device.</p>
+  </div>
+  <div id="caseDashboard" style="display:none">
+    <div class="case-bar">
+      <div class="case-bar-info">
+        <div class="case-bar-name" id="caseName">Unnamed Patient</div>
+        <div class="case-bar-date" id="caseDate"></div>
+      </div>
+      <div class="case-bar-actions">
+        <button class="btn btn-sm btn-primary" onclick="saveCase()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+          Save JSON
+        </button>
+        <button class="btn btn-sm btn-secondary" onclick="triggerLoad()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Load
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="closeCase()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Close
+        </button>
+      </div>
+    </div>
+    <div class="progress-overview">
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 of 15 modules completed</div>
+    </div>
+    <div class="chapter-grid" id="chapterGrid"></div>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="saveCase()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        Save Case as JSON
+      </button>
+      <button class="btn btn-secondary" onclick="printCase()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Case
+      </button>
+    </div>
+  </div>
+</main>
+<div class="iframe-wrap" id="iframeWrap">
+  <div class="iframe-header">
+    <div class="iframe-header-left">
+      <button class="btn btn-sm btn-secondary" onclick="closeChapter()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
+      <span class="iframe-header-title" id="iframeTitle">Chapter</span>
+    </div>
+    <div class="iframe-header-actions">
+      <button class="btn btn-sm btn-primary" onclick="saveCase()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        Save
+      </button>
+      <button class="btn btn-sm btn-secondary" onclick="openSecNav()">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sections
+      </button>
+    </div>
+  </div>
+  <div class="iframe-body">
+    <iframe id="chapterFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads" title="Chapter Content"></iframe>
+  </div>
+</div>
+<button class="secnav-btn hidden" id="secNavBtn" onclick="openSecNav()" title="Section Navigator">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+</button>
+<div class="secnav-overlay" id="secNavOverlay" onclick="if(event.target===this)closeSecNav()">
+  <div class="secnav-sheet">
+    <div class="secnav-header">
+      <h3 id="secNavTitle">Sections</h3>
+      <button class="secnav-close" onclick="closeSecNav()">&times;</button>
+    </div>
+    <div class="secnav-list" id="secNavList"></div>
+  </div>
+</div>
+<input type="file" class="file-input" id="fileInput" accept=".json" onchange="handleFileLoad(event)">
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const CHAPTERS = [
+  {id:"ch01",num:"01",title:"Demographics",icon:"👤",desc:"Name, age, sex, Kuppuswamy SES, informant reliability"},
+  {id:"ch02",num:"02",title:"Chief Complaints",icon:"📝",desc:"Patient's own words, complaint parsing"},
+  {id:"ch03",num:"03",title:"HOPI",icon:"📖",desc:"History of Present Illness — chronological narrative"},
+  {id:"ch04",num:"04",title:"Negative History",icon:"🔍",desc:"Systemic review — what the patient does NOT have"},
+  {id:"ch05",num:"05",title:"Past History",icon:"📚",desc:"Past psychiatric episodes, treatments, medical"},
+  {id:"ch06",num:"06",title:"Family History",icon:"👨‍👩‍👧",desc:"Family psychiatric history, genogram data"},
+  {id:"ch07",num:"07",title:"Personal History",icon:"🌱",desc:"Developmental, educational, occupational, sexual"},
+  {id:"ch08",num:"08",title:"Pre-Morbid Personality",icon:"🎭",desc:"Baseline personality and functioning"},
+  {id:"ch09",num:"09",title:"GPE",icon:"🩺",desc:"General Physical Examination"},
+  {id:"ch10",num:"10",title:"Neurological Exam",icon:"🧠",desc:"CNS — higher mental functions, cranial nerves, motor, gait"},
+  {id:"ch11",num:"11",title:"MSE (Traditional)",icon:"🔬",desc:"12-heading Mental State Examination"},
+  {id:"ch12",num:"12",title:"Diagnosis",icon:"📋",desc:"4-Axis: ICD-11 / ICD-10 / DSM-5-TR with specifiers"},
+  {id:"ch13",num:"13",title:"Investigations",icon:"🔬",desc:"Lab workup — mandatory vs. targeted"},
+  {id:"ch14",num:"14",title:"Management Planning",icon:"💊",desc:"Pharmacological, psychological, follow-up"},
+  {id:"dim15",num:"15",title:"Dimensional Formulation",icon:"🧬",desc:"HiTOP · 8-Domain MSE · Reading the Patient",special:true}
+];
+
+var currentCase = null;
+var activeChapterId = null;
+var secNavItems = [];
+
+function $(id){return document.getElementById(id)}
+function uuid(){return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c=="x"?r:(r&0x3|0x8);return v.toString(16)})}
+function showToast(msg){var t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2500)}
+function fmtDate(d){return new Date(d).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}
+function escapeHtml(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
+
+function newCase(){
+  currentCase = {id:uuid(),name:"",created:new Date().toISOString(),updated:new Date().toISOString(),data:{}};
+  for(var i=0;i<CHAPTERS.length;i++){currentCase.data[CHAPTERS[i].id]={}}
+  showDashboard();
+  showToast("New case started");
+}
+
+function closeCase(){
+  if(currentCase && Object.keys(currentCase.data).some(function(k){return Object.keys(currentCase.data[k]).length>0})){
+    if(!confirm("Close this case? Unsaved changes will be lost.")) return;
+  }
+  currentCase = null; activeChapterId = null;
+  $("emptyState").style.display = "";
+  $("caseDashboard").style.display = "none";
+  $("headerCase").textContent = "";
+  $("btnLoadTop").style.display = "";
+  closeChapter();
+}
+
+function showDashboard(){
+  $("emptyState").style.display = "none";
+  $("caseDashboard").style.display = "";
+  $("btnLoadTop").style.display = "none";
+  updateDashboard();
+}
+
+function updateDashboard(){
+  if(!currentCase) return;
+  $("caseName").textContent = currentCase.name || "Unnamed Patient";
+  $("headerCase").textContent = (currentCase.name || "Unnamed") + " · " + fmtDate(currentCase.updated);
+  $("caseDate").textContent = "Started: " + fmtDate(currentCase.created) + " · Updated: " + fmtDate(currentCase.updated);
+  var grid = $("chapterGrid");
+  var completed = 0;
+  grid.innerHTML = CHAPTERS.map(function(ch){
+    var data = currentCase.data[ch.id] || {};
+    var keys = Object.keys(data).filter(function(k){return data[k] && String(data[k]).trim()});
+    var total = {ch01:25,ch02:10,ch03:20,ch04:25,ch05:20,ch06:15,ch07:30,ch08:15,ch09:20,ch10:25,ch11:30,ch12:25,ch13:15,ch14:20,dim15:30}[ch.id] || 20;
+    var pct = Math.min(100, Math.round((keys.length/total)*100));
+    if(pct >= 80) completed++;
+    var statusClass = pct >= 80 ? "done" : pct > 0 ? "partial" : "empty";
+    var statusIcon = pct >= 80 ? "✓" : pct > 0 ? "◐" : "○";
+    var fillClass = pct >= 80 ? "high" : pct > 30 ? "mid" : "low";
+    var specialClass = ch.special ? " special" : "";
+    return "<div class=\"chapter-card"+specialClass+"\" onclick=\"openChapter(&#39;"+ch.id+"&#39;)\"><div class=\"chapter-status "+statusClass+"\">"+statusIcon+"</div><div class=\"chapter-card-top\"><div class=\"chapter-num\">"+ch.num+"</div><span class=\"chapter-icon\">"+ch.icon+"</span></div><div class=\"chapter-title\">"+ch.title+"</div><div class=\"chapter-desc\">"+ch.desc+"</div><div class=\"chapter-progress\"><div class=\"chapter-progress-fill "+fillClass+"\" style=\"width:"+pct+"%\"></div></div></div>";
+  }).join("");
+  var overallPct = Math.round((completed/CHAPTERS.length)*100);
+  $("progressFill").style.width = overallPct + "%";
+  $("progressText").textContent = completed + " of " + CHAPTERS.length + " modules completed (" + overallPct + "%)";
+}
+
+function openChapter(chId){
+  if(!currentCase) return;
+  if(activeChapterId) collectChapterData();
+  activeChapterId = chId;
+  var ch = CHAPTERS.find(function(c){return c.id===chId});
+  $("iframeTitle").textContent = ch.num + ": " + ch.title;
+  $("iframeWrap").classList.add("open");
+  document.body.style.overflow = "hidden";
+  var frame = $("chapterFrame");
+  frame.src = chId + ".html";
+  $("secNavBtn").classList.remove("hidden");
+  frame.onload = function(){
+    try{
+      injectChapterEnhancements();
+      populateChapterData();
+      scanSections();
+    }catch(e){console.error("iframe load error",e)}
+  };
+}
+
+function closeChapter(){
+  if(activeChapterId){collectChapterData();activeChapterId=null}
+  $("iframeWrap").classList.remove("open");
+  document.body.style.overflow = "";
+  $("chapterFrame").src = "about:blank";
+  $("secNavBtn").classList.add("hidden");
+  closeSecNav();
+  if(currentCase) updateDashboard();
+}
+
+function getFieldKey(el){
+  var dk = el.getAttribute("data-key");
+  if(dk && !dk.startsWith("_") && dk.trim()) return dk;
+  var nm = el.getAttribute("name");
+  if(nm && nm.trim()) return nm;
+  var id = el.getAttribute("id");
+  if(id && id.trim() && !id.startsWith("_")) return id;
+  return null;
+}
+
+function populateChapterData(){
+  if(!activeChapterId || !currentCase) return;
+  var frame = $("chapterFrame");
+  if(!frame.contentDocument) return;
+  var data = currentCase.data[activeChapterId] || {};
+  var inputs = frame.contentDocument.querySelectorAll("input:not([type=\"hidden\"]), textarea, select");
+  for(var i=0;i<inputs.length;i++){
+    var el = inputs[i];
+    var key = getFieldKey(el);
+    if(!key) continue;
+    var val = data[key];
+    if(val===undefined || val===null) continue;
+    if(el.type==="checkbox" || el.type==="radio"){
+      if(Array.isArray(val)) el.checked = val.includes(el.value);
+      else el.checked = (el.value === val);
+      var chip = el.closest(".option-chip, .option-chip-h");
+      if(chip) chip.classList.toggle("checked", el.checked);
+    } else if(el.tagName==="SELECT"){
+      el.value = val;
+    } else {
+      el.value = val;
+    }
+  }
+  try{
+    if(frame.contentWindow.onFieldChange) frame.contentWindow.onFieldChange();
+    if(frame.contentWindow.syncSummary) frame.contentWindow.syncSummary();
+  }catch(e){}
+  if(activeChapterId==="dim15" && data._dim15){
+    try{
+      var fw = frame.contentWindow;
+      fw.cases = data._dim15.cases || [];
+      fw.currentCaseId = data._dim15.currentCaseId || null;
+      fw.activeCase = data._dim15.activeCase || null;
+      fw.pi = data._dim15.pi || {};
+      fw.redFlags = data._dim15.redFlags || {};
+      fw.pFactor = data._dim15.pFactor || "";
+      fw.keystone = data._dim15.keystone || "";
+      fw.formulation = data._dim15.formulation || "";
+      fw.management = data._dim15.management || {};
+      if(fw.renderCases) fw.renderCases();
+      if(fw.renderForm && fw.activeCase) fw.renderForm(fw.activeCase);
+    }catch(e){}
+  }
+}
+
+function collectChapterData(){
+  if(!activeChapterId || !currentCase) return;
+  var frame = $("chapterFrame");
+  if(!frame.contentDocument) return;
+  var data = {};
+  var inputs = frame.contentDocument.querySelectorAll("input:not([type=\"hidden\"]), textarea, select");
+  for(var i=0;i<inputs.length;i++){
+    var el = inputs[i];
+    var key = getFieldKey(el);
+    if(!key) continue;
+    if(el.type==="checkbox"){
+      if(!data[key]) data[key]=[];
+      if(el.checked) data[key].push(el.value);
+    } else if(el.type==="radio"){
+      if(el.checked) data[key]=el.value;
+    } else {
+      data[key] = el.value;
+    }
+  }
+  if(activeChapterId==="dim15"){
+    try{
+      var fw = frame.contentWindow;
+      data._dim15 = {cases:fw.cases||[],currentCaseId:fw.currentCaseId||null,activeCase:fw.activeCase||null,pi:fw.pi||{},redFlags:fw.redFlags||{},pFactor:fw.pFactor||"",keystone:fw.keystone||"",formulation:fw.formulation||"",management:fw.management||{}};
+      if(data._dim15.pi && data._dim15.pi.name) currentCase.name = data._dim15.pi.name;
+    }catch(e){}
+  }
+  currentCase.data[activeChapterId] = data;
+  currentCase.updated = new Date().toISOString();
+  if(activeChapterId==="ch01" && data.a1_name) currentCase.name = data.a1_name;
+}
+
+setInterval(function(){if(activeChapterId && currentCase) collectChapterData()}, 10000);
+
+function isNoise(text){
+  var t = text.toLowerCase().trim();
+  var noise = ["clinical instruction","clear all data","clear all","close","submit","export pdf","copy to clipboard","loading","click here","note:","warning:"];
+  return noise.some(function(n){return t.includes(n)});
+}
+
+function scanSections(){
+  var frame = $("chapterFrame");
+  if(!frame.contentDocument) return;
+  var doc = frame.contentDocument;
+  secNavItems = [];
+  var candidates = [];
+
+  // Pattern A: .card[id] + .card-header (ch11 style)
+  var cards = doc.querySelectorAll(".card[id]");
+  if(cards.length >= 3){
+    var items = [];
+    cards.forEach(function(c){
+      var h = c.querySelector(".card-header");
+      var text = h ? h.textContent.trim() : "";
+      if(text && text.length > 1 && !isNoise(text)){items.push({el:c,text:text.substring(0,80),priority:5})}
+    });
+    if(items.length >= 3) candidates.push(items);
+  }
+
+  // Pattern B: .section[data-card] + .section-header (ch01 style)
+  var secDC = doc.querySelectorAll(".section[data-card]");
+  if(secDC.length >= 2){
+    var items = [];
+    secDC.forEach(function(c){
+      var h = c.querySelector(".section-header");
+      if(!h) h = c.querySelector(".section-title");
+      var text = h ? h.textContent.trim() : "";
+      if(text && text.length > 1 && !isNoise(text)){items.push({el:c,text:text.substring(0,80),priority:5})}
+    });
+    if(items.length >= 2) candidates.push(items);
+  }
+
+  // Pattern C: .section + h2/h3 (ch04 style)
+  var secH = doc.querySelectorAll(".section");
+  if(secH.length >= 3){
+    var items = [];
+    secH.forEach(function(c){
+      var h = c.querySelector("h2, h3");
+      var text = h ? h.textContent.trim() : "";
+      if(text && text.length > 1 && !isNoise(text)){items.push({el:c,text:text.substring(0,80),priority:4})}
+    });
+    if(items.length >= 3) candidates.push(items);
+  }
+
+  // Pattern D: .accordion[data-card] + .accordion-header (ch03)
+  var accDC = doc.querySelectorAll(".accordion[data-card], .accordion[id]");
+  if(accDC.length >= 2){
+    var items = [];
+    accDC.forEach(function(c){
+      var h = c.querySelector(".accordion-header");
+      var text = h ? h.textContent.trim() : "";
+      if(text && text.length > 1 && !isNoise(text)){items.push({el:c,text:text.substring(0,80),priority:5})}
+    });
+    if(items.length >= 2) candidates.push(items);
+  }
+
+  // Pattern E: .accordion-header direct (ch03 fallback)
+  if(candidates.length === 0){
+    var accHdrs = doc.querySelectorAll(".accordion-header");
+    if(accHdrs.length >= 2){
+      var items = [];
+      accHdrs.forEach(function(h){
+        var c = h.closest(".accordion, .accordion-card, .section-card, .card");
+        var text = h.textContent.trim();
+        if(text && text.length > 3 && !isNoise(text)){items.push({el:c||h.parentElement,text:text.substring(0,80),priority:4})}
+      });
+      if(items.length >= 2) candidates.push(items);
+    }
+  }
+
+  // Pattern F: .section-card + .section-header (ch06, ch09)
+  var secCards = doc.querySelectorAll(".section-card");
+  if(secCards.length >= 2){
+    var items = [];
+    secCards.forEach(function(c){
+      var h = c.querySelector(".section-header");
+      var titleEl = c.querySelector(".section-title");
+      var text = titleEl ? titleEl.textContent.trim() : (h ? h.textContent.trim() : "");
+      if(text && text.length > 1 && !isNoise(text)){items.push({el:c,text:text.substring(0,80),priority:5})}
+    });
+    if(items.length >= 2) candidates.push(items);
+  }
+
+  // Pattern G: Tab buttons (dim15)
+  var tabs = doc.querySelectorAll(".tab");
+  if(tabs.length >= 3){
+    var items = [];
+    tabs.forEach(function(t,idx){
+      var text = t.textContent.trim();
+      if(text && text.length > 1){items.push({tabIndex:idx,text:text.substring(0,80),priority:5})}
+    });
+    if(items.length >= 3) candidates.push(items);
+  }
+
+  // Pattern H: h2[id], h3[id] fallback
+  if(candidates.length === 0){
+    var headings = doc.querySelectorAll("h2[id], h3[id]");
+    if(headings.length < 3) headings = doc.querySelectorAll("h2, h3");
+    if(headings.length >= 3){
+      var items = [];
+      headings.forEach(function(h){
+        var text = h.textContent.trim();
+        if(text && text.length > 1 && !isNoise(text)){
+          var el = h.closest(".card, .section, [class*=\"panel\"], [class*=\"drawer\"]") || h;
+          items.push({el:el,text:text.substring(0,80),priority:2});
+        }
+      });
+      if(items.length >= 3) candidates.push(items);
+    }
+  }
+
+  // Pick best candidate
+  if(candidates.length > 0){
+    candidates.sort(function(a,b){
+      var sA = a[0].priority || 0;
+      var sB = b[0].priority || 0;
+      if(sB !== sA) return sB - sA;
+      return b.length - a.length;
+    });
+    secNavItems = candidates[0];
+  }
+}
+
+function openSecNav(){
+  if(secNavItems.length === 0 && activeChapterId) scanSections();
+  var list = $("secNavList");
+  if(secNavItems.length === 0){
+    list.innerHTML = "<div style=\"text-align:center;padding:30px;color:#666;font-size:0.85rem\">No sections detected.<br>Scroll to navigate this chapter.</div>";
+  } else {
+    list.innerHTML = secNavItems.map(function(item,idx){
+      var checkClass = "empty", checkIcon = "○";
+      if(item.el){
+        var inps = item.el.querySelectorAll("input:not([type=\"hidden\"]), textarea, select");
+        if(inps.length > 0){
+          var filled = 0;
+          for(var j=0;j<inps.length;j++) if(inps[j].value && inps[j].value.trim()) filled++;
+          if(filled >= inps.length * 0.6){checkClass="done";checkIcon="✓";}
+          else if(filled > 0){checkClass="partial";checkIcon="◐";}
+        }
+      }
+      return "<div class=\"secnav-item\" onclick=\"jumpToSection("+idx+")\"><div class=\"secnav-item-check "+checkClass+"\">"+checkIcon+"</div><span class=\"secnav-item-text\">"+escapeHtml(item.text)+"</span><span class=\"secnav-item-num\">"+String(idx+1).padStart(2,"0")+"</span></div>";
+    }).join("");
+  }
+  var ch = CHAPTERS.find(function(c){return c.id===activeChapterId});
+  $("secNavTitle").textContent = (ch ? ch.title : "Sections") + " (" + secNavItems.length + ")";
+  $("secNavOverlay").classList.add("open");
+}
+
+function closeSecNav(){$("secNavOverlay").classList.remove("open")}
+
+function jumpToSection(idx){
+  closeSecNav();
+  var item = secNavItems[idx];
+  if(!item) return;
+  var frame = $("chapterFrame");
+  if(!frame.contentWindow) return;
+  if(item.tabIndex !== undefined){
+    var tabs = frame.contentDocument.querySelectorAll(".tab");
+    if(tabs[item.tabIndex]){tabs[item.tabIndex].click();showToast("Jumped to: " + item.text);return}
+  }
+  if(item.el){
+    item.el.scrollIntoView({behavior:"smooth",block:"start"});
+    try{
+      var hdr = item.el.querySelector(".accordion-header, .section-header, .card-header, .card-toggle, [aria-expanded=\"false\"]");
+      if(hdr) hdr.click();
+    }catch(e){}
+    showToast("Jumped to: " + item.text.substring(0,40));
+  }
+}
+
+function injectChapterEnhancements(){
+  var frame = $("chapterFrame");
+  if(!frame.contentDocument) return;
+  var doc = frame.contentDocument;
+
+  // 1. Hide PDF export buttons
+  var style = doc.createElement("style");
+  style.textContent = "button[onclick*=\"print()\"],button[onclick*=\"printPDF\"],button[onclick*=\"exportPDF\"],button[onclick*=\"exportPdf\"],button[onclick*=\"exportpdf\"],button[onclick*=\"PDF\"],button[onclick*=\"pdf\"],button[class*=\"btn-warning\"],.header-actions .btn-warning,.summary-actions .btn-warning{display:none!important;}"+
+    ".shell-notes{margin:20px 0;padding:16px;background:#111;border:1px solid #333;border-radius:12px}"+
+    ".shell-notes-title{font-size:0.85rem;font-weight:600;color:#4fc3f7;margin-bottom:8px}"+
+    ".shell-notes-textarea{width:100%;min-height:80px;background:#0a0a0a;border:1px solid #222;color:#e8e8e8;padding:10px 12px;border-radius:8px;font-size:0.82rem;line-height:1.5;resize:vertical}"+
+    ".shell-notes-textarea:focus{border-color:#4fc3f7;outline:none}"+
+    ".shell-copy-btn{background:#1a1a1a;border:1px solid #333;color:#888;padding:6px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;margin-top:8px}"+
+    ".shell-copy-btn:hover{background:#222;color:#fff;border-color:#4fc3f7}"+
+    ".shell-copy-btn.copied{background:#34d399;color:#000;border-color:#34d399}";
+  doc.head.appendChild(style);
+
+  function hidePdfBtns(){
+    var btns = doc.querySelectorAll("button");
+    for(var i=0;i<btns.length;i++){
+      var b = btns[i];
+      var txt = (b.textContent || b.innerText || "").trim().toLowerCase();
+      var onc = (b.getAttribute("onclick") || "").toLowerCase();
+      if((txt.includes("export") && txt.includes("pdf")) || onc.includes("print()") || onc.includes("printpdf") || onc.includes("exportpdf")){b.style.display = "none"}
+    }
+  }
+  hidePdfBtns();
+  setTimeout(hidePdfBtns, 500);
+  setTimeout(hidePdfBtns, 1500);
+
+  // 2. Copy-to-Clipboard on summary textareas
+  var summaries = doc.querySelectorAll(".summary-textarea, textarea[id*=\"summary\"], textarea[name*=\"summary\"]");
+  summaries.forEach(function(ta){
+    if(ta.nextElementSibling && ta.nextElementSibling.classList.contains("shell-copy-wrap")) return;
+    var wrap = doc.createElement("div");
+    wrap.className = "shell-copy-wrap";
+    wrap.style.cssText = "display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;";
+    var btn = doc.createElement("button");
+    btn.type = "button";
+    btn.className = "shell-copy-btn";
+    btn.textContent = "\u{1F4CB} Copy Summary";
+    btn.onclick = function(){
+      ta.select();
+      doc.execCommand("copy");
+      btn.textContent = "\u2713 Copied!";
+      btn.classList.add("copied");
+      setTimeout(function(){btn.textContent = "\u{1F4CB} Copy Summary";btn.classList.remove("copied")}, 2000);
+    };
+    wrap.appendChild(btn);
+    ta.parentNode.insertBefore(wrap, ta.nextElementSibling);
+  });
+
+  // 3. Free-text notes section
+  var chId = activeChapterId || "unknown";
+  var notesKey = chId + "_notes";
+  if(!doc.getElementById("shellNotes_" + chId)){
+    var container = doc.createElement("div");
+    container.className = "shell-notes";
+    container.id = "shellNotes_" + chId;
+    var title = doc.createElement("div");
+    title.className = "shell-notes-title";
+    title.innerHTML = "\u{1F4DD} Free Notes <span style=\"color:#666;font-size:0.72rem;font-weight:400\">(unstructured, prints with case)</span>";
+    var ta = doc.createElement("textarea");
+    ta.className = "shell-notes-textarea";
+    ta.placeholder = "Write any observations, impressions, or notes that don't fit the form fields above...";
+    ta.setAttribute("data-key", notesKey);
+    if(currentCase && currentCase.data && currentCase.data[chId] && currentCase.data[chId][notesKey]){
+      ta.value = currentCase.data[chId][notesKey];
+    }
+    container.appendChild(title);
+    container.appendChild(ta);
+    doc.body.appendChild(container);
+  }
+}
+
+function saveCase(){
+  if(!currentCase) return;
+  if(activeChapterId) collectChapterData();
+  currentCase.updated = new Date().toISOString();
+  var json = JSON.stringify(currentCase, null, 2);
+  var blob = new Blob([json], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  var fname = (currentCase.name || "case").replace(/[^a-z0-9]/gi, "_").toLowerCase();
+  a.download = "psych_case_" + fname + "_" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Case saved to Downloads");
+}
+
+function triggerLoad(){$("fileInput").click()}
+
+function handleFileLoad(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var data = JSON.parse(ev.target.result);
+      if(!data.id || !data.data) throw new Error("Invalid case file");
+      if(currentCase && Object.keys(currentCase.data).some(function(k){return Object.keys(currentCase.data[k]).length>0})){
+        if(!confirm("Load this case? Current unsaved work will be replaced.")) return;
+      }
+      currentCase = data;
+      currentCase.updated = new Date().toISOString();
+      showDashboard();
+      showToast("Case loaded: " + (currentCase.name || "Unnamed"));
+    }catch(err){alert("Error loading file: " + err.message)}
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+function printCase(){
+  if(!currentCase) return;
+  if(activeChapterId) collectChapterData();
+
+  // Chapter selection
+  var selectedChapters = CHAPTERS.map(function(c){return c.id});
+
+  // Build print
+  var win = window.open("", "_blank");
+  var html = "<html><head><title>Case: " + escapeHtml(currentCase.name || "Unnamed") + "</title>";
+  html += "<style>";
+  html += "body{font-family:Georgia,\"Times New Roman\",serif;font-size:11pt;line-height:1.6;color:#1a1a2e;padding:30px;max-width:210mm;margin:0 auto}";
+  html += "h1{font-size:20pt;font-weight:700;text-align:center;border-bottom:3px double #1a1a2e;padding-bottom:10px;margin-bottom:20px;letter-spacing:1px}";
+  html += "h2{font-size:14pt;font-weight:700;color:#1a1a2e;margin-top:24px;border-bottom:1px solid #ccc;padding-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}";
+  html += "table{width:100%;border-collapse:collapse;margin:10px 0;font-size:10pt}";
+  html += "th,td{border:1px solid #bbb;padding:8px;text-align:left;vertical-align:top}";
+  html += "th{background:#f0f0f0;font-weight:700}";
+  html += "tr:nth-child(even){background:#fafafa}";
+  html += ".cover{text-align:center;padding:40px 20px;border:2px solid #1a1a2e;margin-bottom:30px}";
+  html += ".cover-title{font-size:24pt;font-weight:700;letter-spacing:2px;margin-bottom:20px}";
+  html += ".cover-meta{font-size:11pt;color:#333;line-height:1.8}";
+  html += ".field-row{margin:6px 0;padding:4px 0;border-bottom:1px dotted #ddd;display:flex}";
+  html += ".field-key{font-weight:700;color:#333;min-width:220px;flex-shrink:0}";
+  html += ".field-val{color:#1a1a2e;flex:1}";
+  html += ".empty{color:#999;font-style:italic;text-align:center;padding:20px}";
+  html += ".notes-box{background:#fffde7;border:1px solid #f9a825;padding:10px;margin:10px 0;font-style:italic}";
+  html += ".formulation-box{background:#e8f5e9;border:2px solid #4caf50;padding:16px;margin:20px 0}";
+  html += ".page-break{page-break-before:always}";
+  html += ".footer{text-align:center;font-size:9pt;color:#666;margin-top:40px;border-top:1px solid #ccc;padding-top:10px}";
+  html += ".sig-line{margin-top:60px;border-top:1px solid #333;width:250px;display:inline-block;padding-top:4px;font-size:10pt}";
+  html += "</style></head><body>";
+
+  // Cover page
+  html += "<div class=\"cover\"><div class=\"cover-title\">PSYCHIATRY CASE RECORD</div>";
+  html += "<div class=\"cover-meta\">";
+  html += "<strong>Patient:</strong> " + escapeHtml(currentCase.name || "____________________") + "<br>";
+  html += "<strong>Case ID:</strong> " + currentCase.id.substring(0,8) + "<br>";
+  html += "<strong>Date:</strong> " + fmtDate(currentCase.created) + "<br>";
+  html += "<strong>Prepared by:</strong> ____________________<br>";
+  html += "</div></div>";
+
+  // Unified formulation
+  html += "<div class=\"formulation-box\"><h2 style=\"margin-top:0;border:none;text-align:center\">UNIFIED CASE FORMULATION</h2>";
+  var demoData = currentCase.data["ch01"] || {};
+  var mseData = currentCase.data["ch11"] || {};
+  var diagData = currentCase.data["ch12"] || {};
+  var mgmtData = currentCase.data["ch14"] || {};
+  var dimData = currentCase.data["dim15"] || {};
+  html += "<div class=\"field-row\"><span class=\"field-key\">Patient:</span><span class=\"field-val\">" + escapeHtml(String(demoData.a1_name || "____________________")) + ", " + escapeHtml(String(demoData.a2_age || "___")) + " years, " + escapeHtml(String(demoData.a3_sex || "___")) + "</span></div>";
+  html += "<div class=\"field-row\"><span class=\"field-key\">Presenting Complaint:</span><span class=\"field-val\">" + escapeHtml(String(diagData["b1-cc"] || diagData.cc || "____________________")).substring(0,200) + "</span></div>";
+  html += "<div class=\"field-row\"><span class=\"field-key\">Primary Diagnosis:</span><span class=\"field-val\">" + escapeHtml(String(diagData["b2-pd"] || diagData.diagnosis || "____________________")) + "</span></div>";
+  html += "<div class=\"field-row\"><span class=\"field-key\">Severity:</span><span class=\"field-val\">" + escapeHtml(String(diagData["b2-pd-sev"] || "____________________")) + "</span></div>";
+  if(dimData.pFactor) html += "<div class=\"field-row\"><span class=\"field-key\">HiTOP p-Factor:</span><span class=\"field-val\">" + escapeHtml(String(dimData.pFactor)) + "</span></div>";
+  if(dimData.keystone) html += "<div class=\"field-row\"><span class=\"field-key\">Keystone Symptom:</span><span class=\"field-val\">" + escapeHtml(String(dimData.keystone)) + "</span></div>";
+  html += "<div class=\"field-row\"><span class=\"field-key\">Management:</span><span class=\"field-val\">" + escapeHtml(String(mgmtData["a1-tx"] || mgmtData.plan || "____________________")).substring(0,300) + "</span></div>";
+  html += "<div class=\"field-row\"><span class=\"field-key\">Follow-up:</span><span class=\"field-val\">" + escapeHtml(String(mgmtData["d-fu"] || "____________________")) + "</span></div>";
+  html += "</div>";
+
+  // Chapters
+  CHAPTERS.forEach(function(ch){
+    if(selectedChapters.indexOf(ch.id) === -1) return;
+    var chData = currentCase.data[ch.id] || {};
+    var keys = Object.keys(chData).filter(function(k){return chData[k] && String(chData[k]).trim() && !k.endsWith("_notes") && !k.startsWith("_")});
+    var notesKey = ch.id + "_notes";
+    var hasNotes = chData[notesKey] && String(chData[notesKey]).trim();
+    if(keys.length === 0 && !hasNotes) return;
+    html += "<div class=\"page-break\"></div><h2>" + ch.num + ". " + ch.title + "</h2>";
+    if(keys.length > 0){
+      html += "<table><tr><th style=\"width:35%\">Field</th><th style=\"width:65%\">Value</th></tr>";
+      keys.forEach(function(k){
+        var val = chData[k];
+        if(Array.isArray(val)) val = val.join(", ");
+        if(String(val).length > 300) val = String(val).substring(0,300) + "...";
+        html += "<tr><td>" + escapeHtml(k) + "</td><td>" + escapeHtml(String(val)) + "</td></tr>";
+      });
+      html += "</table>";
+    }
+    if(hasNotes){html += "<div class=\"notes-box\"><strong>Notes:</strong> " + escapeHtml(String(chData[notesKey])) + "</div>"}
+  });
+
+  // Footer
+  html += "<div class=\"page-break\"></div><div style=\"text-align:center;padding-top:60px\"><div class=\"sig-line\">Examining Psychiatrist</div><div style=\"margin-top:40px;font-size:10pt;color:#666\">Date: ____________________</div></div>";
+  html += "<div class=\"footer\">Generated by Psychiatry Case Sheet | " + new Date().toLocaleDateString("en-IN") + "</div>";
+  html += "</body></html>";
+  win.document.write(html);
+  win.document.close();
+  setTimeout(function(){win.print()}, 500);
+}
+
+// PWA
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(function(e){console.log("SW reg failed",e)});
+}
+
+// Keyboard shortcuts
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){
+    if($("secNavOverlay").classList.contains("open")){closeSecNav()}
+    else if($("iframeWrap").classList.contains("open")){closeChapter()}
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==="s"){
+    e.preventDefault();
+    if(currentCase) saveCase();
+  }
+});
+
+// Init
+showToast("App loaded. Create a new case or load an existing one.");
+</script>
+</body>
+</html>

@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 06 – Family History | Psychiatry Case-Taking Compendium</title>
+<style>
+  /* ========================================
+     CSS VARIABLES & RESET
+     ======================================== */
+  :root {
+    --bg-primary: #000000;
+    --bg-card: #0a0a0a;
+    --bg-elevated: #121212;
+    --bg-input: #1a1a1a;
+    --text-primary: #e8e8e8;
+    --text-secondary: #a0a0a0;
+    --text-muted: #707070;
+    --accent-primary: #4fc3f7;
+    --accent-secondary: #81c784;
+    --accent-warning: #ffb74d;
+    --accent-danger: #e57373;
+    --accent-info: #64b5f6;
+    --border-color: #2a2a2a;
+    --border-focus: #4fc3f7;
+    --instruction-bg: rgba(79, 195, 247, 0.08);
+    --instruction-border: rgba(79, 195, 247, 0.3);
+    --help-bg: rgba(129, 199, 132, 0.08);
+    --help-border: rgba(129, 199, 132, 0.3);
+    --shadow: 0 2px 8px rgba(0,0,0,0.5);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --touch-target: 52px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; scroll-behavior: smooth; background: var(--bg-primary); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding-bottom: calc(var(--touch-target) + 80px + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  input, textarea, select, button { font-family: inherit; font-size: 16px; color: var(--text-primary); }
+  input, textarea, select {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(79,195,247,0.15);
+  }
+  input[type="checkbox"], input[type="radio"] {
+    width: 22px; height: 22px; min-width: 22px; min-height: 22px;
+    margin-right: 10px; accent-color: var(--accent-primary);
+    cursor: pointer;
+  }
+  input[type="number"] { -moz-appearance: textfield; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="date"] { padding-right: 8px; }
+  textarea { resize: none; min-height: 56px; overflow: hidden; white-space: pre-wrap; word-wrap: break-word; }
+  label { display: flex; align-items: center; cursor: pointer; padding: 8px 0; font-size: 15px; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0a0a0'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  ::placeholder { color: #777777; opacity: 1; }
+  textarea::placeholder { color: #777777; opacity: 1; }
+
+  /* ========================================
+     HEADER & CONTAINER
+     ======================================== */
+  .container { max-width: 720px; margin: 0 auto; padding: 16px; }
+  .page-header {
+    text-align: center; padding: 20px 0 16px;
+    border-bottom: 1px solid var(--border-color); margin-bottom: 16px;
+  }
+  .page-header h1 { font-size: 1.4rem; font-weight: 600; color: var(--accent-primary); letter-spacing: 0.5px; }
+  .page-header .subtitle { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
+  .page-header .chapter-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+
+  /* ========================================
+     QUICK REFERENCE PANELS
+     ======================================== */
+  .quick-ref { margin-bottom: 16px; }
+  .quick-ref-toggle {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg-elevated); border: 1px solid var(--border-color);
+    border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+    font-weight: 500; font-size: 0.95rem; min-height: var(--touch-target);
+  }
+  .quick-ref-toggle .chevron { transition: transform 0.3s; font-size: 0.8rem; color: var(--text-muted); }
+  .quick-ref-toggle.expanded .chevron { transform: rotate(180deg); }
+  .quick-ref-content {
+    display: none; background: var(--bg-card); border: 1px solid var(--border-color);
+    border-top: none; border-radius: 0 0 var(--radius) var(--radius);
+    padding: 16px; font-size: 0.85rem;
+  }
+  .quick-ref-content.active { display: block; }
+  .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 500px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+  th { color: var(--accent-primary); font-weight: 600; white-space: nowrap; }
+  td { color: var(--text-secondary); }
+  tr:last-child td { border-bottom: none; }
+  .symbol-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+  .symbol { font-family: monospace; font-size: 1.1rem; color: var(--accent-primary); min-width: 28px; }
+  .mnemonic-box {
+    background: var(--help-bg); border: 1px solid var(--help-border);
+    border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; font-size: 0.85rem;
+  }
+  .mnemonic-box strong { color: var(--accent-secondary); }
+
+  /* ========================================
+     AUTO-GENERATED SUMMARY
+     ======================================== */
+  .summary-card {
+    background: var(--bg-elevated); border: 1px solid var(--border-color);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 20px;
+  }
+  .summary-card h2 { font-size: 1rem; color: var(--accent-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .summary-textarea { min-height: 100px; background: var(--bg-primary); border-style: dashed; }
+  .summary-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+  /* ========================================
+     INSTRUCTION BOXES
+     ======================================== */
+  .instruction-box {
+    background: var(--instruction-bg); border: 1px solid var(--instruction-border);
+    border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; font-size: 0.88rem;
+  }
+  .instruction-box h4 { color: var(--accent-primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .instruction-box ul { margin-left: 16px; color: var(--text-secondary); }
+  .instruction-box li { margin-bottom: 4px; }
+  .instruction-box .why-matters { font-style: italic; color: var(--text-muted); margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--instruction-border); }
+
+  /* ========================================
+     ACCORDION CARDS
+     ======================================== */
+  .section-card {
+    background: var(--bg-card); border: 1px solid var(--border-color);
+    border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+  }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px; cursor: pointer; min-height: var(--touch-target);
+    background: linear-gradient(90deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    border-bottom: 1px solid transparent; transition: border-color 0.3s;
+  }
+  .section-header.active { border-bottom-color: var(--border-color); }
+  .section-header h3 { font-size: 1rem; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+  .section-badge {
+    background: var(--accent-primary); color: var(--bg-primary);
+    font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .section-chevron { transition: transform 0.3s; color: var(--text-muted); font-size: 0.75rem; }
+  .section-header.active .section-chevron { transform: rotate(180deg); }
+  .section-body { display: none; padding: 16px; }
+  .section-body.active { display: block; }
+  .section-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+
+  /* ========================================
+     FORM ELEMENTS
+     ======================================== */
+  .field-group { margin-bottom: 18px; }
+  .field-label { display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; color: var(--text-primary); }
+  .field-hint { font-size: 0.82rem; color: var(--text-secondary); border: 1px dashed var(--border-color); word-wrap: break-word; margin-bottom: 8px; padding: 8px 10px; border-radius: var(--radius-sm); }
+  .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 2px; }
+  .radio-group.horizontal, .checkbox-group.horizontal { flex-direction: row; flex-wrap: wrap; gap: 12px; }
+  .radio-group.horizontal label, .checkbox-group.horizontal label { padding: 4px 0; }
+  .inline-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .inline-fields { grid-template-columns: 1fr; } }
+  .multi-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
+  @media (max-width: 480px) { .multi-check-grid { grid-template-columns: 1fr; } }
+  .option-chip { display: inline-flex; align-items: center; max-width: 100%; overflow-wrap: break-word; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-input); cursor: pointer; transition: all 0.2s; gap: 8px; }
+  .option-chip.checked { border-color: var(--accent-primary); background: rgba(79,195,247,0.1); }
+  .option-chip input { margin: 0; }
+  .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* ========================================
+     HELP PANEL (ℹ️)
+     ======================================== */
+  .help-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--accent-info); font-size: 0.82rem; cursor: pointer;
+    margin-top: 6px; padding: 6px 0; user-select: none;
+  }
+  .help-toggle .icon { font-size: 1rem; }
+  .help-panel {
+    display: none; background: var(--help-bg); border: 1px solid var(--help-border);
+    border-radius: var(--radius-sm); padding: 14px; margin-top: 8px; font-size: 0.85rem;
+  }
+  .help-panel.active { display: block; }
+  .help-panel h5 { color: var(--accent-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .help-panel .phrase { background: rgba(255,255,255,0.04); border-radius: 6px; padding: 8px 10px; margin: 6px 0; font-style: italic; color: var(--text-secondary); border-left: 3px solid var(--accent-info); }
+  .help-panel .phrase .lang { font-style: normal; font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 2px; }
+
+  /* ========================================
+     BUTTONS
+     ======================================== */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    border: none; border-radius: var(--radius-sm); padding: 12px 18px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    min-height: var(--touch-target); min-width: var(--touch-target);
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent-primary); color: var(--bg-primary); }
+  .btn-secondary { background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border-color); }
+  .btn-success { background: var(--accent-secondary); color: var(--bg-primary); }
+  .btn-warning { background: var(--accent-warning); color: var(--bg-primary); }
+  .btn-danger { background: var(--accent-danger); color: var(--bg-primary); }
+  .btn-sm { padding: 8px 12px; font-size: 0.82rem; min-height: 40px; }
+
+  /* ========================================
+     BOTTOM STICKY BAR
+     ======================================== */
+  .sticky-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, var(--bg-primary) 100%);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border-color); padding: 12px 16px calc(12px + var(--safe-bottom));
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; z-index: 1000;
+  }
+  .sticky-bar .btn { flex: 1; max-width: 180px; }
+  .save-indicator { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+  /* ========================================
+     PRINT STYLES (PDF EXPORT)
+     ======================================== */
+  @media print {
+    body { background: #fff; color: #000; padding-bottom: 0; font-size: 11pt; overflow: visible; max-width: none; }
+    .quick-ref, .section-header, .help-toggle, .help-panel, .sticky-bar,
+    .btn, .summary-actions, .instruction-box { display: none !important; }
+    .section-body { display: block !important; padding: 10px 0; }
+    .section-header { display: none !important; }
+    .quick-ref-content { display: block !important; }
+    .quick-ref-toggle { display: none !important; }
+    .section-card { border: 1px solid #ccc; margin-bottom: 14px; break-inside: avoid; }
+    .summary-card { border: 1px solid #ccc; display: block !important; }
+    .summary-textarea {
+      background: #fff; border: 1px solid #ccc; color: #000;
+      min-height: auto !important; height: auto !important;
+      overflow: visible !important; resize: none;
+    }
+    input, textarea, select {
+      background: #fff; border: 1px solid #999; color: #000;
+      -webkit-appearance: none; appearance: none;
+    }
+    textarea { overflow: visible !important; min-height: auto !important; height: auto !important; }
+    .page-header h1 { color: #000; }
+    .container { max-width: 100%; padding: 0; }
+    h1, h2, h3 { page-break-after: avoid; }
+    .section-card { page-break-inside: avoid; }
+    .field-group { page-break-inside: avoid; }
+    /* Show all textarea content */
+    textarea { white-space: pre-wrap !important; }
+  }
+
+  /* ========================================
+     UTILITIES
+     ======================================== */
+  .text-center { text-align: center; }
+  .text-muted { color: var(--text-muted); }
+  .text-small { font-size: 0.85rem; }
+  .mb-0 { margin-bottom: 0; }
+  .mb-1 { margin-bottom: 8px; }
+  .mb-2 { margin-bottom: 14px; }
+  .mt-1 { margin-top: 8px; }
+  .divider { height: 1px; background: var(--border-color); margin: 14px 0; }
+  .tag {
+    display: inline-block; background: var(--bg-elevated); border: 1px solid var(--border-color);
+    border-radius: 4px; padding: 3px 8px; font-size: 0.78rem; color: var(--text-secondary);
+    margin: 2px 4px 2px 0;
+  }
+  .highlight { color: var(--accent-warning); font-weight: 500; }
+  .exam-pearl {
+    background: rgba(255, 183, 77, 0.08); border: 1px solid rgba(255, 183, 77, 0.25);
+    border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; font-size: 0.85rem;
+  }
+  .exam-pearl strong { color: var(--accent-warning); }
+  .clinical-anchor {
+    background: rgba(129, 199, 132, 0.08); border: 1px solid rgba(129, 199, 132, 0.25);
+    border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; font-size: 0.85rem;
+  }
+  .clinical-anchor strong { color: var(--accent-secondary); }
+  .pitfall-box {
+    background: rgba(229, 115, 115, 0.08); border: 1px solid rgba(229, 115, 115, 0.25);
+    border-radius: var(--radius-sm); padding: 12px; margin: 10px 0; font-size: 0.85rem;
+  }
+  .pitfall-box strong { color: var(--accent-danger); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ====== PAGE HEADER ====== -->
+<div class="page-header">
+  <div class="chapter-label">Chapter 06</div>
+  <h1>Family History</h1>
+  <div class="subtitle">The Adult Psychiatry History-Taking Compendium &mdash; Family History Section</div>
+</div>
+
+<!-- ====== QUICK REFERENCE PANELS ====== -->
+<div class="quick-ref">
+  <div class="quick-ref-toggle" onclick="toggleQuickRef(this)">
+    <span>🔍 Quick Reference: Heritability Table (Section D)</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quick-ref-content">
+    <div class="table-responsive">
+      <table>
+        <thead><tr><th>Disorder</th><th>Pop Risk</th><th>1° Relative Risk</th><th>MZ Twin</th></tr></thead>
+        <tbody>
+          <tr><td>Schizophrenia</td><td>~1%</td><td>~10% (10×)</td><td>~48%</td></tr>
+          <tr><td>Bipolar I</td><td>~1%</td><td>~7–10% (~8×)</td><td>~40–70%</td></tr>
+          <tr><td>Bipolar II / spectrum</td><td>~1–2%</td><td>~5% (5×)</td><td>~30–40%</td></tr>
+          <tr><td>Major depressive disorder</td><td>~10–15%</td><td>~2–3×</td><td>~37% (heritability)</td></tr>
+          <tr><td>OCD (childhood-onset)</td><td>~2–3%</td><td>~5-fold</td><td>~65–80%</td></tr>
+          <tr><td>OCD (adult-onset)</td><td>~2–3%</td><td>~2–3-fold</td><td>Lower</td></tr>
+          <tr><td>Alcohol use disorder</td><td>Varies</td><td>~3–4× (paternal esp.)</td><td>~50% (heritability)</td></tr>
+          <tr><td>Panic disorder</td><td>~3–5%</td><td>~5-fold</td><td>~30–40%</td></tr>
+          <tr><td>GAD</td><td>~5%</td><td>~2-fold</td><td>~30%</td></tr>
+          <tr><td>PTSD (after trauma)</td><td>~7%</td><td>Modestly elevated</td><td>~30% (heritability)</td></tr>
+          <tr><td>Anorexia nervosa</td><td>~0.5–1%</td><td>~10-fold</td><td>~55%</td></tr>
+          <tr><td>Bulimia nervosa</td><td>~1–2%</td><td>~4-fold</td><td>~55%</td></tr>
+          <tr><td>Autism spectrum</td><td>~1–2%</td><td>~10–20× (sibling)</td><td>~70–90%</td></tr>
+          <tr><td>ADHD</td><td>~5%</td><td>~2–8-fold</td><td>~75% (heritability)</td></tr>
+          <tr><td>Borderline PD</td><td>~1.5%</td><td>~5-fold</td><td>~40–60% (heritability)</td></tr>
+          <tr><td>Antisocial PD</td><td>~2–3%</td><td>~5-fold</td><td>~50% (heritability)</td></tr>
+          <tr><td>Tourette syndrome</td><td>~0.3–1%</td><td>~10-fold</td><td>Substantial</td></tr>
+          <tr><td>Late-onset Alzheimer’s</td><td>Age-dependent</td><td>~3–4-fold</td><td>~60% (heritability)</td></tr>
+          <tr><td>Early-onset autosomal dominant AD</td><td>Very rare</td><td>~50% in carriers</td><td>Near 100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exam-pearl"><strong>Exam Pearl:</strong> Have the schizophrenia vs bipolar vs general population triplet ready verbatim. "In a first-degree relative of a patient with schizophrenia, the lifetime risk is ~10% vs 1% general population. For bipolar, ~7–10% with additional ~10% risk of MDD. MZ twin concordance: schizophrenia ~48%, bipolar ~40–70%."</div>
+  </div>
+</div>
+
+<div class="quick-ref">
+  <div class="quick-ref-toggle" onclick="toggleQuickRef(this)">
+    <span>📐 Quick Reference: Pedigree Symbols (Section C1)</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quick-ref-content">
+    <div class="symbol-row"><span class="symbol">□</span> male, alive</div>
+    <div class="symbol-row"><span class="symbol">○</span> female, alive</div>
+    <div class="symbol-row"><span class="symbol">◇</span> sex unknown</div>
+    <div class="symbol-row"><span class="symbol">⊠</span> male, deceased (square with diagonal slash)</div>
+    <div class="symbol-row"><span class="symbol">⊘</span> female, deceased (circle with diagonal slash)</div>
+    <div class="symbol-row"><span class="symbol">▣</span> male, affected (filled square)</div>
+    <div class="symbol-row"><span class="symbol">●</span> female, affected (filled circle)</div>
+    <div class="symbol-row"><span class="symbol">◐◑</span> half-filled = carrier or partial trait expression</div>
+    <div class="symbol-row"><span class="symbol">↗</span> arrow pointing to index patient (proband)</div>
+    <div class="symbol-row"><span class="symbol">▽</span> triangle = pregnancy in progress; SB = stillbirth; P = miscarriage</div>
+    <div class="symbol-row"><span class="symbol">──</span> horizontal line = mating / partnership</div>
+    <div class="symbol-row"><span class="symbol">═</span> double horizontal line = consanguineous mating</div>
+    <div class="symbol-row"><span class="symbol">│</span> vertical line down from couple = offspring line</div>
+    <div class="symbol-row"><span class="symbol">─┬─</span> siblings drawn left to right by birth order, eldest on left</div>
+    <div class="symbol-row"><span class="symbol">□₃</span> number inside/below = number of unaffected children of that sex</div>
+    <div class="mnemonic-box"><strong>Mnemonic:</strong> PEDIGREE — Parents/siblings, Extended family, Diagnoses with age of onset & treatment, Illness (medical), Genetic counselling, Relationships/household, Expressed emotion, Economic status (Kuppuswamy). Eight letters, nine NIMHANS sub-sections.</div>
+  </div>
+</div>
+
+<div class="quick-ref">
+  <div class="quick-ref-toggle" onclick="toggleQuickRef(this)">
+    <span>💡 Quick Reference: Expressed Emotion (Section E)</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quick-ref-content">
+    <div class="mnemonic-box"><strong>Mnemonic CHEW-P:</strong> <strong>C</strong>ritical comments, <strong>H</strong>ostility, <strong>E</strong>OI (emotional over-involvement) = risk components. <strong>W</strong>armth, <strong>P</strong>ositive remarks = protective components. High EE defined by any one of: ≥6 critical comments, any hostility, or EOI ≥3 (0–5 scale).</div>
+    <div class="table-responsive">
+      <table>
+        <thead><tr><th>Disorder</th><th>Low EE Relapse</th><th>High EE Relapse</th><th>Key EE Driver</th></tr></thead>
+        <tbody>
+          <tr><td>Schizophrenia</td><td>~23% (9-mo)</td><td>~54% (9-mo)</td><td>Critical comments</td></tr>
+          <tr><td>Major depression</td><td>~12%</td><td>~65%</td><td>Perceived criticism</td></tr>
+          <tr><td>Bipolar disorder</td><td>~54%</td><td>~90%</td><td>Criticism (depressive relapse); EOI (manic relapse)</td></tr>
+          <tr><td>Anorexia nervosa</td><td>—</td><td>Substantially elevated</td><td>EOI</td></tr>
+          <tr><td>Dementia (BPSD)</td><td>Slower progression</td><td>Faster cognitive decline</td><td>EOI / caregiver burnout</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-small text-muted" style="margin-top:8px;">Indian context: High-EE households ~24% (Chandigarh, Leff 1987) vs 48–70% in Western samples. Prognostic effect preserved when present. EOI relatively more prominent; criticism relatively less in collectivist families.</p>
+  </div>
+</div>
+
+<div class="quick-ref">
+  <div class="quick-ref-toggle" onclick="toggleQuickRef(this)">
+    <span>📊 Quick Reference: Modified Kuppuswamy Scale (Section A8)</span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="quick-ref-content">
+    <p class="text-small text-muted mb-1">April 2025 update (Shankar, Tyagi, Sharma 2025). Income brackets shift annually with CPI-IW. Always cite update year.</p>
+    <div class="table-responsive">
+      <table>
+        <thead><tr><th>Education</th><th>Score</th><th>Occupation</th><th>Score</th><th>Monthly Income (₹)</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr><td>Profession/honours</td><td>7</td><td>Legislators/senior officers</td><td>10</td><td>≥ 118,864</td><td>12</td></tr>
+          <tr><td>Graduate</td><td>6</td><td>Professionals</td><td>9</td><td>59,417 – 118,863</td><td>10</td></tr>
+          <tr><td>Intermediate/diploma</td><td>5</td><td>Technicians</td><td>8</td><td>44,570 – 59,416</td><td>6</td></tr>
+          <tr><td>High school</td><td>4</td><td>Clerks</td><td>7</td><td>29,723 – 44,569</td><td>4</td></tr>
+          <tr><td>Middle school</td><td>3</td><td>Skilled workers/sales</td><td>6</td><td>17,816 – 29,722</td><td>3</td></tr>
+          <tr><td>Primary school</td><td>2</td><td>Skilled agricultural/fishery</td><td>5</td><td>5,942 – 17,815</td><td>2</td></tr>
+          <tr><td>Illiterate</td><td>1</td><td>Craft/trade workers</td><td>4</td><td>&lt; 5,942</td><td>1</td></tr>
+          <tr><td></td><td></td><td>Plant/machine operators</td><td>3</td><td></td><td></td></tr>
+          <tr><td></td><td></td><td>Elementary occupation</td><td>2</td><td></td><td></td></tr>
+          <tr><td></td><td></td><td>Unemployed</td><td>1</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-small" style="margin-top:8px;"><strong>Class mapping:</strong> 26–29 = Upper (I); 16–25 = Upper middle (II); 11–15 = Lower middle (III); 5–10 = Upper lower (IV); &lt;5 = Lower (V)</p>
+  </div>
+</div>
+
+<!-- ====== AUTO-GENERATED SUMMARY ====== -->
+<div class="summary-card" id="summaryCard">
+  <h2><span>📝</span> Live Family History Summary (90-Second Pedigree Drill)</h2>
+  <div class="instruction-box" style="margin-bottom:10px;">
+    <p class="text-small" style="margin-bottom:6px;">Builds the verbal viva template from Section C5 as you fill the form. Edit manually anytime — auto-sync pauses on manual edit. Tap Re-sync to restore auto-generation.</p>
+  </div>
+  <div class="field-hint">The patient is a [age]-year-old [married/unmarried/widowed] [woman/man] from a [nuclear/joint] family. Her family of origin consists of [parents...]; she is the [order] of [number] siblings... Her fam...</div>
+      <textarea data-key="autoSummary" id="autoSummary" class="summary-textarea" placeholder="Type here..."></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-sm btn-primary" onclick="copySummary()">📋 Copy to Clipboard</button>
+    <button class="btn btn-sm btn-secondary" id="resyncBtn" onclick="resyncSummary()">🔄 Re-sync Auto</button>
+    <span class="text-small text-muted" id="syncStatus">Auto-sync: ON</span>
+  </div>
+</div>
+
+<!-- ====== PATIENT DEMOGRAPHICS (for summary builder) ====== -->
+<div class="section-card">
+  <div class="section-header active" onclick="toggleSection(this)">
+    <h3><span class="section-badge">Dem</span> Patient Demographics (for Summary)</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body active">
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Patient age (years)</label>
+        <input type="number" data-key="patient_age" name="patient_age" min="0" max="120" placeholder="e.g., 28">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Patient sex</label>
+        <div class="radio-group horizontal">
+          <label><input type="radio" data-key="patient_sex" name="patient_sex" value="woman"> Woman</label>
+          <label><input type="radio" data-key="patient_sex" name="patient_sex" value="man"> Man</label>
+        </div>
+      </div>
+    </div>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Assessment date</label>
+        <input type="date" data-key="assessment_date" name="assessment_date">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Index illness onset date (if known)</label>
+        <input type="date" data-key="index_onset_date" name="index_onset_date">
+      </div>
+    </div>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Clinician / trainee name</label>
+        <input type="text" data-key="clinician_name" name="clinician_name" placeholder="e.g., Dr. A. Sharma / PGY-2">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Institution</label>
+        <input type="text" data-key="institution" name="institution" placeholder="e.g., KMCRI / NIMHANS">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION A: NIMHANS FRAMEWORK ====== -->
+<div class="section-label">A. NIMHANS Framework — Nine Sub-Sections</div>
+
+<!-- ====== A1: THREE-GENERATION PEDIGREE ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A1</span> Three-Generation Pedigree</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>The pedigree is the <strong>visual anchor</strong> of the entire chapter — the first thing an examiner looks at.</li>
+        <li>Three generations (patient, parents, grandparents) is standard; extend downward to children if relevant age, upward only for dementia/familial neurodegenerative differentials.</li>
+        <li>Dating (ages, ages at death, ages at onset) transforms the pedigree from a diagram into <strong>clinical evidence</strong>.</li>
+      </ul>
+      <p class="why-matters">Without dating, the pedigree is flat and examinable as an error. Always date every individual.</p>
+    </div>
+    <div class="exam-pearl"><strong>Exam Pearl:</strong> A flat pedigree without dating is the single most common error examiners catch. No ages, no ages at death, no ages at onset = incomplete pedigree.</div>
+
+    <div class="field-group">
+      <label class="field-label">Pedigree drawn / to be drawn on paper</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="pedigree_drawn" name="pedigree_drawn" value="yes"> Yes — dated and annotated</label>
+        <label><input type="radio" data-key="pedigree_drawn" name="pedigree_drawn" value="pending"> Pending — verbal data collected</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Number of generations drawn</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="pedigree_gens" name="pedigree_gens" value="3"> 3 (standard)</label>
+        <label><input type="radio" data-key="pedigree_gens" name="pedigree_gens" value="4_down"> 4 (includes patient's children)</label>
+        <label><input type="radio" data-key="pedigree_gens" name="pedigree_gens" value="4_up"> 4 (includes great-grandparents)</label>
+        <label><input type="radio" data-key="pedigree_gens" name="pedigree_gens" value="4_both"> 4 both directions</label>
+      </div>
+      <p class="field-hint">Extend downward when patient has children of relevant age. Extend upward only for dementia/familial neurodegenerative differentials.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Standard symbols used (NSGC nomenclature)</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="male_alive"> □ male alive</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="female_alive"> ○ female alive</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="male_dead"> ⊠ male deceased (slashed)</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="female_dead"> ⊘ female deceased (slashed)</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="male_affected"> ▣ male affected (filled)</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="female_affected"> ● female affected (filled)</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="carrier"> ◐/◑ carrier / partial expression</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="arrow"> ↗ proband arrow</label>
+        <label><input type="checkbox" data-key="pedigree_symbols" name="pedigree_symbols" value="consanguinity"> ═ double line = consanguinity</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Dating completed for every individual</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="pedigree_dated" name="pedigree_dated" value="yes"> Yes</label>
+        <label><input type="radio" data-key="pedigree_dated" name="pedigree_dated" value="partial"> Partial</label>
+        <label><input type="radio" data-key="pedigree_dated" name="pedigree_dated" value="no"> No — explain:</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If partial/missing dating, explain gaps</label>
+      <div class="field-hint">e.g., Grandfather's age at death unknown — family reports 'very old'...</div>
+      <textarea data-key="pedigree_dating_gaps" name="pedigree_dating_gaps" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Index patient (proband) marked with arrow</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="proband_marked" name="proband_marked" value="yes"> Yes</label>
+        <label><input type="radio" data-key="proband_marked" name="proband_marked" value="no"> No</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Key pedigree findings / annotation summary</label>
+      <div class="field-hint">Describe any affected relatives with diagnosis and age of onset; consanguinity; unusual patterns; cause of death annotations...</div>
+      <textarea data-key="pedigree_findings" name="pedigree_findings" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Overall pedigree assessment</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="pedigree_assessment" name="pedigree_assessment" value="unremarkable"> Unremarkable — no affected relatives identified</label>
+        <label><input type="radio" data-key="pedigree_assessment" name="pedigree_assessment" value="psychiatric_load"> Psychiatric illness load in ___ degree relatives</label>
+        <label><input type="radio" data-key="pedigree_assessment" name="pedigree_assessment" value="medical_load"> Significant medical illness load</label>
+        <label><input type="radio" data-key="pedigree_assessment" name="pedigree_assessment" value="consanguinity"> Consanguinity present</label>
+        <label><input type="radio" data-key="pedigree_assessment" name="pedigree_assessment" value="mixed"> Mixed findings (describe below)</label>
+      </div>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> Sample phrasings &amp; 90-second drill template
+    </div>
+    <div class="help-panel">
+      <h5>Pedigree opening (H1)</h5>
+      <div class="phrase">"I'd like to draw a small diagram of your family — your parents, your brothers and sisters, your spouse and children. It helps me see the whole picture in one place. Let's start with your parents — are they both alive?"</div>
+      <h5>90-second viva drill template (C5)</h5>
+      <div class="phrase">"The patient is a [age]-year-old [married/unmarried/widowed] [woman/man] from a [nuclear/joint] family. Her family of origin consists of [parents, alive/deceased, ages, illnesses]; she is the [order] of [number] siblings; the siblings are [number alive, ages, any illnesses], and there is [no/a] history of psychiatric illness in her first-degree relatives. Her family of procreation consists of [spouse, status] and [number] children, ages [ages], all currently well. She lives in a [household composition] in [urban/rural] [location]. The pedigree is unremarkable / shows [specific finding]."</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A2: FAMILY OF ORIGIN ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A2</span> Family of Origin</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Birth order indexes the <strong>family role</strong> the patient grew up performing and modifies <strong>caregiver availability</strong> in current illness.</li>
+        <li>Parental quality of relationship (supportive, authoritarian, distant, conflicted, abusive) captured here in summary; developmental detail lives in Chapter 07 §A2–A4.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Patient's birth order among siblings</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="birth_order" name="birth_order" value="only"> Only child</label>
+        <label><input type="radio" data-key="birth_order" name="birth_order" value="eldest"> Eldest</label>
+        <label><input type="radio" data-key="birth_order" name="birth_order" value="middle"> Middle</label>
+        <label><input type="radio" data-key="birth_order" name="birth_order" value="youngest"> Youngest</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Total number of siblings (including patient)</label>
+      <input type="number" data-key="total_siblings" name="total_siblings" placeholder="e.g., 3" min="1">
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Father</p>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Name / Initial</label>
+        <input type="text" data-key="father_name" name="father_name" placeholder="e.g., R.S.">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current age (or age at death)</label>
+        <input type="number" data-key="father_age" name="father_age" placeholder="e.g., 62" min="0">
+      </div>
+    </div>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Occupation</label>
+        <input type="text" data-key="father_occupation" name="father_occupation" placeholder="e.g., Retired teacher">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Education</label>
+        <input type="text" data-key="father_education" name="father_education" placeholder="e.g., Graduate">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Living status</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="father_alive" name="father_alive" value="alive"> Alive & well</label>
+        <label><input type="radio" data-key="father_alive" name="father_alive" value="alive_ill"> Alive with illness</label>
+        <label><input type="radio" data-key="father_alive" name="father_alive" value="deceased"> Deceased</label>
+        <label><input type="radio" data-key="father_alive" name="father_alive" value="unknown"> Unknown / not in contact</label>
+      </div>
+    </div>
+    <div class="field-group" id="father_death_fields" style="display:none;">
+      <label class="field-label">If deceased: date of death, age at death &amp; cause</label>
+      <div class="inline-fields">
+        <input type="date" data-key="father_death_date" name="father_death_date" placeholder="Date of death">
+        <input type="text" data-key="father_death_details" name="father_death_details" placeholder="e.g., Age 58 — myocardial infarction">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Psychiatric / neurological / significant medical illness</label>
+      <div class="field-hint">Document diagnosis, age of onset, treatment received, outcome...</div>
+      <textarea data-key="father_illness" name="father_illness" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Current relationship with patient</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="supportive"> Supportive</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="authoritarian"> Authoritarian</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="distant"> Distant</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="conflicted"> Conflicted</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="abusive"> Abusive</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="estranged"> Estranged</label>
+        <label><input type="radio" data-key="father_relationship" name="father_relationship" value="deceased"> Deceased / not applicable</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Mother</p>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Name / Initial</label>
+        <input type="text" data-key="mother_name" name="mother_name" placeholder="e.g., S.D.">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current age (or age at death)</label>
+        <input type="number" data-key="mother_age" name="mother_age" placeholder="e.g., 58" min="0">
+      </div>
+    </div>
+    <div class="inline-fields">
+      <div class="field-group">
+        <label class="field-label">Occupation</label>
+        <input type="text" data-key="mother_occupation" name="mother_occupation" placeholder="e.g., Homemaker">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Education</label>
+        <input type="text" data-key="mother_education" name="mother_education" placeholder="e.g., High school">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Living status</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="mother_alive" name="mother_alive" value="alive"> Alive & well</label>
+        <label><input type="radio" data-key="mother_alive" name="mother_alive" value="alive_ill"> Alive with illness</label>
+        <label><input type="radio" data-key="mother_alive" name="mother_alive" value="deceased"> Deceased</label>
+        <label><input type="radio" data-key="mother_alive" name="mother_alive" value="unknown"> Unknown / not in contact</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If deceased: date of death, age at death &amp; cause</label>
+      <div class="inline-fields">
+        <input type="date" data-key="mother_death_date" name="mother_death_date" placeholder="Date of death">
+        <input type="text" data-key="mother_death_details" name="mother_death_details" placeholder="e.g., Age 55 — breast cancer">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Psychiatric / neurological / significant medical illness</label>
+      <div class="field-hint">Document diagnosis, age of onset, treatment, outcome...</div>
+      <textarea data-key="mother_illness" name="mother_illness" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Current relationship with patient</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="supportive"> Supportive</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="authoritarian"> Authoritarian / over-involved</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="distant"> Distant</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="conflicted"> Conflicted</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="abusive"> Abusive</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="estranged"> Estranged</label>
+        <label><input type="radio" data-key="mother_relationship" name="mother_relationship" value="deceased"> Deceased / not applicable</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Parents' Relationship</p>
+    <div class="field-group">
+      <label class="field-label">Parents' marital status</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="parents_status" name="parents_status" value="married"> Married / together</label>
+        <label><input type="radio" data-key="parents_status" name="parents_status" value="separated"> Separated</label>
+        <label><input type="radio" data-key="parents_status" name="parents_status" value="divorced"> Divorced</label>
+        <label><input type="radio" data-key="parents_status" name="parents_status" value="widowed"> One widowed</label>
+        <label><input type="radio" data-key="parents_status" name="parents_status" value="never_married"> Never married</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If separated/divorced: when, why, patient's age at time</label>
+      <textarea data-key="parents_separation" name="parents_separation" placeholder="Document circumstances, impact on patient..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Siblings (each sibling: add details in free text or document below)</p>
+    <div class="field-group">
+      <label class="field-label">Sibling summary (birth order, sex, age, health, relationship)</label>
+      <div class="field-hint">1. Elder brother, 35, engineer, well, supportive<br>2. Younger sister, 24, student, anxiety disorder diagnosed age 19, close relationship<br>...</div>
+      <textarea data-key="siblings_summary" name="siblings_summary" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Any sibling with psychiatric or significant medical illness?</label>
+      <div class="field-hint">Document diagnosis, age of onset, treatment, outcome for each affected sibling...</div>
+      <textarea data-key="siblings_illness" name="siblings_illness" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> Clinical anchor: expanded psychiatric probe
+    </div>
+    <div class="help-panel">
+      <div class="clinical-anchor"><strong>Clinical Anchor:</strong> When asked about psychiatric illness in the family, Indian families very often answer "no". The follow-up probe is the discriminator: <em>"Has anyone in the family ever had a problem with their nerves, with sadness that did not lift, with worry that interfered with daily life, with being unable to sleep for many nights together, with hearing voices, with being suspicious of people without reason, with drinking, with being taken to a temple or a faith healer for relief?"</em> The expanded probe converts perhaps half of negative answers to positive ones.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A3: FAMILY OF PROCREATION ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A3</span> Family of Procreation</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Documents the family the patient <strong>has built</strong> — spouse, children, household composition.</li>
+        <li>Household composition matters for <strong>EE assessment</strong> and <strong>discharge planning</strong> (Chapter 14).</li>
+        <li>For minor children of a patient with SMI or SUD: safeguarding question — who is caring for the children, and is that arrangement stable?</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Marital status of patient</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="patient_marital" name="patient_marital" value="never_married"> Never married</label>
+        <label><input type="radio" data-key="patient_marital" name="patient_marital" value="married"> Married</label>
+        <label><input type="radio" data-key="patient_marital" name="patient_marital" value="separated"> Separated</label>
+        <label><input type="radio" data-key="patient_marital" name="patient_marital" value="divorced"> Divorced</label>
+        <label><input type="radio" data-key="patient_marital" name="patient_marital" value="widowed"> Widowed</label>
+      </div>
+    </div>
+
+    <div id="spouse_fields">
+      <div class="divider"></div>
+      <p class="section-label">Spouse / Partner</p>
+      <div class="inline-fields">
+        <div class="field-group">
+          <label class="field-label">Age</label>
+          <input type="number" data-key="spouse_age" name="spouse_age" min="0" placeholder="e.g., 32">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Education</label>
+          <input type="text" data-key="spouse_education" name="spouse_education" placeholder="e.g., Graduate">
+        </div>
+      </div>
+      <div class="inline-fields">
+        <div class="field-group">
+          <label class="field-label">Occupation</label>
+          <input type="text" data-key="spouse_occupation" name="spouse_occupation" placeholder="e.g., Software engineer">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Health status</label>
+          <input type="text" data-key="spouse_health" name="spouse_health" placeholder="e.g., Well / Diabetes">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Spouse currently in household or living separately</label>
+        <div class="radio-group horizontal">
+          <label><input type="radio" data-key="spouse_household" name="spouse_household" value="same"> In same household</label>
+          <label><input type="radio" data-key="spouse_household" name="spouse_household" value="separate"> Living separately</label>
+          <label><input type="radio" data-key="spouse_household" name="spouse_household" value="abroad"> Abroad / distant</label>
+          <label><input type="radio" data-key="spouse_household" name="spouse_household" value="deceased"> Deceased</label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">If widowed / divorced / separated: date and reason</label>
+        <div class="inline-fields">
+          <input type="date" data-key="spouse_absence_date" name="spouse_absence_date" placeholder="Date of event">
+          <input type="text" data-key="spouse_absence_reason" name="spouse_absence_reason" placeholder="Reason (e.g., death, divorce, separation)">
+        </div>
+        <div class="field-hint">e.g., Widowed 2019 — husband died in road accident. Patient was age 28.</div>
+      <textarea data-key="spouse_absence" name="spouse_absence" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Marital relationship summary (brief)</label>
+        <div class="radio-group">
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="supportive"> Supportive / harmonious</label>
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="strained"> Strained / frequent conflict</label>
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="distant"> Distant / emotionally detached</label>
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="abusive"> Abusive (verbal / physical)</label>
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="dependent"> Over-involved / dependent</label>
+          <label><input type="radio" data-key="marital_quality" name="marital_quality" value="na"> Not applicable (unmarried)</label>
+        </div>
+        <p class="field-hint">Detail lives in Chapter 07 §A9.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Children</p>
+    <div class="field-group">
+      <label class="field-label">Number of children</label>
+      <input type="number" data-key="children_count" name="children_count" min="0" placeholder="e.g., 2">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Children details (age, sex, education, health, relationship)</label>
+      <div class="field-hint">1. Son, 8 years, 3rd standard, well, close<br>2. Daughter, 5 years, UKG, well, close<br>...</div>
+      <textarea data-key="children_details" name="children_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If patient has SMI/SUD and minor children: safeguarding status</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="safeguarding" name="safeguarding" value="na"> Not applicable — no minor children / no SMI/SUD</label>
+        <label><input type="radio" data-key="safeguarding" name="safeguarding" value="stable"> Children cared for by spouse/relative — arrangement is stable</label>
+        <label><input type="radio" data-key="safeguarding" name="safeguarding" value="unstable"> Arrangement is unstable / at risk</label>
+        <label><input type="radio" data-key="safeguarding" name="safeguarding" value="unclear"> Unclear — needs further assessment</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Who is currently caring for the children?</label>
+      <input type="text" data-key="children_carer" name="children_carer" placeholder="e.g., Paternal grandparents">
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Household Composition</p>
+    <div class="field-group">
+      <label class="field-label">Who currently lives in the patient's home?</label>
+      <div class="field-hint">Include non-relatives: domestic staff, paying guests, friends...<br>e.g., Patient, husband, 2 children, husband's mother (6 members total).</div>
+      <textarea data-key="household_composition" name="household_composition" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Type of family</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="family_type" name="family_type" value="nuclear"> Nuclear</label>
+        <label><input type="radio" data-key="family_type" name="family_type" value="joint"> Joint / extended</label>
+        <label><input type="radio" data-key="family_type" name="family_type" value="single_parent"> Single-parent</label>
+        <label><input type="radio" data-key="family_type" name="family_type" value="other"> Other (specify)</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A4: FAMILY PSYCHIATRIC HISTORY ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A4</span> Family Psychiatric History</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters — highest-yield sub-section</h4>
+      <ul>
+        <li><strong>Shifts the differential diagnosis</strong> before symptom history is even completed.</li>
+        <li>For each affected 1°, 2°, or 3° relative, document four items: diagnosis (family words → contemporary), age of onset, treatment received, outcome.</li>
+        <li>Suicide must be screened <strong>explicitly</strong> — never assumed present or absent from spontaneous narrative.</li>
+      </ul>
+      <p class="why-matters">Family vocabulary in India is loose (&quot;nervous breakdown&quot;, &quot;tension&quot;, &quot;madness&quot;). Map carefully without overclaiming. ECT in a relative = severe illness that families remember.</p>
+    </div>
+    <div class="clinical-anchor"><strong>Clinical Anchor:</strong> Indian families often answer &quot;no&quot; to psychiatric illness. Use the expanded probe to convert ~50% of negatives to positives.</div>
+
+    <div class="field-group">
+      <label class="field-label">Expanded probe administered</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="probe_done" name="probe_done" value="yes"> Yes</label>
+        <label><input type="radio" data-key="probe_done" name="probe_done" value="no"> No</label>
+        <label><input type="radio" data-key="probe_done" name="probe_done" value="partial"> Partial</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Affected First-Degree Relatives</p>
+    <div class="field-group">
+      <label class="field-label">Parent(s) with psychiatric illness</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="none"> None identified</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="depression"> Depression / "tension"</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="bipolar"> Bipolar disorder / "madness"</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="schizophrenia"> Schizophrenia / psychosis</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="anxiety"> Anxiety disorder</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="ocd"> OCD</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="substance"> Substance use disorder</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="suicide"> Suicide / self-harm</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="dementia"> Dementia</label>
+        <label><input type="checkbox" data-key="psych_parent_dx" name="psych_parent_dx" value="other"> Other (describe)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Parent(s): family words → probable contemporary diagnosis, age of onset, treatment, outcome</label>
+      <div class="field-hint">Father: family said 'tension' and 'shock treatment' → probable severe depression with ECT, onset age 42, partial recovery with residual symptoms, currently on antidepressants. Mother: no history.</div>
+      <textarea data-key="psych_parent_details" name="psych_parent_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Sibling(s) with psychiatric illness — details</label>
+      <div class="field-hint">Elder brother: diagnosed schizophrenia age 25, treated at NIMHANS, 3 admissions, currently on olanzapine, partial recovery.</div>
+      <textarea data-key="psych_sibling_details" name="psych_sibling_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Affected Second- & Third-Degree Relatives</p>
+    <div class="field-group">
+      <label class="field-label">Grandparents, aunts, uncles, cousins with psychiatric illness</label>
+      <div class="field-hint">Maternal uncle: alcohol dependence, died age 45 (cirrhosis). Paternal grandmother: 'nervous trouble' — probable anxiety, onset elderly, faith healer treatment, died age 78.</div>
+      <textarea data-key="psych_extended_details" name="psych_extended_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Suicide Screen</p>
+    <div class="exam-pearl"><strong>Exam Pearl:</strong> Many family suicides recorded as &quot;fell from roof&quot;, &quot;accidental hanging&quot;, &quot;consumed something by mistake&quot;, &quot;sudden cardiac death&quot; — probe directly.</div>
+    <div class="field-group">
+      <label class="field-label">Suicide screen explicitly asked</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="suicide_screen" name="suicide_screen" value="yes"> Yes</label>
+        <label><input type="radio" data-key="suicide_screen" name="suicide_screen" value="no"> No — document why</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family history of completed or attempted suicide</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="suicide_history" name="suicide_history" value="none"> None identified</label>
+        <label><input type="radio" data-key="suicide_history" name="suicide_history" value="completed"> Completed suicide in family (specify below)</label>
+        <label><input type="radio" data-key="suicide_history" name="suicide_history" value="attempted"> Attempted suicide in family (specify below)</label>
+        <label><input type="radio" data-key="suicide_history" name="suicide_history" value="suspected"> Suspected but not confirmed (euphemistic deaths)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Suicide / attempt details: relative, method, date, age, circumstances, family narrative</label>
+      <div class="inline-fields">
+        <input type="date" data-key="suicide_date" name="suicide_date" placeholder="Date of event">
+        <input type="text" data-key="suicide_relative" name="suicide_relative" placeholder="Relationship to patient">
+      </div>
+      <div class="field-hint">Maternal aunt: died age 32, family says 'fell from roof' — probed: had been 'very sad' for months, previous 'tablet overdose' survived. Probable suicide by jumping.</div>
+      <textarea data-key="suicide_details" name="suicide_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> Sample phrasings: suicide screen &amp; substance probe
+    </div>
+    <div class="help-panel">
+      <h5>Suicide screen in family (H3)</h5>
+      <div class="phrase">"Has anyone in your family — parents, brothers and sisters, aunts, uncles, grandparents, cousins — ever taken their own life, or died in a way that the family was not sure was an accident? Has anyone ever attempted to take their own life and survived?"</div>
+      <h5>Substance use in family — paternal opener (H4)</h5>
+      <div class="phrase">"I'd like to ask about drinking and other substances in your family. Many people grow up in homes where alcohol is part of the picture; some find this difficult to talk about. Did your father drink? If yes, can you tell me a little about what that was like — how often, how heavily, whether it caused trouble at home? Did anyone else in your family drink heavily, or use any other substance — cannabis, opioids, sleeping tablets, anything else?"</div>
+      <div class="phrase"><span class="lang">Hindi:</span> "Kya aapke pita sharab peete the? Agar haan, toh thoda batayein, kitni baar, kitni zyada, kya iski wajah se ghar mein pareshani hoti thi? Kya parivar mein aur kisi ne sharab ya koi aur cheez, ganja, afim, neend ki goliyaan, bhaari maatra mein li hai?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A5: FAMILY MEDICAL HISTORY ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A5</span> Family Medical History</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Conditions in 1° and 2° relatives <strong>clinically relevant to psychiatric management</strong>.</li>
+        <li>Cardiovascular history (sudden cardiac death) → relevant for <strong>QTc-prolonging psychotropics</strong>.</li>
+        <li>Diabetes → relevant for <strong>second-generation antipsychotics and metabolic syndrome</strong>.</li>
+        <li>Thyroid disease → relevant for <strong>lithium and depression differential</strong>.</li>
+        <li>Epilepsy, dementia, autoimmune → each carries <strong>neuropsychiatric overlap</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Cardiovascular conditions in 1°/2° relatives</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="none"> None known</label>
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="hypertension"> Hypertension</label>
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="ihd"> Ischaemic heart disease</label>
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="scd"> Sudden cardiac death</label>
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="stroke"> Stroke / cerebrovascular</label>
+        <label><input type="checkbox" data-key="fam_cv" name="fam_cv" value="other"> Other (specify)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">CV details (relative, diagnosis, age at onset, relevance)</label>
+      <div class="field-hint">Father: hypertension diagnosed age 45, on amlodipine. Maternal uncle: sudden cardiac death age 52 — relevant for QTc monitoring if antipsychotics considered.</div>
+      <textarea data-key="fam_cv_details" name="fam_cv_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Endocrine conditions</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="fam_endocrine" name="fam_endocrine" value="none"> None known</label>
+        <label><input type="checkbox" data-key="fam_endocrine" name="fam_endocrine" value="dm"> Diabetes mellitus</label>
+        <label><input type="checkbox" data-key="fam_endocrine" name="fam_endocrine" value="thyroid"> Thyroid disease</label>
+        <label><input type="checkbox" data-key="fam_endocrine" name="fam_endocrine" value="other"> Other</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Endocrine details (relevance to SGAs, lithium, depression differential)</label>
+      <div class="field-hint">Mother: hypothyroidism on thyroxine. Maternal grandmother: type 2 diabetes from age 55. Relevant for metabolic monitoring if olanzapine/quetiapine considered.</div>
+      <textarea data-key="fam_endocrine_details" name="fam_endocrine_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Neurological conditions</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="none"> None known</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="epilepsy"> Epilepsy</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="stroke"> Stroke</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="parkinsons"> Parkinson's disease</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="ms"> Multiple sclerosis</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="head_injury"> Head injury with long-term sequelae</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="dementia"> Dementia (with age of onset)</label>
+        <label><input type="checkbox" data-key="fam_neuro" name="fam_neuro" value="other"> Other</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Neurological details (age of onset, course, relevance)</label>
+      <div class="field-hint">Paternal grandfather: dementia onset age 72, died age 78. No autopsy. Relevant for neurocognitive workup if patient has memory concerns.</div>
+      <textarea data-key="fam_neuro_details" name="fam_neuro_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Autoimmune conditions</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="fam_autoimmune" name="fam_autoimmune" value="none"> None known</label>
+        <label><input type="checkbox" data-key="fam_autoimmune" name="fam_autoimmune" value="sle"> Systemic lupus erythematosus</label>
+        <label><input type="checkbox" data-key="fam_autoimmune" name="fam_autoimmune" value="ms"> Multiple sclerosis</label>
+        <label><input type="checkbox" data-key="fam_autoimmune" name="fam_autoimmune" value="ra"> Rheumatoid arthritis</label>
+        <label><input type="checkbox" data-key="fam_autoimmune" name="fam_autoimmune" value="other"> Other</label>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Cancers and chronic illness in family</label>
+      <div class="field-hint">Document type, relative, age at diagnosis, outcome. Relevant for psychosocial context and caregiver burden.</div>
+      <textarea data-key="fam_cancer" name="fam_cancer" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A6: CONSANGUINITY ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A6</span> Consanguinity</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Sufficiently common in many Indian regions (southern India, Muslim communities, endogamous groups) — <strong>asked routinely, never assumed absent</strong>.</li>
+        <li>Raises suspicion for <strong>autosomal recessive conditions</strong> including metabolic and neurodegenerative disorders presenting with neuropsychiatric features.</li>
+        <li><strong>Wilson's disease</strong> is the highest-yield single example in a young adult presentation.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Consanguinity present in family</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="consanguinity" name="consanguinity" value="no"> No</label>
+        <label><input type="radio" data-key="consanguinity" name="consanguinity" value="yes_parents"> Yes — between patient's parents</label>
+        <label><input type="radio" data-key="consanguinity" name="consanguinity" value="yes_wider"> Yes — in wider family only</label>
+        <label><input type="radio" data-key="consanguinity" name="consanguinity" value="yes_patient"> Yes — patient married within kindred</label>
+        <label><input type="radio" data-key="consanguinity" name="consanguinity" value="unknown"> Unknown</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If yes: degree of consanguinity</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="consanguinity_degree" name="consanguinity_degree" value="first_cousins"> First cousins</label>
+        <label><input type="radio" data-key="consanguinity_degree" name="consanguinity_degree" value="double_first"> Double first cousins</label>
+        <label><input type="radio" data-key="consanguinity_degree" name="consanguinity_degree" value="uncle_niece"> Uncle-niece / aunt-nephew</label>
+        <label><input type="radio" data-key="consanguinity_degree" name="consanguinity_degree" value="distant"> More distant</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Frequency in wider family</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="consanguinity_freq" name="consanguinity_freq" value="single"> Single occurrence</label>
+        <label><input type="radio" data-key="consanguinity_freq" name="consanguinity_freq" value="multiple"> Multiple marriages within kindred</label>
+        <label><input type="radio" data-key="consanguinity_freq" name="consanguinity_freq" value="na"> Not applicable</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Drawn on pedigree as double horizontal line</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="consanguinity_drawn" name="consanguinity_drawn" value="yes"> Yes</label>
+        <label><input type="radio" data-key="consanguinity_drawn" name="consanguinity_drawn" value="na"> Not applicable — no consanguinity</label>
+        <label><input type="radio" data-key="consanguinity_drawn" name="consanguinity_drawn" value="pending"> Pending</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Clinical relevance / autosomal recessive differential considered</label>
+      <div class="field-hint">e.g., Young adult with movement disorder + psychiatric symptoms → Wilson's disease in differential. Consanguinity increases suspicion for AR inheritance.</div>
+      <textarea data-key="consanguinity_relevance" name="consanguinity_relevance" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A7: FAMILY ENVIRONMENT & EXPRESSED EMOTION ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A7</span> Family Environment &amp; Expressed Emotion</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>EE is the <strong>largest single modifiable predictor of relapse</strong> in schizophrenia and substantial in bipolar, depression, eating disorders, and dementia.</li>
+        <li>Document EE state on admission so Chapter 14 family intervention has a <strong>baseline</strong> to work against.</li>
+        <li>Indian families: high-EE prevalence <strong>lower</strong> (~24% Chandigarh) than Western (~48–70%), but <strong>prognostic effect preserved</strong> when present. EOI relatively more prominent; criticism relatively less.</li>
+      </ul>
+    </div>
+
+    <div class="mnemonic-box"><strong>Mnemonic CHEW-P:</strong> <strong>C</strong>ritical comments, <strong>H</strong>ostility, <strong>E</strong>OI (emotional over-involvement) = risk components. <strong>W</strong>armth, <strong>P</strong>ositive remarks = protective. High EE = any one of: ≥6 critical comments, any hostility, or EOI ≥3 (0–5).</div>
+
+    <div class="field-group">
+      <label class="field-label">Emotional climate of household (qualitative summary)</label>
+      <div class="field-hint">Describe atmosphere, communication style, conflict, supportiveness... e.g., 'Conflicted atmosphere with frequent arguments about patient's daily functioning. Mother is overprotective and monitors pati...</div>
+      <textarea data-key="ee_climate" name="ee_climate" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Five Components — Screen (not formal CFI)</p>
+    <div class="field-group">
+      <label class="field-label">1. Critical comments — specific negative remarks about patient's behaviour or personality</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_critical" name="ee_critical" value="0"> None observed</label>
+        <label><input type="radio" data-key="ee_critical" name="ee_critical" value="1_2"> 1–2 mild criticisms</label>
+        <label><input type="radio" data-key="ee_critical" name="ee_critical" value="3_5"> 3–5 criticisms</label>
+        <label><input type="radio" data-key="ee_critical" name="ee_critical" value="6_plus"> ≥6 critical comments (high-EE cut-off)</label>
+        <label><input type="radio" data-key="ee_critical" name="ee_critical" value="unclear"> Unclear / not assessed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">2. Hostility — generalised negative attitude toward patient as a person (rejection/blame)</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_hostility" name="ee_hostility" value="0"> None observed (score = 0)</label>
+        <label><input type="radio" data-key="ee_hostility" name="ee_hostility" value="present"> Present (any hostility above zero = high EE)</label>
+        <label><input type="radio" data-key="ee_hostility" name="ee_hostility" value="unclear"> Unclear / not assessed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">3. Emotional over-involvement (EOI) — overprotective, self-sacrificing, excessively concerned</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_eoi" name="ee_eoi" value="0"> 0 — absent</label>
+        <label><input type="radio" data-key="ee_eoi" name="ee_eoi" value="1"> 1 — mild</label>
+        <label><input type="radio" data-key="ee_eoi" name="ee_eoi" value="2"> 2 — moderate</label>
+        <label><input type="radio" data-key="ee_eoi" name="ee_eoi" value="3_plus"> ≥3 (high-EE cut-off)</label>
+        <label><input type="radio" data-key="ee_eoi" name="ee_eoi" value="unclear"> Unclear / not assessed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">4. Warmth — positive, empathetic, supportive emotional expression</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_warmth" name="ee_warmth" value="high"> High — protective</label>
+        <label><input type="radio" data-key="ee_warmth" name="ee_warmth" value="moderate"> Moderate</label>
+        <label><input type="radio" data-key="ee_warmth" name="ee_warmth" value="low"> Low — absent or minimal</label>
+        <label><input type="radio" data-key="ee_warmth" name="ee_warmth" value="unclear"> Unclear / not assessed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">5. Positive remarks — explicit praise or acknowledgement of patient's efforts</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_positive" name="ee_positive" value="present"> Present — protective</label>
+        <label><input type="radio" data-key="ee_positive" name="ee_positive" value="absent"> Absent</label>
+        <label><input type="radio" data-key="ee_positive" name="ee_positive" value="unclear"> Unclear / not assessed</label>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="field-group">
+      <label class="field-label">Overall EE classification</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_overall" name="ee_overall" value="low"> Low EE</label>
+        <label><input type="radio" data-key="ee_overall" name="ee_overall" value="high"> High EE</label>
+        <label><input type="radio" data-key="ee_overall" name="ee_overall" value="borderline"> Borderline / indeterminate</label>
+        <label><input type="radio" data-key="ee_overall" name="ee_overall" value="not_assessed"> Not formally assessed — clinical screen only</label>
+      </div>
+      <p class="field-hint">Document the basis: e.g., "High EE based on ≥6 critical comments from mother + EOI score 4."</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">EE assessment method used</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="clinical_screen"> Brief clinical screen (probes only)</label>
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="fmss"> Five-Minute Speech Sample (FMSS)</label>
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="lee"> Level of Expressed Emotion Scale (LEE)</label>
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="fas"> Family Attitude Scale (FAS)</label>
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="pc"> Perceived Criticism (PC) Scale</label>
+        <label><input type="radio" data-key="ee_method" name="ee_method" value="cfi"> Full Camberwell Family Interview (CFI)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Key family-process variables (accommodation, avoidance reinforcement, etc.)</label>
+      <div class="field-hint">e.g., Family accommodates OCD rituals (hours per day). OR: Family reinforces avoidance in panic disorder (accompanies patient everywhere).</div>
+      <textarea data-key="ee_process_notes" name="ee_process_notes" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> Sample EE elicitation probes (H5)
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"How would you describe how things are between you and your [son/daughter/wife/husband] right now? When she is unwell, how do you find yourself reacting? Do you find yourself getting frustrated with her, or angry? Are there things she does that particularly upset you? On the other side, what do you find you appreciate about her, even now when things are difficult? How do you show that you care about her? When she is doing something well, do you tell her so?"</div>
+      <p class="text-small text-muted">A relative who answers the first half with multiple specific frustrations and the second half with vague generalities = high-EE end. One who balances both sides with concrete examples = low-EE end.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A8: SOCIOECONOMIC STATUS — MODIFIED KUPPUSWAMY ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A8</span> Socioeconomic Status (Modified Kuppuswamy)</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Standard for <strong>urban Indian psychiatric practice</strong>. Combines education, occupation, and total monthly family income.</li>
+        <li>Income brackets updated <strong>annually</strong> with CPI-IW. Figures below from April 2025 update (Shankar, Tyagi, Sharma 2025).</li>
+        <li>Modified BG Prasad scale is the rural standard. In urban practice (including KMCRI), <strong>Kuppuswamy is default</strong>.</li>
+      </ul>
+    </div>
+    <div class="exam-pearl"><strong>Exam Pearl:</strong> Income brackets shift annually. Always cite the year of update and refresh from latest publication before viva. April 2025 inflation factor used: 2.94%.</div>
+
+    <div class="field-group">
+      <label class="field-label">Update year cited</label>
+      <input type="text" data-key="kuppuswamy_year" name="kuppuswamy_year" value="April 2025" placeholder="e.g., April 2025">
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Education of Head of Family</p>
+    <div class="field-group">
+      <label class="field-label">Education score</label>
+      <select data-key="kupp_education" name="kupp_education" onchange="calcKuppuswamy();">
+        <option value="">Select education level</option>
+        <option value="7">Profession or honours (7)</option>
+        <option value="6">Graduate (6)</option>
+        <option value="5">Intermediate or diploma (5)</option>
+        <option value="4">High school certificate (4)</option>
+        <option value="3">Middle school certificate (3)</option>
+        <option value="2">Primary school certificate (2)</option>
+        <option value="1">Illiterate (1)</option>
+      </select>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Occupation of Head of Family</p>
+    <div class="field-group">
+      <label class="field-label">Occupation score</label>
+      <select data-key="kupp_occupation" name="kupp_occupation" onchange="calcKuppuswamy();">
+        <option value="">Select occupation level</option>
+        <option value="10">Legislators, senior officers, managers (10)</option>
+        <option value="9">Professionals (9)</option>
+        <option value="8">Technicians and associate professionals (8)</option>
+        <option value="7">Clerks (7)</option>
+        <option value="6">Skilled workers, shop and market sales workers (6)</option>
+        <option value="5">Skilled agricultural and fishery workers (5)</option>
+        <option value="4">Craft and related trade workers (4)</option>
+        <option value="3">Plant and machine operators and assemblers (3)</option>
+        <option value="2">Elementary occupation (2)</option>
+        <option value="1">Unemployed (1)</option>
+      </select>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Total Monthly Family Income (₹)</p>
+    <div class="field-group">
+      <label class="field-label">Income score</label>
+      <select data-key="kupp_income" name="kupp_income" onchange="calcKuppuswamy();">
+        <option value="">Select income bracket</option>
+        <option value="12">≥ ₹118,864 (12)</option>
+        <option value="10">₹59,417 – ₹118,863 (10)</option>
+        <option value="6">₹44,570 – ₹59,416 (6)</option>
+        <option value="4">₹29,723 – ₹44,569 (4)</option>
+        <option value="3">₹17,816 – ₹29,722 (3)</option>
+        <option value="2">₹5,942 – ₹17,815 (2)</option>
+        <option value="1">&lt; ₹5,942 (1)</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Exact monthly family income (₹) if known</label>
+      <input type="number" data-key="kupp_exact_income" name="kupp_exact_income" placeholder="e.g., 45000" min="0">
+    </div>
+
+    <div class="divider"></div>
+    <div class="field-group">
+      <label class="field-label">Auto-calculated total score &amp; class</label>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="text" id="kupp_total" readonly placeholder="Total score" style="flex:1; min-width:120px; background:var(--bg-primary); color:var(--accent-secondary); font-weight:600;">
+        <input type="text" id="kupp_class" readonly placeholder="SES Class" style="flex:1; min-width:120px; background:var(--bg-primary); color:var(--accent-secondary); font-weight:600;">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Clinical notes on SES relevance</label>
+      <div class="field-hint">e.g., Upper lower (IV). Financial strain is a stressor. Treatment affordability concerns for long-term medication.</div>
+      <textarea data-key="ses_notes" name="ses_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== A9: CAREGIVER IDENTIFICATION & BURDEN ====== -->
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">A9</span> Caregiver Identification &amp; Burden</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <ul>
+        <li>Treatment in Indian psychiatric practice is <strong>family treatment</strong> more than individual treatment.</li>
+        <li>Primary caregiver often <strong>≠ decision-maker</strong>. Caregiver may be daughter-in-law/wife/mother; decision-maker may be son/husband/father.</li>
+        <li>Discharge plan that hands a chronic schizophrenia patient back to a <strong>burnt-out caregiver</strong> is a relapse plan.</li>
+        <li>Zarit Burden Interview (ZBI) is the standard formal instrument; routine case file uses <strong>clinical summary</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Primary caregiver identified</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="caregiver_identified" name="caregiver_identified" value="yes"> Yes</label>
+        <label><input type="radio" data-key="caregiver_identified" name="caregiver_identified" value="no"> No — patient independent / no caregiver needed</label>
+        <label><input type="radio" data-key="caregiver_identified" name="caregiver_identified" value="unclear"> Unclear — needs clarification</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Primary caregiver: relationship to patient, age, health</label>
+      <div class="field-hint">e.g., Wife, 32, homemaker, well. Administers medication, accompanies to clinic, monitors symptoms.</div>
+      <textarea data-key="caregiver_details" name="caregiver_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Is caregiver the same as family decision-maker?</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="caregiver_is_decisionmaker" name="caregiver_is_decisionmaker" value="yes"> Yes — same person</label>
+        <label><input type="radio" data-key="caregiver_is_decisionmaker" name="caregiver_is_decisionmaker" value="no"> No — different person (specify below)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">If different: decision-maker details (relationship, role in treatment choices)</label>
+      <div class="field-hint">e.g., Decision-maker is patient's elder brother (35, engineer, lives abroad). Financial decisions and treatment consent flow through him via phone.</div>
+      <textarea data-key="decisionmaker_details" name="decisionmaker_details" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+    <p class="section-label">Caregiver Burden Assessment (Clinical Summary)</p>
+    <div class="field-group">
+      <label class="field-label">Duration of burden carried</label>
+      <input type="text" data-key="burden_duration" name="burden_duration" placeholder="e.g., 18 months since first episode">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Current level of caregiver stress</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="burden_stress" name="burden_stress" value="minimal"> Minimal — well-supported, coping</label>
+        <label><input type="radio" data-key="burden_stress" name="burden_stress" value="mild"> Mild — some strain but manageable</label>
+        <label><input type="radio" data-key="burden_stress" name="burden_stress" value="moderate"> Moderate — clear strain, needs support</label>
+        <label><input type="radio" data-key="burden_stress" name="burden_stress" value="severe"> Severe — burnout risk, urgent intervention needed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Physical symptoms in caregiver (sleep, appetite, somatic complaints)</label>
+      <div class="field-hint">e.g., Caregiver reports insomnia for 3 months, 5 kg weight loss, frequent headaches.</div>
+      <textarea data-key="caregiver_physical" name="caregiver_physical" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Caregiver mental health issues</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="caregiver_mh" name="caregiver_mh" value="none"> None apparent</label>
+        <label><input type="radio" data-key="caregiver_mh" name="caregiver_mh" value="anxiety"> Anxiety / worry prominent</label>
+        <label><input type="radio" data-key="caregiver_mh" name="caregiver_mh" value="depression"> Depressive symptoms</label>
+        <label><input type="radio" data-key="caregiver_mh" name="caregiver_mh" value="both"> Both anxiety and depression</label>
+        <label><input type="radio" data-key="caregiver_mh" name="caregiver_mh" value="other"> Other (specify)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family coping capacity</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="family_coping" name="family_coping" value="good"> Good — resources and support available</label>
+        <label><input type="radio" data-key="family_coping" name="family_coping" value="strained"> Strained — limited resources, high burden</label>
+        <label><input type="radio" data-key="family_coping" name="family_coping" value="collapsing"> Collapsing — crisis level, needs immediate support</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Zarit Burden Interview / ZCBI administered</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="zbi_done" name="zbi_done" value="yes_full"> Yes — full ZBI</label>
+        <label><input type="radio" data-key="zbi_done" name="zbi_done" value="yes_short"> Yes — brief ZCBI</label>
+        <label><input type="radio" data-key="zbi_done" name="zbi_done" value="no"> No — clinical screen only</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">ZBI score (if administered)</label>
+      <input type="number" data-key="zbi_score" name="zbi_score" placeholder="0–88" min="0" max="88">
+      <p class="field-hint">Higher scores = greater burden. >60 often indicates severe burden.</p>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> Sample caregiver burden opener (H6)
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"I want to ask about you, not about her, for a moment. How are you holding up? How are you sleeping? Are you eating? Is there anyone helping you with her care, or is most of it falling on you? Have there been days when it has felt like too much?"</div>
+      <div class="phrase"><span class="lang">Hindi:</span> "Main ek pal ke liye unke baare mein nahin, aapke baare mein poochna chahta hoon. Aap kaise hain? Aapki neend kaisi hai? Khana kha rahe hain? Unki dekh-bhal mein koi aur madad kar raha hai, ya zyadatar bojh aap par hi hai? Kya kabhi aisa hua hai ki yeh sab bahut zyada lag raha hai?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION C: PEDIGREE CONVENTIONS & VIVA EXECUTION ====== -->
+<div class="section-label">C. The Pedigree — Drawing Convention &amp; Viva Execution</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">C1</span> Standard Symbols (Reference)</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>Standard NSGC nomenclature. Examiners catch symbol errors instantly. Father conventionally on the <strong>left</strong>; siblings in <strong>birth order</strong> (eldest left); proband in <strong>centre</strong> of lowest generation.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Symbol checklist — confirm all used correctly</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="square_male"> Square = male (not circle)</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="circle_female"> Circle = female</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="diamond_unknown"> Diamond = sex unknown</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="slash_dead"> Diagonal slash = deceased</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="fill_affected"> Filled = affected</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="arrow_proband"> Arrow = proband</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="horizontal_mating"> Horizontal line = mating</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="double_consanguinity"> Double horizontal = consanguinity</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="vertical_offspring"> Vertical line = offspring</label>
+        <label><input type="checkbox" data-key="symbol_check" name="symbol_check" value="sibship_order"> Siblings left-to-right by birth order</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">C2–C4</span> Rules, Dating, Family of Origin vs Procreation</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="field-group">
+      <label class="field-label">Three-generation rule followed</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="three_gen_rule" name="three_gen_rule" value="yes"> Yes — standard 3 generations</label>
+        <label><input type="radio" data-key="three_gen_rule" name="three_gen_rule" value="extended_down"> Extended downward (children)</label>
+        <label><input type="radio" data-key="three_gen_rule" name="three_gen_rule" value="extended_up"> Extended upward (dementia differential)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Dating convention — every individual dated</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="dating_convention" name="dating_convention" value="yes_all"> Yes — all dated</label>
+        <label><input type="radio" data-key="dating_convention" name="dating_convention" value="partial"> Partial — some gaps</label>
+        <label><input type="radio" data-key="dating_convention" name="dating_convention" value="no"> No — major gaps</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Annotations on pedigree: affected = diagnosis + age of onset</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="annotations" name="annotations" value="yes"> Fully annotated</label>
+        <label><input type="radio" data-key="annotations" name="annotations" value="partial"> Partial</label>
+        <label><input type="radio" data-key="annotations" name="annotations" value="no"> Missing</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family of origin + procreation drawn as integrated single pedigree</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="integrated_pedigree" name="integrated_pedigree" value="yes"> Yes — integrated</label>
+        <label><input type="radio" data-key="integrated_pedigree" name="integrated_pedigree" value="separate"> Two separate side-by-side</label>
+        <label><input type="radio" data-key="integrated_pedigree" name="integrated_pedigree" value="na"> Not applicable (unmarried, no children)</label>
+      </div>
+      <p class="field-hint">Integrated single pedigree is the cleaner convention and preferred.</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">C5</span> 90-Second Pedigree Drill (Verbal Viva)</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>In viva, candidates are sometimes asked to describe the pedigree verbally. The 90-second drill is a structured sentence template that covers all required elements.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Verbal drill practiced / ready</label>
+      <div class="radio-group horizontal">
+        <label><input type="radio" data-key="drill_ready" name="drill_ready" value="yes"> Yes</label>
+        <label><input type="radio" data-key="drill_ready" name="drill_ready" value="partial"> Partially</label>
+        <label><input type="radio" data-key="drill_ready" name="drill_ready" value="no"> Not yet</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Candidate's verbal drill (draft / notes)</label>
+      <div class="field-hint">Write out your 90-second pedigree drill here for practice...</div>
+      <textarea data-key="drill_notes" name="drill_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">C6</span> Common Pedigree Errors — Self-Check</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="field-group">
+      <label class="field-label">Check each common error — confirm avoided</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="flat_no_dating"> NOT flat with no dating (ages, death, onset)</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="proband_arrow"> Index patient marked with arrow</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="father_left"> Father on left, mother on right</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="birth_order"> Siblings in birth order (eldest left)</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="affected_annotated"> Affected individuals annotated with diagnosis</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="deceased_slashed"> Deceased relatives slashed</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="consanguinity_drawn"> Consanguinity drawn (double line) if present</label>
+        <label><input type="checkbox" data-key="pedigree_errors_avoided" name="pedigree_errors_avoided" value="three_gen_drawn"> Three generations drawn (not omitted if unknown — use ?)</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION D: HERITABILITY TABLE (SUMMARY FIELDS) ====== -->
+<div class="section-label">D. Heritability — Differential-Shifting Numbers</div>
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">D</span> Heritability Interpretation for This Case</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>Population baseline, first-degree relative risk, and MZ twin concordance give quantitative context to family history findings. Reference values are in the Quick Reference panel above.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Working differential diagnosis (from Chapter 03 / 12)</label>
+      <input type="text" data-key="working_dx" name="working_dx" placeholder="e.g., First-episode psychosis vs bipolar mania vs substance-induced">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Key family history finding that shifts differential</label>
+      <div class="field-hint">e.g., First-degree relative (elder brother) with schizophrenia diagnosed age 25, treated with ECT, partial recovery. This shifts schizophrenia likelihood from population ~1% to ~10% (10-fold) and sugg...</div>
+      <textarea data-key="heritability_shift" name="heritability_shift" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Heritability interpretation for viva</label>
+      <div class="field-hint">e.g., 'In a first-degree relative of a patient with schizophrenia, the lifetime risk is approximately 10% compared to 1% in the general population, a tenfold increase. The MZ twin concordance is aroun...</div>
+      <textarea data-key="heritability_viva" name="heritability_viva" placeholder="Type here..."></textarea>
+    </div>
+    <div class="exam-pearl"><strong>Exam Pearl:</strong> Have the schizophrenia vs bipolar vs population triplet paragraph ready verbatim. This is the single most examined comparison.</div>
+  </div>
+</div>
+
+<!-- ====== SECTION E: EXPRESSED EMOTION (DETAILED) ====== -->
+<div class="section-label">E. Expressed Emotion — The Relapse-Modifying Construct</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">E1</span> Five Components (Brown) — Detailed</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>EE operationalised as five components from the Camberwell Family Interview. First three are <strong>risk</strong> components; last two are <strong>protective</strong>.</p>
+    </div>
+    <div class="mnemonic-box"><strong>CHEW-P:</strong> <strong>C</strong>ritical comments, <strong>H</strong>ostility, <strong>E</strong>OI, <strong>W</strong>armth, <strong>P</strong>ositive remarks.</div>
+
+    <div class="field-group">
+      <label class="field-label">Critical comments — count and examples</label>
+      <div class="field-hint">e.g., Mother: 'She doesn't do anything all day' (1), 'She wastes money on useless things' (2), 'She argues with everyone' (3), 'She doesn't listen to advice' (4), 'She makes the house tense' (5), 'She...</div>
+      <textarea data-key="ee_c_details" name="ee_c_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Hostility — generalised negative attitude (rejection / blame)</label>
+      <div class="field-hint">e.g., Father: 'She is the cause of all our problems.' Generalised blame rather than specific criticism. Hostility present = high EE regardless of criticism count.</div>
+      <textarea data-key="ee_h_details" name="ee_h_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">EOI — overprotective, self-sacrificing, excessively concerned behaviour</label>
+      <div class="field-hint">e.g., Mother sleeps outside patient's door, prepares separate meals, cancels own medical appointments to attend to patient. Score ≥3 on 0–5 scale = high EE.</div>
+      <textarea data-key="ee_e_details" name="ee_e_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Warmth — positive, empathetic, supportive expression</label>
+      <div class="field-hint">e.g., Brother expresses genuine concern, offers practical help, speaks affectionately. Protective component.</div>
+      <textarea data-key="ee_w_details" name="ee_w_details" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Positive remarks — explicit praise or acknowledgement</label>
+      <div class="field-hint">e.g., Father: 'She is very good with her children.' 'She used to be very helpful before this illness.' Protective component.</div>
+      <textarea data-key="ee_p_details" name="ee_p_details" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">E2</span> Assessment Instruments</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="field-group">
+      <label class="field-label">Instrument used for EE assessment</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="cfi"> Camberwell Family Interview (CFI) — gold standard, 1–2 hrs, trained coding</label>
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="fmss"> Five-Minute Speech Sample (FMSS) — practical routine use</label>
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="lee"> Level of Expressed Emotion Scale (LEE) — 60-item self-report</label>
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="fas"> Family Attitude Scale (FAS) — 30-item self-report</label>
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="pc"> Perceived Criticism (PC) Scale — single-item, surprisingly powerful</label>
+        <label><input type="radio" data-key="ee_instrument" name="ee_instrument" value="clinical"> Clinical screen only — brief probes, not scored</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Instrument details / score if applicable</label>
+      <div class="field-hint">e.g., FMSS: Mother spent 4 of 5 minutes criticising patient's behaviour. Coded: critical comments high, hostility absent, EOI moderate, warmth low, positive remarks absent.</div>
+      <textarea data-key="ee_instrument_details" name="ee_instrument_details" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">E3–E4</span> Cut-Off Conventions &amp; Relapse Data</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 High-EE cut-offs</h4>
+      <ul>
+        <li>≥6 critical comments by a single key relative during interview</li>
+        <li>Any rating of hostility above zero</li>
+        <li>EOI rating ≥3 (on 0–5 scale)</li>
+        <li>Otherwise classified as low EE. Dichotomous high-vs-low is the standard for prognostic literature.</li>
+      </ul>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Which cut-off(s) met (if high EE)</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="ee_cutoffs" name="ee_cutoffs" value="cc6"> ≥6 critical comments</label>
+        <label><input type="checkbox" data-key="ee_cutoffs" name="ee_cutoffs" value="hostility"> Any hostility >0</label>
+        <label><input type="checkbox" data-key="ee_cutoffs" name="ee_cutoffs" value="eoi3"> EOI ≥3</label>
+        <label><input type="checkbox" data-key="ee_cutoffs" name="ee_cutoffs" value="none"> None met — low EE</label>
+        <label><input type="checkbox" data-key="ee_cutoffs" name="ee_cutoffs" value="unclear"> Unclear / not scored</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Disorder-specific relapse relevance for this case</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="schizophrenia"> Schizophrenia — criticism dominant predictor (~23% low EE vs ~54% high EE at 9 mo)</label>
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="depression"> Major depression — perceived criticism strongest (~12% vs ~65%)</label>
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="bipolar"> Bipolar — criticism (depressive relapse); EOI (manic relapse)</label>
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="anorexia"> Anorexia nervosa — EOI dominant; target of Family-Based Treatment</label>
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="dementia"> Dementia — high EE predicts faster BPSD progression / caregiver burnout</label>
+        <label><input type="radio" data-key="ee_disorder" name="ee_disorder" value="other"> Other / not disorder-specific</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">E5</span> Cultural Moderation — Indian Context</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Key Indian-relevant point</h4>
+      <p>High-EE prevalence <strong>lower</strong> in Indian families (~24% Chandigarh, Leff 1987) vs Western (~48–70%). <strong>But prognostic effect preserved when present.</strong> EOI relatively more prominent; criticism relatively less in collectivist families. Do not assume an Indian family is low EE because background rate is lower — elicit components individually.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Cultural context considered in EE assessment</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ee_cultural" name="ee_cultural" value="yes_indian"> Yes — Indian collectivist family structure considered</label>
+        <label><input type="radio" data-key="ee_cultural" name="ee_cultural" value="yes_other"> Yes — other cultural context (specify)</label>
+        <label><input type="radio" data-key="ee_cultural" name="ee_cultural" value="no"> Not specifically addressed</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Notes on cultural form of high EE in this family</label>
+      <div class="field-hint">e.g., Criticism count lower than expected (4), but EOI very high (5/5) with mother sacrificing all personal activities. Pattern consistent with collectivist family structure where over-involvement is ...</div>
+      <textarea data-key="ee_cultural_notes" name="ee_cultural_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">E6</span> Family Interventions Targeting EE</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>Family psychoeducation reduces EE measurably as stand-alone. Behavioural Family Therapy (Falloon) and Family-Focused Therapy for bipolar (Miklowitz) target communication, problem-solving, and specific EE components. Both reduce relapse rates comparable to maintenance pharmacotherapy alone. Cross-ref Chapter 14 §C4.</p>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family intervention planned / discussed</label>
+      <div class="checkbox-group multi-check-grid">
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="psychoeducation"> Family psychoeducation (entry-level)</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="bft"> Behavioural Family Therapy (Falloon)</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="fft"> Family-Focused Therapy — bipolar (Miklowitz)</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="fbt"> Family-Based Treatment — anorexia (Maudsley)</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="dbt_fam"> DBT family skills</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="mbft"> Mentalisation-based family therapy</label>
+        <label><input type="checkbox" data-key="fam_intervention" name="fam_intervention" value="none"> None planned at this stage</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family intervention notes</label>
+      <div class="field-hint">e.g., Family psychoeducation planned as entry-level. If high EE confirmed on follow-up, referral to structured BFT considered. Family meeting scheduled with primary caregiver and decision-maker (Chapt...</div>
+      <textarea data-key="fam_intervention_notes" name="fam_intervention_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION F: DISORDER-SPECIFIC TAILORING ====== -->
+<div class="section-label">F. Disorder-Specific Tailoring</div>
+
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">F</span> Disorder-Specific Family History Priorities</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>Select the block matching the presenting condition. Each block describes: <strong>heritability signal</strong>, what to screen for, <strong>EE considerations</strong>, and the <strong>family intervention point</strong>.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Presenting condition / working diagnosis</label>
+      <select data-key="disorder_tailoring" name="disorder_tailoring">
+        <option value="">Select or specify below</option>
+        <option value="fep">1. Schizophrenia / first-episode psychosis</option>
+        <option value="mania">2. Mania / Bipolar I disorder</option>
+        <option value="bipolar_dep">3. Bipolar depression (BD-I or BD-II depressive episode)</option>
+        <option value="mdd">4. Major depressive disorder</option>
+        <option value="sud_alc">5. Substance use disorder, alcohol</option>
+        <option value="anxiety">6. Anxiety / panic disorder</option>
+        <option value="ocd">7. OCD and related disorders</option>
+        <option value="ptsd">8. PTSD and trauma-related disorders</option>
+        <option value="an">9. Eating disorder (anorexia nervosa, restricting type)</option>
+        <option value="fnd">10. Dissociative disorder / functional neurological disorder</option>
+        <option value="bpd">11. Personality disorder (BPD-emphasised)</option>
+        <option value="ascd">11b. Antisocial PD / conduct disorder trajectory</option>
+        <option value="neurocog">12. Neurocognitive (delirium vs dementia)</option>
+        <option value="other">Other / not listed</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Heritability screening completed for this disorder</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="yes"> Screened primary disorder in 1° relatives</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="bipolar_if_psychosis"> If psychosis: screened for bipolar (shifts prior to mood)</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="schiz_if_mood"> If mood: screened for schizophrenia spectrum</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="suicide"> Suicide screened explicitly</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="asd"> Autism spectrum (if psychosis — genetic overlap)</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="sud"> Substance use (if relevant index)</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="ocd_tic"> OCD-tic overlap (if OCD index)</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="an_eating"> Maternal line eating disorders (if AN index)</label>
+        <label><input type="checkbox" data-key="ds_heritability" name="ds_heritability" value="dementia_onset"> Dementia with age of onset (if neurocognitive)</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">EE assessment tailored to this disorder</label>
+      <div class="radio-group">
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="criticism"> Criticism dominant (schizophrenia, depression)</label>
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="eoi"> EOI dominant (anorexia, dementia, bipolar manic relapse)</label>
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="mixed"> Mixed (bipolar — criticism for depression, EOI for mania)</label>
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="accommodation"> Family accommodation (OCD, anxiety)</label>
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="perceived_criticism"> Perceived criticism (depression — strongest predictor)</label>
+        <label><input type="radio" data-key="ds_ee" name="ds_ee" value="na"> Not disorder-specifically tailored</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Family intervention point for this disorder</label>
+      <div class="field-hint">e.g., For first-episode psychosis: family psychoeducation entry-level → BFT if high EE confirmed. Caregiver identified for daily medication supervision and symptom monitoring (Chapter 14).</div>
+      <textarea data-key="ds_intervention" name="ds_intervention" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Additional disorder-specific notes</label>
+      <div class="field-hint">e.g., Patient in depressive episode with first-degree relative having documented bipolar I → shifts likelihood toward bipolar II spectrum. Search for prior unrecognised hypomania (Chapter 07 §D3).</div>
+      <textarea data-key="ds_notes" name="ds_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION G: PITFALLS & EXAM TRAPS ====== -->
+<div class="section-label">G. Pitfalls and Exam Traps</div>
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">G</span> Self-Check: Pitfalls &amp; Exam Traps</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>These are the most common errors examiners catch. Work through this checklist before finalising the case file.</p>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Pitfall check — confirm each avoided</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="flat_pedigree"> ☐ Pedigree NOT drawn flat with no dating (ages, death, onset all present)</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="proband_marked"> ☐ Index patient marked with arrow</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="substance_quantified"> ☐ Substance use in family quantified (age of onset, treatment trajectory) — not just "alcoholism"</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="suicide_probed"> ☐ Suicide history probed beyond "natural causes" / "fell from roof" / "sudden cardiac death"</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="ee_operational"> ☐ EE operationalised with criteria (≥6 CC, any hostility, EOI ≥3) — not general impression</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="ee_cultural"> ☐ Western EE cut-offs NOT blindly applied — cultural moderation acknowledged</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="medical_not_skipped"> ☐ Family medical history NOT skipped (QTc, thyroid, epilepsy, dementia all relevant)</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="burden_assessed"> ☐ Caregiver burden assessed in chronic cases</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="decisionmaker_id"> ☐ Decision-maker identified and distinguished from caregiver</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="kuppuswamy_current"> ☐ Kuppuswamy income brackets from current update (cited year)</label>
+        <label><input type="checkbox" data-key="pitfall_check" name="pitfall_check" value="consanguinity_asked"> ☐ Consanguinity asked about — NOT assumed absent</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Additional pitfalls identified / mitigation</label>
+      <div class="field-hint">Document any specific pitfalls relevant to this case and how they were addressed...</div>
+      <textarea data-key="pitfall_notes" name="pitfall_notes" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="pitfall-box"><strong>Pitfall reminder:</strong> A discharge plan that hands a chronic schizophrenia patient back to a burnt-out caregiver is a relapse plan. Always assess caregiver burden before discharge planning (Chapter 14).</div>
+  </div>
+</div>
+
+<!-- ====== SECTION H: SAMPLE PHRASINGS ====== -->
+<div class="section-label">H. Sample Phrasings — Reference</div>
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">H</span> Interview Phrasings &amp; Language Alternatives</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="instruction-box">
+      <h4>💡 Why this matters</h4>
+      <p>English unless otherwise marked. Substitute local language equivalent where appropriate. These phrasings are designed to convert guarded or negative responses into clinically useful disclosures.</p>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H1. Pedigree opening
+    </div>
+    <div class="help-panel active">
+      <div class="phrase">"I'd like to draw a small diagram of your family — your parents, your brothers and sisters, your spouse and children. It helps me see the whole picture in one place. Let's start with your parents — are they both alive?"</div>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H2. Family psychiatric history — the expanded probe
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"Has anyone in your family ever had any kind of nervous trouble? I'm asking broadly — has anyone had a problem with sadness that did not lift, with worry or fear that interfered with daily life, with being unable to sleep for many nights together, with hearing voices that others could not hear, with being suspicious of people without reason, with drinking alcohol heavily, with being taken to a temple or a faith healer for relief, with being treated by a psychiatrist, or with receiving electric shock treatment?"</div>
+      <p class="text-small text-muted">This expanded probe converts roughly half of spontaneous "no" answers into useful disclosures.</p>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H3. Suicide screen in the family
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"Has anyone in your family — parents, brothers and sisters, aunts, uncles, grandparents, cousins — ever taken their own life, or died in a way that the family was not sure was an accident? Has anyone ever attempted to take their own life and survived?"</div>
+      <div class="phrase"><span class="lang">Hindi:</span> "Aapke parivar mein, mata-pita, bhai-behen, chacha-chachi, dada-dadi, kya kabhi kisi ne apni jaan li hai, ya aisi tarah se mara hai jiske bare mein parivar yakeen nahin tha ki yeh haadsa tha? Kya kisi ne kabhi apni jaan lene ki koshish ki hai aur bach gaya?"</div>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H4. Substance use — paternal opener
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"I'd like to ask about drinking and other substances in your family. Many people grow up in homes where alcohol is part of the picture; some find this difficult to talk about. Did your father drink? If yes, can you tell me a little about what that was like — how often, how heavily, whether it caused trouble at home? Did anyone else in your family drink heavily, or use any other substance — cannabis, opioids, sleeping tablets, anything else?"</div>
+      <div class="phrase"><span class="lang">Hindi:</span> "Kya aapke pita sharab peete the? Agar haan, toh thoda batayein, kitni baar, kitni zyada, kya iski wajah se ghar mein pareshani hoti thi? Kya parivar mein aur kisi ne sharab ya koi aur cheez, ganja, afim, neend ki goliyaan, bhaari maatra mein li hai?"</div>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H5. EE elicitation reframed as interview probes
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"How would you describe how things are between you and your [son/daughter/wife/husband] right now? When she is unwell, how do you find yourself reacting? Do you find yourself getting frustrated with her, or angry? Are there things she does that particularly upset you? On the other side, what do you find you appreciate about her, even now when things are difficult? How do you show that you care about her? When she is doing something well, do you tell her so?"</div>
+      <p class="text-small text-muted">A relative who answers first half with multiple frustrations and second half with vague generalities = high-EE. One who balances both with concrete examples = low-EE.</p>
+    </div>
+
+    <div class="help-toggle" onclick="toggleHelp(this)">
+      <span class="icon">ℹ️</span> H6. Caregiver burden opener
+    </div>
+    <div class="help-panel">
+      <div class="phrase">"I want to ask about you, not about her, for a moment. How are you holding up? How are you sleeping? Are you eating? Is there anyone helping you with her care, or is most of it falling on you? Have there been days when it has felt like too much?"</div>
+      <div class="phrase"><span class="lang">Hindi:</span> "Main ek pal ke liye unke baare mein nahin, aapke baare mein poochna chahta hoon. Aap kaise hain? Aapki neend kaisi hai? Khana kha rahe hain? Unki dekh-bhal mein koi aur madad kar raha hai, ya zyadatar bojh aap par hi hai? Kya kabhi aisa hua hai ki yeh sab bahut zyada lag raha hai?"</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SECTION I: CROSS-REFERENCES ====== -->
+<div class="section-label">I. Cross-References &amp; Chapter Links</div>
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">I</span> Cross-References to Other Chapters</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="field-group">
+      <label class="field-label">Links documented for this case</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch03"> Chapter 03 (HOPI) — substance use HOPI for SUD index case</label>
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch05"> Chapter 05 (Past History) — prior episodes in the patient herself</label>
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch07"> Chapter 07 (Personal History) — ACEs §A4; developmental events; premorbid personality §A9</label>
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch08"> Chapter 08 (Premorbid Personality) — family environment that shaped traits</label>
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch12"> Chapter 12 (Diagnosis 4-axis) — biological &amp; psychosocial predisposing entries from this chapter</label>
+        <label><input type="checkbox" data-key="crossref" name="crossref" value="ch14"> Chapter 14 (Management) — family meeting protocol §C4; psychoeducation; BFT; FFT; FBT; discharge planning</label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Specific cross-reference notes for this case</label>
+      <div class="field-hint">e.g., Chapter 07 §A4 — maternal intimate partner violence documented in personal history correlates with paternal alcohol use documented here. Chapter 14 — family meeting planned with caregiver (wife)...</div>
+      <textarea data-key="crossref_notes" name="crossref_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ADDITIONAL NOTES ====== -->
+<div class="section-label">Additional Notes</div>
+<div class="section-card">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="section-badge">+</span> Free-Text Additional Notes</h3>
+    <span class="section-chevron">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="field-group">
+      <label class="field-label">Any additional family history information not captured above</label>
+      <div class="field-hint">Free-text space for anything else relevant to the family history...</div>
+      <textarea data-key="additional_notes" name="additional_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ====== BOTTOM STICKY BAR ====== -->
+<div class="sticky-bar">
+  <span class="save-indicator" id="saveIndicator">Last saved: —</span>
+  <button class="btn btn-secondary" onclick="clearAllData()">🗑️ Clear</button>
+  <button class="btn btn-success" onclick="copySummary()">📋 Copy</button>
+  <button class="btn btn-primary" onclick="exportPDF()">🖨️ Export PDF</button>
+</div>
+
+</div><!-- /.container -->
+
+<script>
+/* ========================================
+   TEXTAREA AUTO-EXPAND
+   ======================================== */
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(el => {
+    el.addEventListener('input', () => resizeTextarea(el));
+    el.addEventListener('paste', () => setTimeout(() => resizeTextarea(el), 50));
+  });
+  // Initial resize after 50ms delay
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  }, 50);
+}
+
+/* ========================================
+   OPTION CHIP STYLES
+   ======================================== */
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip').forEach(chip => {
+    const inp = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (inp) chip.classList.toggle('checked', inp.checked);
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip').forEach(chip => {
+    if (chip.dataset.chipInit) return;
+    chip.dataset.chipInit = '1';
+    const inp = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (inp) {
+      inp.addEventListener('change', updateChipVisuals);
+    }
+  });
+  updateChipVisuals();
+}
+
+/* ========================================
+   ACCORDION TOGGLES
+   ======================================== */
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('active');
+  header.classList.toggle('active');
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveData(), 800);
+}
+
+function toggleQuickRef(toggle) {
+  const content = toggle.nextElementSibling;
+  content.classList.toggle('active');
+  toggle.classList.toggle('expanded');
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveData(), 800);
+}
+
+function toggleHelp(toggle) {
+  const panel = toggle.nextElementSibling;
+  const isActive = panel.classList.contains('active');
+  const parent = toggle.parentElement;
+  parent.querySelectorAll('.help-panel').forEach(p => p.classList.remove('active'));
+  if (!isActive) panel.classList.add('active');
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveData(), 800);
+}
+
+/* ========================================
+   KUPPUSWAMY CALCULATOR
+   ======================================== */
+function calcKuppuswamy() {
+  const edu = parseInt(document.querySelector('[data-key="kupp_education"]')?.value || 0);
+  const occ = parseInt(document.querySelector('[data-key="kupp_occupation"]')?.value || 0);
+  const inc = parseInt(document.querySelector('[data-key="kupp_income"]')?.value || 0);
+  const total = edu + occ + inc;
+  let cls = '';
+  if (total >= 26) cls = 'Upper (I)';
+  else if (total >= 16) cls = 'Upper middle (II)';
+  else if (total >= 11) cls = 'Lower middle (III)';
+  else if (total >= 5) cls = 'Upper lower (IV)';
+  else if (total > 0) cls = 'Lower (V)';
+  else cls = '—';
+  const totalEl = document.getElementById('kupp_total');
+  const classEl = document.getElementById('kupp_class');
+  if (totalEl) totalEl.value = total > 0 ? total : '';
+  if (classEl) classEl.value = total > 0 ? cls : '';
+}
+
+/* ========================================
+   PERSISTENCE (localStorage)
+   ======================================== */
+const STORAGE_KEY = 'ch06_family_history_v1';
+const BACKUP_PREFIX = 'ch06_backup_';
+let autoSaveTimer = null;
+let lastSaveTime = null;
+
+function saveData() {
+  const data = {};
+  // Save all fields by data-key
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (!key) return;
+    if (el.type === 'checkbox') {
+      if (!data[key]) data[key] = [];
+      if (el.checked) data[key].push(el.value);
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  // Save open states of cards
+  data._openCards = [];
+  document.querySelectorAll('.section-body.active').forEach(el => {
+    const header = el.previousElementSibling;
+    if (header && header.querySelector('.section-badge')) {
+      const badge = header.querySelector('.section-badge').textContent.trim();
+      data._openCards.push(badge);
+    }
+  });
+  // Save open states of QR panels
+  data._openQR = [];
+  document.querySelectorAll('.quick-ref-content.active').forEach((el, idx) => {
+    data._openQR.push(idx);
+  });
+  // Save manual edit flag and summary
+  data._manualEdit = summaryManualEdit;
+  data._timestamp = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  lastSaveTime = new Date();
+  updateSaveIndicator();
+}
+
+function restoreData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    if (data._timestamp) {
+      lastSaveTime = new Date(data._timestamp);
+      delete data._timestamp;
+    }
+    // Restore _manualEdit
+    if (data._manualEdit !== undefined) {
+      summaryManualEdit = data._manualEdit;
+      document.getElementById('syncStatus').textContent = summaryManualEdit ? 'Auto-sync: PAUSED (manual edit)' : 'Auto-sync: ON';
+      delete data._manualEdit;
+    }
+    // Restore field values
+    document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+      const key = el.dataset.key;
+      if (!key || !(key in data)) return;
+      const val = data[key];
+      if (el.type === 'checkbox') {
+        el.checked = Array.isArray(val) && val.includes(el.value);
+      } else if (el.type === 'radio') {
+        el.checked = val === el.value;
+      } else {
+        el.value = val || '';
+      }
+    });
+    // Restore card open states
+    if (data._openCards && data._openCards.length) {
+      document.querySelectorAll('.section-card').forEach(card => {
+        const header = card.querySelector('.section-header');
+        const body = card.querySelector('.section-body');
+        const badge = header?.querySelector('.section-badge')?.textContent.trim();
+        if (badge && data._openCards.includes(badge)) {
+          body?.classList.add('active');
+          header?.classList.add('active');
+        }
+      });
+      delete data._openCards;
+    }
+    // Restore QR panel open states
+    if (data._openQR && data._openQR.length) {
+      document.querySelectorAll('.quick-ref').forEach((qr, idx) => {
+        if (data._openQR.includes(idx)) {
+          const content = qr.querySelector('.quick-ref-content');
+          const toggle = qr.querySelector('.quick-ref-toggle');
+          content?.classList.add('active');
+          toggle?.classList.add('expanded');
+        }
+      });
+      delete data._openQR;
+    }
+    // Kuppuswamy recalc
+    calcKuppuswamy();
+    // Update chip visuals
+    updateChipVisuals();
+    // Resize textareas after 100ms
+    setTimeout(() => {
+      document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+    }, 100);
+    updateSaveIndicator();
+  } catch(e) { console.error('Restore failed', e); }
+}
+
+function initAutoSave() {
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio' ? 'change' : 'input', () => {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => saveData(), 800);
+      const indicator = document.getElementById('saveIndicator');
+      if (indicator) indicator.textContent = 'Saving...';
+    });
+  });
+}
+
+function updateSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  if (!lastSaveTime) { el.textContent = 'Last saved: —'; return; }
+  const diff = Math.floor((Date.now() - lastSaveTime.getTime()) / 1000);
+  let txt;
+  if (diff < 5) txt = 'Just now';
+  else if (diff < 60) txt = diff + 's ago';
+  else if (diff < 3600) txt = Math.floor(diff/60) + 'm ago';
+  else txt = Math.floor(diff/3600) + 'h ago';
+  el.textContent = 'Last saved: ' + txt;
+}
+
+function clearAllData() {
+  if (!confirm('Clear ALL data? A timestamped backup will be saved to localStorage first.')) return;
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (!key) return;
+    if (el.type === 'checkbox') {
+      if (!data[key]) data[key] = [];
+      if (el.checked) data[key].push(el.value);
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  const backupKey = BACKUP_PREFIX + Date.now();
+  localStorage.setItem(backupKey, JSON.stringify(data));
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else el.value = '';
+  });
+  document.getElementById('autoSummary').value = '';
+  summaryManualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: ON';
+  calcKuppuswamy();
+  updateChipVisuals();
+  document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  lastSaveTime = new Date();
+  updateSaveIndicator();
+  alert('All data cleared. Backup saved as: ' + backupKey);
+}
+
+/* ========================================
+   AUTO-GENERATED SUMMARY
+   ======================================== */
+let summaryManualEdit = false;
+
+function buildSummary() {
+  if (summaryManualEdit) return;
+  const get = (key) => {
+    const el = document.querySelector(`[data-key="${key}"]`);
+    return el ? el.value : '';
+  };
+  const getRadioLabel = (key) => {
+    const el = document.querySelector(`[data-key="${key}"]:checked`);
+    if (!el) return '';
+    const label = el.closest('label');
+    return label ? label.textContent.trim() : '';
+  };
+  const patientSex = getRadioLabel('patient_sex') || '[sex]';
+  const patientAge = get('patient_age') || '[age]';
+  const marital = getRadioLabel('patient_marital') || '[marital status]';
+  const familyType = getRadioLabel('family_type') || '[family type]';
+  const birthOrder = getRadioLabel('birth_order') || '[birth order]';
+  const siblings = get('total_siblings') || '[number]';
+  const fatherAlive = document.querySelector('[data-key="father_alive"]:checked')?.value || '';
+  const motherAlive = document.querySelector('[data-key="mother_alive"]:checked')?.value || '';
+  const fatherAge = get('father_age') || '';
+  const motherAge = get('mother_age') || '';
+  const spouseAge = get('spouse_age') || '';
+  const children = get('children_count') || '';
+  const household = get('household_composition') || '[household]';
+  const pedigreeAssessment = getRadioLabel('pedigree_assessment') || '';
+  const autoSummary = document.getElementById('autoSummary');
+  if (!autoSummary) return;
+
+  let parts = [];
+  parts.push(`The patient is a ${patientAge}-year-old ${marital.toLowerCase()} ${patientSex.toLowerCase()} from a ${familyType.toLowerCase()} family.`);
+  let familyOrigin = `Family of origin: `;
+  if (fatherAge || motherAge) {
+    familyOrigin += `father `;
+    if (fatherAlive === 'deceased') familyOrigin += `(deceased, age ${fatherAge})`;
+    else if (fatherAge) familyOrigin += `(age ${fatherAge})`;
+    familyOrigin += `; mother `;
+    if (motherAlive === 'deceased') familyOrigin += `(deceased, age ${motherAge})`;
+    else if (motherAge) familyOrigin += `(age ${motherAge})`;
+  }
+  familyOrigin += `. Patient is the ${birthOrder.toLowerCase()} of ${siblings} siblings.`;
+  parts.push(familyOrigin);
+  if (get('siblings_illness')) {
+    parts.push(`Sibling psychiatric history: ${get('siblings_illness').substring(0, 120)}${get('siblings_illness').length > 120 ? '...' : ''}`);
+  }
+  if (spouseAge || children) {
+    let proc = `Family of procreation: `;
+    if (spouseAge) proc += `spouse (age ${spouseAge})`;
+    if (children) proc += `${spouseAge ? '; ' : ''}${children} children`;
+    proc += `.`;
+    parts.push(proc);
+  }
+  if (household && household !== '[household]') {
+    parts.push(`Household: ${household.substring(0, 100)}${household.length > 100 ? '...' : ''}`);
+  }
+  if (pedigreeAssessment) {
+    parts.push(`Pedigree assessment: ${pedigreeAssessment}.`);
+  }
+  const kuppTotal = document.getElementById('kupp_total')?.value || '';
+  const kuppClass = document.getElementById('kupp_class')?.value || '';
+  if (kuppTotal) {
+    parts.push(`Socioeconomic status: Modified Kuppuswamy score ${kuppTotal} → ${kuppClass}.`);
+  }
+  const eeOverall = getRadioLabel('ee_overall') || '';
+  if (eeOverall) {
+    parts.push(`Expressed emotion: ${eeOverall}.`);
+  }
+  const caregiver = get('caregiver_details') || '';
+  if (caregiver) {
+    parts.push(`Primary caregiver: ${caregiver.substring(0, 100)}${caregiver.length > 100 ? '...' : ''}`);
+  }
+  const burden = getRadioLabel('burden_stress') || '';
+  if (burden) {
+    parts.push(`Caregiver burden: ${burden}.`);
+  }
+  const newSummary = parts.join('\n\n');
+  if (newSummary && autoSummary.value !== newSummary) {
+    autoSummary.value = newSummary;
+    resizeTextarea(autoSummary);
+  }
+}
+
+function resyncSummary() {
+  summaryManualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: ON';
+  buildSummary();
+  resizeTextarea(document.getElementById('autoSummary'));
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveData(), 800);
+}
+
+function updateSummary() {
+  buildSummary();
+}
+
+/* ========================================
+   COPY SUMMARY
+   ======================================== */
+function copySummary() {
+  const txt = document.getElementById('autoSummary').value;
+  if (!txt) { alert('Summary is empty.'); return; }
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('.sticky-bar .btn-success');
+    if (!btn) return;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '&#9989; Copied!';
+    setTimeout(() => btn.innerHTML = orig, 1500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert('Summary copied to clipboard.');
+  });
+}
+
+/* ========================================
+   PDF EXPORT
+   ======================================== */
+function exportPDF() {
+  document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('active'));
+  document.querySelectorAll('.section-header').forEach(h => h.classList.add('active'));
+  window.print();
+}
+
+/* ========================================
+   RADIO CONDITIONAL DISPLAY
+   ======================================== */
+function setupConditionalFields() {
+  document.querySelectorAll('[data-key="father_alive"]').forEach(el => {
+    el.addEventListener('change', () => {
+      const show = document.querySelector('[data-key="father_alive"]:checked')?.value === 'deceased';
+      const df = document.getElementById('father_death_fields');
+      if (df) df.style.display = show ? 'block' : 'none';
+    });
+  });
+}
+
+/* ========================================
+   BEFORE PRINT
+   ======================================== */
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('active'));
+  document.querySelectorAll('.section-header').forEach(h => h.classList.add('active'));
+  document.querySelectorAll('.quick-ref-content').forEach(c => c.classList.add('active'));
+});
+
+/* ========================================
+   INIT — DOMContentLoaded ORDER
+   ======================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  setupConditionalFields();
+  calcKuppuswamy();
+  setInterval(updateSaveIndicator, 30000);
+  // Final safety resize at 300ms
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  }, 300);
+  // Before unload — flush pending saves
+  window.addEventListener('beforeunload', () => {
+    if (autoSaveTimer) {
+      clearTimeout(autoSaveTimer);
+      saveData();
+    }
+  });
+  // Summary manual edit listener
+  const autoSummary = document.getElementById('autoSummary');
+  if (autoSummary) {
+    autoSummary.addEventListener('input', () => {
+      summaryManualEdit = true;
+      const st = document.getElementById('syncStatus');
+      if (st) st.textContent = 'Auto-sync: PAUSED (manual edit)';
+      resizeTextarea(autoSummary);
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => saveData(), 800);
+    });
+  }
+  // Rebuild summary on field changes
+  document.querySelectorAll('input[data-key], select[data-key]').forEach(el => {
+    el.addEventListener('change', () => {
+      buildSummary();
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,2999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 14 — Management Planning | Psychiatry Case-Taking Compendium</title>
+<style>
+/* ===== ROOT & RESET ===== */
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-raised: #121212;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --text-secondary: #a0a0a0;
+  --accent: #4fc3f7;
+  --accent-dim: #1e3a4f;
+  --danger: #ff5252;
+  --warning: #ffb74d;
+  --success: #69f0ae;
+  --info: #82b1ff;
+  --touch-min: 52px;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.7);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  padding-bottom: 120px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+}
+
+.header .subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ===== SUMMARY BAR ===== */
+.summary-bar {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  margin: 14px 16px;
+  padding: 14px;
+}
+
+.summary-bar label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.summary-bar textarea {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.95rem;
+  padding: 12px;
+  min-height: 80px;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== QUICK REFERENCE PANEL ===== */
+.qr-panel {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 14px 16px;
+  overflow: hidden;
+}
+
+.qr-header {
+  background: var(--surface);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  min-height: var(--touch-min);
+  border-bottom: 1px solid var(--border);
+}
+
+.qr-header h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.qr-header .chevron {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.qr-panel.open .qr-header .chevron { transform: rotate(180deg); }
+
+.qr-body {
+  display: none;
+  padding: 14px;
+}
+
+.qr-panel.open .qr-body { display: block; }
+
+/* ===== ACCORDION CARD ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 12px 16px;
+  overflow: hidden;
+}
+
+.card-header {
+  background: var(--surface-raised);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  min-height: var(--touch-min);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  padding-right: 10px;
+}
+
+.card-header .section-id {
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-right: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-header .chevron {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.card.open .card-header .chevron { transform: rotate(180deg); }
+
+.card-body {
+  display: none;
+  padding: 16px;
+}
+
+.card.open .card-body { display: block; }
+
+/* ===== INSTRUCTION BOX ===== */
+.instruction-box {
+  background: rgba(79, 195, 247, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.instruction-box strong {
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.instruction-box ul {
+  margin-left: 18px;
+  margin-top: 6px;
+  color: var(--text-secondary);
+}
+
+.instruction-box ul li { margin-bottom: 4px; }
+
+/* ===== HELP TOGGLE ===== */
+.help-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.help-btn {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 28px;
+  flex-shrink: 0;
+}
+
+.help-panel {
+  display: none;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 8px;
+  margin-bottom: 14px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.help-panel.open { display: block; }
+
+.help-panel strong { color: var(--warning); }
+
+/* ===== FORM ELEMENTS ===== */
+.field {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.field-sublabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Textarea auto-expand */
+textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+  resize: none;
+  min-height: 56px;
+  font-family: inherit;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.15);
+}
+
+textarea::placeholder {
+  color: #777777;
+  opacity: 1;
+}
+
+/* Inputs */
+input[type="text"], input[type="number"], input[type="date"] {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 14px;
+  min-height: var(--touch-min);
+  font-family: inherit;
+  overflow-x: auto;
+  text-overflow: ellipsis;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="date"]::placeholder {
+  color: #777777;
+  opacity: 1;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.15);
+  overflow-x: auto;
+}
+
+/* Radio / Checkbox groups */
+.option-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-height: var(--touch-min);
+  cursor: pointer;
+  font-size: 0.95rem;
+  flex: 1 1 auto;
+  min-width: 120px;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.option-chip input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.option-chip.checked {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* Inline number + text pairs */
+.inline-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .inline-fields { grid-template-columns: 1fr; }
+}
+
+/* Table styling */
+.data-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 14px 0;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 600px;
+}
+
+.data-table th {
+  background: var(--surface-raised);
+  color: var(--accent);
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid var(--accent);
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+
+.data-table tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  min-height: var(--touch-min);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  flex: 1 1 auto;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+
+.btn-secondary {
+  background: var(--surface-raised);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-danger {
+  background: rgba(255, 82, 82, 0.15);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.btn-success {
+  background: rgba(105, 240, 174, 0.15);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  min-height: 40px;
+  font-size: 0.85rem;
+}
+
+/* ===== STICKY BOTTOM BAR ===== */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px 24px;
+  display: flex;
+  gap: 10px;
+  z-index: 200;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+}
+
+/* ===== STATUS BAR ===== */
+.status-bar {
+  position: fixed;
+  bottom: 84px;
+  right: 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  z-index: 199;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    padding-bottom: 0;
+  }
+
+  .header, .sticky-bar, .status-bar, .summary-actions,
+  .card-header, .qr-header, .help-btn, .btn, .btn-group {
+    display: none !important;
+  }
+
+  .card, .qr-panel {
+    border: 1px solid #ccc;
+    margin: 12px 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .card-body, .qr-body {
+    display: block !important;
+    padding: 12px;
+  }
+
+  .instruction-box {
+    background: #f0f8ff;
+    border-left: 4px solid #0066cc;
+    color: #000;
+  }
+
+  .instruction-box strong { color: #0066cc; }
+
+  .help-panel {
+    display: block !important;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    color: #333;
+  }
+
+  textarea, input {
+    border: 1px solid #999;
+    background: #fff;
+    color: #000;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    resize: none;
+  }
+
+  .option-chip {
+    border: 1px solid #999;
+    background: #fff;
+    color: #000;
+  }
+
+  .option-chip.checked {
+    background: #e3f2fd;
+    border-color: #0066cc;
+  }
+
+  .data-table th { color: #000; border-bottom: 2px solid #000; }
+  .data-table td { color: #000; border-bottom: 1px solid #ccc; }
+
+  .summary-bar {
+    border: 2px solid #0066cc;
+    background: #f0f8ff;
+  }
+
+  .summary-bar textarea {
+    background: #fff;
+    border: 1px solid #999;
+    color: #000;
+  }
+
+  h1, h2, h3, h4 { color: #000; page-break-after: avoid; }
+
+  .page-break { page-break-before: always; }
+}
+
+/* ===== MISC ===== */
+.pearl-box {
+  background: rgba(255, 183, 77, 0.08);
+  border-left: 4px solid var(--warning);
+  border-radius: 0 10px 10px 0;
+  padding: 14px;
+  margin: 14px 0;
+  font-size: 0.9rem;
+}
+
+.pearl-box strong {
+  color: var(--warning);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.anchor-box {
+  background: rgba(105, 240, 174, 0.08);
+  border-left: 4px solid var(--success);
+  border-radius: 0 10px 10px 0;
+  padding: 14px;
+  margin: 14px 0;
+  font-size: 0.9rem;
+}
+
+.anchor-box strong {
+  color: var(--success);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.mnemonic-box {
+  background: rgba(130, 177, 255, 0.08);
+  border: 1px dashed var(--info);
+  border-radius: 10px;
+  padding: 14px;
+  margin: 14px 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--info);
+  letter-spacing: 1px;
+}
+
+.subsection-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Print-only watermark */
+.print-watermark {
+  display: none;
+}
+
+@media print {
+  .print-watermark {
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #666;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+}
+
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+</style>
+</head>
+<body>
+
+<div class="print-watermark">
+  Psychiatry Case-Taking Compendium — Chapter 14: Management Planning | Generated from offline form
+</div>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <h1>Ch 14 — Management Planning</h1>
+  <div class="subtitle">The Adult Psychiatry History-Taking Compendium · First Edition · April 2026</div>
+</div>
+
+<!-- ===== AUTO-GENERATED SUMMARY ===== -->
+<div class="summary-bar">
+  <label>Live Management Summary (auto-generating)</label>
+  <div class="field-hint">Summary builds as you fill sections... Tap 'Re-sync' to restore auto-generation after manual edits.</div>
+  <textarea id="liveSummary" placeholder="Type here..."></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-success btn-sm" onclick="copySummary()">📋 Copy Summary</button>
+    <button class="btn btn-secondary btn-sm" onclick="resyncSummary()">🔄 Re-sync</button>
+    <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 Clear All</button>
+  </div>
+</div>
+
+<!-- ===== QUICK REFERENCE PANELS ===== -->
+<div class="qr-panel open" id="qrMnemonic">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h2>🔤 Mnemonics & Presentation Order</h2>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="qr-body">
+    <div class="mnemonic-box">SBPSDF — Safety → Biological → Psychological → Social → Disposition → Follow-up</div>
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:8px;">
+      The verbal viva order differs from the written BPSSD: <strong>Safety → Bio → Psycho → Social → Disposition → Follow-up</strong>. Safety leads because that is what examiners want to hear first.
+    </p>
+    <div class="mnemonic-box" style="margin-top:12px;">BPSSD — Biological · Psychological · Social · Safety · Disposition</div>
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:8px;">
+      The five pillars of the NIMHANS proforma, layered against the three-phase time axis (Immediate 0–72h, Short-term 1–4 weeks, Long-term months to years).
+    </p>
+  </div>
+</div>
+
+<div class="qr-panel" id="qrMHCA">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h2>⚖️ MHCA 2017 Decision Tree</h2>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="qr-body">
+    <div class="data-table-wrap"><table class="data-table">
+      <thead>
+        <tr><th>Section</th><th>Purpose</th><th>Who Applies</th><th>Review</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Sec 86</strong></td><td>Independent (voluntary) admission, patient with capacity</td><td>Patient</td><td>Patient or MOIC may discharge</td></tr>
+        <tr><td><strong>Sec 87</strong></td><td>Independent admission of a minor</td><td>Nominated representative</td><td>MHRB if &gt;30 days</td></tr>
+        <tr><td><strong>Sec 89</strong></td><td>Supported admission ≤30 days, adult lacking capacity</td><td>Nominated representative</td><td>Psychiatrist within 24h; mandatory periodic review</td></tr>
+        <tr><td><strong>Sec 90</strong></td><td>Supported admission &gt;30 days</td><td>Nominated representative</td><td>Two psychiatrists</td></tr>
+        <tr><td><strong>Sec 94</strong></td><td>Emergency treatment up to 72 hours</td><td>Any registered medical practitioner</td><td>MHRB authorisation mandatory</td></tr>
+        <tr><td><strong>Sec 97</strong></td><td>Restraint principles</td><td>Treating team</td><td>Debrief after; least restrictive, shortest time, documented, reviewed</td></tr>
+      </tbody>
+    </table></div>
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      In KMCRI viva, Section 89 is the highest-yield single piece of MHCA knowledge. If the case is acute mania, severe psychosis, severe depression with active suicidal intent, or neurocognitive disorder with risk and incapacity — name it.
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:10px;">
+      <strong>Capacity (4 domains):</strong> Understand information · Appreciate consequences · Retain information · Communicate decision. All four must be present. Capacity is decision-specific and time-specific.
+    </p>
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:6px;">
+      <strong>Sec 89 criteria:</strong> (a) Recently threatened/attempted significant harm to self/others, or inability to care for self to a degree that places person at risk; AND (b) lacks capacity for mental healthcare decisions; AND (c) admission is the least restrictive option.
+    </p>
+  </div>
+</div>
+
+<div class="qr-panel" id="qrDrugDefence">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h2>💊 Drug Defence — 6 Criterion Framework</h2>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="qr-body">
+    <ol style="font-size:0.9rem;color:var(--text);margin-left:18px;">
+      <li><strong style="color:var(--accent)">Indication</strong> — the diagnosis justifies the drug class</li>
+      <li><strong style="color:var(--accent)">Evidence</strong> — IPS-CPG citation level, or international guideline</li>
+      <li><strong style="color:var(--accent)">Patient fit</strong> — comorbidity, age, sex, pregnancy, organ function, prior response, family response history</li>
+      <li><strong style="color:var(--accent)">Safety profile</strong> — side effects relevant to this patient</li>
+      <li><strong style="color:var(--accent)">Accessibility & affordability</strong> — Indian-context cost and availability</li>
+      <li><strong style="color:var(--accent)">Exit criteria</strong> — review point, response criteria, switch or escalation plan</li>
+    </ol>
+    <div class="anchor-box" style="margin-top:12px;">
+      <strong>Clinical Anchor</strong>
+      A candidate who can name five drugs but cannot say which one for this patient is failing. A candidate who names one drug, defends it on six criteria, and names one alternative is passing. Always explain <em>why this drug for this patient</em>.
+    </div>
+  </div>
+</div>
+
+<div class="qr-panel" id="qrPitfalls">
+  <div class="qr-header" onclick="toggleQr(this)">
+    <h2>⚠️ Pitfalls & Exam Traps</h2>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="qr-body">
+    <ul style="font-size:0.88rem;color:var(--text);margin-left:18px; line-height:1.8;">
+      <li>Forgetting <strong>safety first</strong>. Every plan begins with current risk.</li>
+      <li><strong>Polypharmacy</strong> without indication. Every drug needs defended indication, dose, duration, exit criterion.</li>
+      <li>Starting an <strong>antidepressant in untreated bipolar</strong>. IPS-CPG 2026: antidepressant monotherapy is NOT recommended in bipolar depression.</li>
+      <li><strong>Benzodiazepines</strong> in BPD, delirium, dementia, PTSD, anorexia nervosa, and substance use (other than alcohol/BZD withdrawal).</li>
+      <li>Not naming <strong>drug, dose, duration, and monitoring plan</strong>. "I would start an SSRI" is not an answer.</li>
+      <li>Mixing up <strong>"supportive" with "specific"</strong> psychotherapy. Name the modality, sessions, and content.</li>
+      <li><strong>Ignoring the family</strong> in an Indian case. Family meeting in first 24 hours is central.</li>
+      <li>Forgetting the <strong>cost dimension</strong>. Lurasidone, vortioxetine, aripiprazole LAI are unaffordable for most Indian patients.</li>
+      <li>Not specifying <strong>monitoring</strong>. Each drug carries a named monitoring plan with frequencies.</li>
+      <li>Forgetting <strong>MHCA</strong> where it applies. Acute mania, severe psychosis, severe depression with active SI, NCD with risk and incapacity: name Section 89.</li>
+      <li>"Refer to psychologist" is <strong>never adequate</strong>. Name modality, goal, number of sessions, and phase.</li>
+      <li>Forgetting the <strong>discharge plan</strong>. Day one of admission is day one of discharge planning.</li>
+      <li><strong>Valproate in women of reproductive age</strong> without MHRA 2024 / IPS-CPG 2026 safeguards documented.</li>
+      <li><strong>Olanzapine in AN</strong> without acknowledging it is off-label and weakly evidenced. Frame as adjunct, never as treatment.</li>
+      <li><strong>Generic plans</strong>. "CBT, SSRI, family work, follow-up" applied to two different patients is a fail. Reference the patient's specific features.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== A. NIMHANS FRAMEWORK ===== -->
+<div class="card open" id="cardA1">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">A1</span>
+    <h3>The Five Pillars (BPSSD)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Why this matters</strong>
+      The NIMHANS proforma asks for management under five pillars against a three-phase time axis. A plan that omits any pillar is incomplete. Examiners mark against this framework. Document all five; present Safety first verbally.
+    </div>
+    <div class="field">
+      <label class="field-label">1. Biological <span class="field-sublabel">Pharmacotherapy (drug, dose, titration, duration, monitoring), ECT, rTMS, DBS, physical-health interventions, comorbid medical illness treatment</span></label>
+      <textarea class="auto-expand" data-key="a1_bio" placeholder="Document biological plan for this patient..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">2. Psychological <span class="field-sublabel">Named modality (CBT/ERP/IPT/DBT/MBT/MI/EFT/family therapy/supportive), psychoeducation, behavioural activation, sleep hygiene</span></label>
+      <textarea class="auto-expand" data-key="a1_psych" placeholder="Name modality, sessions, content, and phase..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">3. Social <span class="field-sublabel">Family interventions, occupational rehab, supported employment, social skills training, housing, financial aid, disability cert (IDEAS), school liaison, DMHP/NGO linkage</span></label>
+      <textarea class="auto-expand" data-key="a1_social" placeholder="Social plan for this patient..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">4. Safety <span class="field-sublabel">Current suicide risk, homicide risk, self-neglect, wandering, vulnerability, capacity, MHCA admission, restraint, means restriction, written safety plan</span></label>
+      <textarea class="auto-expand" data-key="a1_safety" placeholder="Safety assessment and immediate actions..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">5. Disposition <span class="field-sublabel">OPD / day-care / voluntary inpatient / supported inpatient (Sec 89) / special unit / community-based care + explicit follow-up schedule</span></label>
+      <textarea class="auto-expand" data-key="a1_disp" placeholder="Disposition decision and rationale..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cardA2">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">A2</span>
+    <h3>The Three Time Phases</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>How it shifts the differential</strong>
+      The 2D matrix (pillars × phases) structures every answer. "What would you do tonight?" is the immediate axis. Every disorder block in §D is built against this matrix.
+    </div>
+    <div class="field">
+      <label class="field-label">Immediate (0–72 hours) <span class="field-sublabel">Tonight, on the ward, next outpatient sit. Focus: safety stabilisation, beginning pharmacotherapy, family meeting.</span></label>
+      <textarea class="auto-expand" data-key="a2_imm" placeholder="Immediate priorities for this patient..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Short-term (1–4 weeks) <span class="field-sublabel">Drug titration, response assessment, side-effect monitoring, beginning psychotherapy, family education, discharge planning.</span></label>
+      <textarea class="auto-expand" data-key="a2_short" placeholder="Short-term plan..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Long-term (months to years) <span class="field-sublabel">Maintenance pharmacotherapy, full psychotherapy course, vocational rehab, relapse prevention, periodic monitoring, discontinuation decisions.</span></label>
+      <textarea class="auto-expand" data-key="a2_long" placeholder="Long-term plan..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== B. WHY IT MATTERS ===== -->
+<div class="card" id="cardB1">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">B1</span>
+    <h3>Why It Matters — Four Examiner Questions</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>What to ask and how to document</strong>
+      Examiners and consultants ask four questions about every plan. Your answer to these is what is being marked. Prepare a defended response for each before entering the viva.
+    </div>
+    <div class="field">
+      <label class="field-label">"What would you do tonight?" <span class="field-sublabel">The immediate axis. If the answer is anything other than a specific safety decision (admit, discharge with crisis plan, start drug X at dose Y), the plan has failed.</span></label>
+      <textarea class="auto-expand" data-key="b1_tonight" placeholder="Your defended immediate plan..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">"Why this drug and not another?" <span class="field-sublabel">Defend on six criteria: indication, evidence, patient fit, safety profile, accessibility, exit criteria.</span></label>
+      <textarea class="auto-expand" data-key="b1_whydrug" placeholder="Drug defence for primary agent..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">"What if it doesn't work?" <span class="field-sublabel">Every first-line recommendation needs a second-line plan and an exit criterion with review timeline.</span></label>
+      <textarea class="auto-expand" data-key="b1_secondline" placeholder="Second-line plan and switch criteria..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">"What are you monitoring?" <span class="field-sublabel">Every drug carries a named monitoring plan with frequencies. Lithium→renal/thyroid/level. Valproate→LFT/weight/level. Olanzapine→metabolic. Clozapine→CBC. Haloperidol→EPS/QTc.</span></label>
+      <textarea class="auto-expand" data-key="b1_monitor" placeholder="Named monitoring plan with frequencies..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Primary guideline citation for this case</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2026_sz"> IPS-CPG 2026 Schizophrenia</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2026_bd"> IPS-CPG 2026 Bipolar</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2026_dep"> IPS-CPG 2026 Depression</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2026_ocd"> IPS-CPG 2026 OCD</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2014_sud"> IPS-CPG 2014 SUD</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2017_anx"> IPS-CPG 2017 Anxiety</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_ips2018_dem"> IPS-CPG 2018 Dementia</label>
+        <label class="option-chip"><input type="checkbox" data-key="b1_cite_nice"> NICE / RANZCP / MARSIPAN</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== C. HOW TO PRESENT ===== -->
+<div class="card" id="cardC1">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">C1</span>
+    <h3>The Presentation Order (Verbal Viva)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>How to document</strong>
+      The single opening sentence orients the examiner and buys ninety seconds. Every disorder block uses this order. Write out your customised opening stem for this patient.
+    </div>
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      Examiners listen for the order in which the candidate presents the plan. The correct verbal order is Safety → Bio → Psycho → Social → Disposition → Follow-up.
+    </div>
+    <div class="field">
+      <label class="field-label">Your customised opening stem for this patient</label>
+      <div class="field-hint">My management of this patient with [diagnosis] would proceed in five domains. I would address safety first, then biological treatment, then psychological intervention, then social and family work, and finally disposition and follow-up. Across three time phases, immediate, short-term, and long-term.</div>
+      <textarea class="auto-expand" data-key="c1_stem" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Safety opening (customised)</label>
+      <div class="field-hint">The most pressing concern in this case is [specific risk]. I would address this immediately by [specific action]. The rationale is [patient-specific feature].</div>
+      <textarea class="auto-expand" data-key="c1_safeopen" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cardC2">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">C2</span>
+    <h3>Drug Defence — Six-Criterion Framework</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Common pitfalls</strong>
+      "I would start an SSRI" is not an answer. Every named drug must be defended. The candidate who names one drug, defends it on six criteria, and names one alternative is passing.
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Drug name</label>
+        <input type="text" data-key="c2_drug" placeholder="e.g., Olanzapine">
+      </div>
+      <div class="field">
+        <label class="field-label">Dose & titration</label>
+        <input type="text" data-key="c2_dose" placeholder="e.g., 5 mg OD, titrate to 10–20 mg">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">1. Indication</label>
+      <textarea class="auto-expand" data-key="c2_indication" placeholder="The diagnosis that justifies this drug class..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">2. Evidence <span class="field-sublabel">IPS-CPG citation level or international guideline</span></label>
+      <textarea class="auto-expand" data-key="c2_evidence" placeholder="Guideline citation and recommendation level..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">3. Patient fit <span class="field-sublabel">Comorbidity, age, sex, pregnancy, organ function, prior response, family response history</span></label>
+      <textarea class="auto-expand" data-key="c2_fit" placeholder="Why this drug for this specific patient..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">4. Safety profile <span class="field-sublabel">Side effects relevant to this patient</span></label>
+      <textarea class="auto-expand" data-key="c2_safety" placeholder="Relevant side effects and how you will monitor..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">5. Accessibility & affordability <span class="field-sublabel">Indian-context cost and availability</span></label>
+      <div class="field-hint">Generic cost, availability in public/private sector...</div>
+      <textarea class="auto-expand" data-key="c2_access" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">6. Exit criteria <span class="field-sublabel">Review point, response criteria, switch/escalation plan</span></label>
+      <textarea class="auto-expand" data-key="c2_exit" placeholder="If no response by week X, switch to Y..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Alternative drug (if primary fails)</label>
+      <input type="text" data-key="c2_alt" placeholder="e.g., Risperidone 2–6 mg/day">
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cardC3">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">C3</span>
+    <h3>MHCA 2017 Decision Tree</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Why this matters diagnostically</strong>
+      The MHCA governs every involuntary admission and most voluntary ones. The candidate is expected to know clinically relevant sections, not the entire Act. Section 89 is highest-yield.
+    </div>
+    <div class="field">
+      <label class="field-label">MHCA Section applicable to this case</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="86" data-key="c3_sec"> Sec 86 (Voluntary)</label>
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="87" data-key="c3_sec"> Sec 87 (Minor)</label>
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="89" data-key="c3_sec"> Sec 89 (Supported ≤30d)</label>
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="90" data-key="c3_sec"> Sec 90 (Supported &gt;30d)</label>
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="94" data-key="c3_sec"> Sec 94 (Emergency 72h)</label>
+        <label class="option-chip"><input type="radio" name="mhca_sec" value="97" data-key="c3_sec"> Sec 97 (Restraint)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Capacity assessment (4 domains) <span class="field-sublabel">All four must be present. Capacity is decision-specific and time-specific.</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="c3_cap_understand"> Understand information relevant to the decision</label>
+        <label class="option-chip"><input type="checkbox" data-key="c3_cap_appreciate"> Appreciate its consequences</label>
+        <label class="option-chip"><input type="checkbox" data-key="c3_cap_retain"> Retain the information long enough to use it</label>
+        <label class="option-chip"><input type="checkbox" data-key="c3_cap_communicate"> Communicate the decision</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Sec 89 criteria met? <span class="field-sublabel">(a) Threatened/attempted harm or inability to care for self placing at risk; AND (b) lacks capacity; AND (c) admission is least restrictive option</span></label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="c3_s89" value="yes" data-key="c3_s89"> Yes — all 3 criteria</label>
+        <label class="option-chip"><input type="radio" name="c3_s89" value="no" data-key="c3_s89"> No — specify below</label>
+        <label class="option-chip"><input type="radio" name="c3_s89" value="unclear" data-key="c3_s89"> Unclear — needs review</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Nominated representative / Who applies</label>
+      <input type="text" data-key="c3_nominee" placeholder="Name and relationship">
+    </div>
+    <div class="field">
+      <label class="field-label">Who confirms admission</label>
+      <input type="text" data-key="c3_confirms" placeholder="e.g., Two psychiatrists per Sec 89">
+    </div>
+    <div class="field">
+      <label class="field-label">Restraint plan (if applicable) <span class="field-sublabel">Only to prevent imminent harm, shortest possible time, least restrictive form, documented, regular review, debrief afterwards. Chemical preferred over physical where feasible.</span></label>
+      <div class="field-hint">Lorazepam 2–4 mg or IM haloperidol 5–10 mg + promethazine 25–50 mg if needed...</div>
+      <textarea class="auto-expand" data-key="c3_restraint" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Advance directive (Sec 5) discussed?</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="c3_ad" value="yes" data-key="c3_ad"> Yes</label>
+        <label class="option-chip"><input type="radio" name="c3_ad" value="no" data-key="c3_ad"> No</label>
+        <label class="option-chip"><input type="radio" name="c3_ad" value="na" data-key="c3_ad"> N/A — acute first presentation</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cardC4">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">C4</span>
+    <h3>The Family Meeting</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Common pitfalls</strong>
+      Ignoring the family in an Indian case is a fail. The family is the treatment system. A plan without a family meeting in the first 24 hours has missed the central plank of Indian psychiatric management.
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">When</label>
+        <input type="text" data-key="c4_when" placeholder="Typically within 24 hours">
+      </div>
+      <div class="field">
+        <label class="field-label">Who present</label>
+        <textarea class="auto-expand" data-key="c4_who" placeholder="Patient, primary caregiver, key decision-maker"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Agenda items covered</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_dx"> Diagnosis in lay language</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_prog"> Prognosis</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_tx"> Treatment plan with rationale</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_se"> Side effects to watch</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_timeline"> Expected timeline of response</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_relapse"> Signs of relapse</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_crisis"> What to do in a crisis</label>
+        <label class="option-chip"><input type="checkbox" data-key="c4_agenda_role"> Family's specific role</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Expressed-emotion intervention point? <span class="field-sublabel">In schizophrenia and bipolar disorder, the family meeting is also an EE intervention point.</span></label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="c4_ee" value="yes" data-key="c4_ee"> Yes — EE work planned</label>
+        <label class="option-chip"><input type="radio" name="c4_ee" value="no" data-key="c4_ee"> No — not indicated</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Additional notes / cultural considerations</label>
+      <div class="field-hint">Language of delivery, decision-making dynamics, confidentiality boundaries...</div>
+      <textarea class="auto-expand" data-key="c4_notes" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="cardC5">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">C5</span>
+    <h3>Discharge Planning (Inpatient Cases)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>What to ask and how to document</strong>
+      Begin on day one. The discharge package must be explicit. "Day one of admission is day one of discharge planning."
+    </div>
+    <div class="field">
+      <label class="field-label">Discharge components checklist</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="c5_reconcile"> Medication reconciliation</label>
+        <label class="option-chip"><input type="checkbox" data-key="c5_script"> Written prescription with timing and doses</label>
+        <label class="option-chip"><input type="checkbox" data-key="c5_fu"> Follow-up appointment within 1–2 weeks</label>
+        <label class="option-chip"><input type="checkbox" data-key="c5_crisis"> Crisis plan with three named contacts</label>
+        <label class="option-chip"><input type="checkbox" data-key="c5_brief"> Family briefing</label>
+        <label class="option-chip"><input type="checkbox" data-key="c5_relapse"> Explicit relapse-warning signs</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Continuity plan (DMHP / telepsychiatry)</label>
+      <div class="field-hint">DMHP outreach worker, telepsychiatry if in-person impractical...</div>
+      <textarea class="auto-expand" data-key="c5_continuity" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Follow-up schedule</label>
+      <div class="field-hint">e.g., Weekly ×4 weeks → biweekly ×2 months → monthly</div>
+      <textarea class="auto-expand" data-key="c5_schedule" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== D. DISORDER-SPECIFIC TAILORING ===== -->
+<div style="margin: 24px 16px 12px;">
+  <h2 style="font-size:1.05rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--accent);padding-bottom:8px;">D. Disorder-Specific Tailoring</h2>
+  <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:6px;">Each block uses: immediate priorities, first-line pharmacotherapy, second-line options, drug-specific monitoring table, psychological treatment, social/family interventions, disposition decision tree, prognosis, guideline references.</p>
+</div>
+
+<!-- D1. Schizophrenia / FEP -->
+<div class="card" id="cardD1">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D1</span>
+    <h3>Schizophrenia / First-Episode Psychosis</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities (0–72 hours)</strong>
+      Florid persecutory delusions, third-person hallucinations, self-neglect, partial insight → admission under MHCA Section 89, initiate SGA, family meeting within 24h, medical screen, brief catatonia screen (Bush-Francis ≥3 signs → lorazepam challenge 2 mg IM/IV).
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">Admission decision</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d1_admit" value="sec89" data-key="d1_admit"> Sec 89 — lacks capacity/risk</label>
+        <label class="option-chip"><input type="radio" name="d1_admit" value="voluntary" data-key="d1_admit"> Voluntary (Sec 86) — insight intact</label>
+        <label class="option-chip"><input type="radio" name="d1_admit" value="opd" data-key="d1_admit"> OPD — mild, family supportive</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Medical screen ordered</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d1_cbc"> CBC</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_rft"> RFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_lft"> LFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_tsh"> TSH</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_fbg"> Fasting glucose</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_lipids"> Lipids</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_ecg"> ECG</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_uds"> Urine drug screen</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Catatonia screen (Bush-Francis 12-item)</label>
+      <div class="grid-2">
+        <div class="field" style="margin-bottom:0;">
+          <label class="field-label" style="font-size:0.85rem;">Score</label>
+          <input type="number" data-key="d1_bf_score" placeholder="0–12">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label class="field-label" style="font-size:0.85rem;">Lorazepam challenge given?</label>
+          <div class="option-group">
+            <label class="option-chip"><input type="radio" name="d1_loraz" value="yes" data-key="d1_loraz"> Yes 2 mg IM/IV</label>
+            <label class="option-chip"><input type="radio" name="d1_loraz" value="no" data-key="d1_loraz"> No — &lt;3 signs</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Rapid tranquillisation (if severe agitation)</label>
+      <div class="field-hint">Lorazepam 2 mg IM, repeat 30 min if needed; or haloperidol 5 mg IM + promethazine 25 mg IM</div>
+      <textarea class="auto-expand" data-key="d1_rt" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Primary antipsychotic selected</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d1_ap" value="olanzapine" data-key="d1_ap"> Olanzapine 5–10 mg → 10–20 mg/day (~₹55–110/strip)</label>
+        <label class="option-chip"><input type="radio" name="d1_ap" value="aripiprazole" data-key="d1_ap"> Aripiprazole 10–15 mg → 15–30 mg/day (~₹230–275/strip)</label>
+        <label class="option-chip"><input type="radio" name="d1_ap" value="risperidone" data-key="d1_ap"> Risperidone 2 mg → 4–6 mg/day (~₹65–80/strip)</label>
+        <label class="option-chip"><input type="radio" name="d1_ap" value="haloperidol" data-key="d1_ap"> Haloperidol 5 mg → 5–15 mg/day + trihexyphenidyl 2 mg BD</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Adjunct medications</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d1_adj_loraz"> Lorazepam 2–4 mg/day × 1–2 weeks (agitation/sleep)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_adj_prop"> Propranolol 20 mg BD → 40 mg BD (akathisia)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_adj_trihex"> Trihexyphenidyl 2–6 mg/day (EPS)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Second-Line / Treatment-Resistant</div>
+    <div class="field">
+      <label class="field-label">If two adequate antipsychotic trials (≥6 weeks each at therapeutic dose) fail:</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d1_second" value="clozapine" data-key="d1_second"> Clozapine — start 12.5 mg d1, 25 mg d2, titrate 25–50 mg q2–3d to 200–450 mg/day; weekly CBC ×18w → 2w → 4w lifelong</label>
+        <label class="option-chip"><input type="radio" name="d1_second" value="paliperidone" data-key="d1_second"> Paliperidone 3 mg → 6–12 mg/day; LAI 100–150 mg IM monthly</label>
+        <label class="option-chip"><input type="radio" name="d1_second" value="quetiapine" data-key="d1_second"> Quetiapine 50 mg BD → 300–600 mg/day (sleep disturbance/D2 intolerance)</label>
+        <label class="option-chip"><input type="radio" name="d1_second" value="amisulpride" data-key="d1_second"> Amisulpride 400–800 mg/day (predominant negative symptoms)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Monitoring Plan</div>
+    <div class="field">
+      <label class="field-label">Metabolic monitoring schedule</label>
+      <div class="field-hint">Weight/waist baseline, w4, w12, then 6-monthly. FBG/lipids baseline, w12, 6-monthly. Prolactin baseline and 12w if risperidone.</div>
+      <textarea class="auto-expand" data-key="d1_monitor" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Psychological & Social</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions planned</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d1_psychoed"> Psychoeducation (first week, multiple short sessions in patient's language with family)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_cbtp"> CBT for psychosis (CBTp) 12–16 sessions — normalising, reality-testing, coping with residual voices</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_cogrem"> Cognitive remediation 2–3×/week × 3 months (computer/paper-based)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d1_fi"> Family intervention with EE work, 9–12 sessions over 3–6 months</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_se"> Supported employment (NGO/RCI framework)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_ideas"> Disability certification (IDEAS scale) if illness ≥2 years</label>
+        <label class="option-chip"><input type="checkbox" data-key="d1_dmhp"> DMHP linkage for continuity</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Disposition decision</label>
+      <div class="field-hint">Admit Sec 89 if acute psychosis + inability to care for self/risk/lack of capacity. Day care if partially stabilised. OPD if mild, family supportive, insight intact. Transition: 4–6 week inpatient → weekly OPD ×1 month → 2-weekly ×3 months → monthly.</div>
+      <textarea class="auto-expand" data-key="d1_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Good prognostic factors present</label>
+        <div class="field-hint">Acute onset, clear precipitant, prominent affective symptoms, good premorbid, DUP &lt;6 months...</div>
+        <textarea class="auto-expand" data-key="d1_good" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Bad prognostic factors present</label>
+        <div class="field-hint">Insidious onset, prominent negative/cognitive symptoms, DUP &gt;1 year, comorbid cannabis use...</div>
+        <textarea class="auto-expand" data-key="d1_bad" placeholder="Type here..."></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Net prognostic statement</label>
+      <div class="field-hint">In this patient, the prognosis is [guarded / cautiously favourable / poor] because...</div>
+      <textarea class="auto-expand" data-key="d1_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D2. Mania / Bipolar I -->
+<div class="card" id="cardD2">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D2</span>
+    <h3>Mania / Bipolar I (Current Manic Episode)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Severe mania with grandiose delusions, disinhibition, financial harm, absent insight → admission under Section 89. Stop any antidepressant. Medical screen + pregnancy test + calcium (lithium baseline). Family confiscates bank cards.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">Admission & legal framework</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d2_admit" value="sec89" data-key="d2_admit"> Sec 89 — severe mania, incapacity, risk</label>
+        <label class="option-chip"><input type="radio" name="d2_admit" value="sec86" data-key="d2_admit"> Sec 86 — retains capacity and agrees</label>
+        <label class="option-chip"><input type="radio" name="d2_admit" value="opd" data-key="d2_admit"> OPD / day care — hypomania, supportive family</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Medical screen ordered</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d2_cbc"> CBC</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_rft"> RFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_lft"> LFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_tsh"> TSH</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_fbg"> Fasting glucose</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ecg"> ECG</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_preg"> Pregnancy test</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_calcium"> Calcium (lithium baseline)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Antidepressant the patient was on — action taken</label>
+      <div class="field-hint">Stopped [drug]. Documented discontinuation and switch-risk rationale.</div>
+      <textarea class="auto-expand" data-key="d2_ad_stop" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Financial protection measures</label>
+      <div class="field-hint">Family confiscates bank cards, informs employer with patient consent where possible...</div>
+      <textarea class="auto-expand" data-key="d2_finance" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Rapid tranquillisation (if severe agitation)</label>
+      <div class="field-hint">Lorazepam 2–4 mg IM; or haloperidol 5–10 mg IM + promethazine 25–50 mg IM</div>
+      <textarea class="auto-expand" data-key="d2_rt" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Mood stabiliser selected</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d2_ms" value="lithium" data-key="d2_ms"> Lithium 600–900 mg/day divided; target 0.6–1.2 mEq/L (0.4–0.8 older adults); level day 5; ~₹25/strip 300 mg</label>
+        <label class="option-chip"><input type="radio" name="d2_ms" value="divalproex" data-key="d2_ms"> Divalproex 250 mg BID/TID → 20–30 mg/kg/day; target 50–125 µg/mL; MHRA 2024 restriction if &lt;55 years</label>
+        <label class="option-chip"><input type="radio" name="d2_ms" value="carbamazepine" data-key="d2_ms"> Carbamazepine 200 mg BD → 800–1000 mg/day; target 4–12 µg/mL; HLA-B*1502 if at-risk ethnicity</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Antipsychotic for severe mania (plus mood stabiliser)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d2_ap" value="olanzapine" data-key="d2_ap"> Olanzapine 10–20 mg/day</label>
+        <label class="option-chip"><input type="radio" name="d2_ap" value="risperidone" data-key="d2_ap"> Risperidone 2–6 mg/day</label>
+        <label class="option-chip"><input type="radio" name="d2_ap" value="aripiprazole" data-key="d2_ap"> Aripiprazole 15–30 mg/day</label>
+        <label class="option-chip"><input type="radio" name="d2_ap" value="quetiapine" data-key="d2_ap"> Quetiapine 400–800 mg/day</label>
+        <label class="option-chip"><input type="radio" name="d2_ap" value="asenapine" data-key="d2_ap"> Asenapine 10–20 mg/day</label>
+        <label class="option-chip"><input type="radio" name="d2_ap" value="cariprazine" data-key="d2_ap"> Cariprazine 3–12 mg/day</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Adjunct (short course)</label>
+      <div class="field-hint">Lorazepam 2–6 mg/day × 1–2 weeks for agitation/sleep, then taper</div>
+      <textarea class="auto-expand" data-key="d2_adj" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Second-Line / ECT</div>
+    <div class="field">
+      <label class="field-label">ECT indication</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_catatonia"> Severe mania with catatonic features</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_suicide"> Very high suicide risk</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_exhaustion"> Severe physical exhaustion</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_preg"> Pregnancy</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_resistant"> Treatment resistance</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">ECT details (if applicable)</label>
+      <textarea class="auto-expand" data-key="d2_ect_detail" placeholder="Modified bilateral, thrice weekly, 6–9 sessions"></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Clozapine for treatment-resistant mania (if lithium + AP + ECT fail)</label>
+      <div class="field-hint">100–400 mg/day; weekly CBC protocol as per schizophrenia block</div>
+      <textarea class="auto-expand" data-key="d2_clozapine" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Monitoring</div>
+    <div class="field">
+      <label class="field-label">Drug-specific monitoring plan</label>
+      <div class="field-hint">Lithium: U&E/eGFR/TSH/Ca/ECG baseline; serum level day 5, week 2; then 3-monthly ×6mo → 6-monthly. eGFR/TSH 6-monthly. Weight/calcium annually. Divalproex: LFT/FBC/weight baseline; LFT/level week 1–2; LFT/weight 6-monthly, level 6-monthly.</div>
+      <textarea class="auto-expand" data-key="d2_monitor" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Psychological & Social</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d2_psychoed"> Psychoeducation (Barcelona programme adapted, 21 sessions) — once manic symptoms partially settled</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ipsrt"> IPSRT 16–20 sessions — once euthymic, regularising sleep-wake/social rhythms</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_fft"> Family-focused therapy (FFT) 21 sessions over 9 months — for high-EE families</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_moodchart"> Mood charting (NIMH-LCM) at every visit</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family meeting within 24 hours, financial protection, employer disclosure with consent post-recovery, relapse-prevention conversation from day one, DMHP linkage...</div>
+      <textarea class="auto-expand" data-key="d2_social" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Disposition & follow-up</label>
+      <div class="field-hint">Admit Sec 89 for severe mania with incapacity/risk. Voluntary if capacity retained. Day care/OPD for hypomania. Transition: 2–4 week inpatient → weekly OPD ×1 month → monthly.</div>
+      <textarea class="auto-expand" data-key="d2_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">Good prognostic factors</label>
+        <div class="field-hint">Short episode, manic-predominant polarity, full inter-episode recovery, classic lithium responder, good adherence...</div>
+        <textarea class="auto-expand" data-key="d2_good" placeholder="Type here..."></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Bad prognostic factors</label>
+        <div class="field-hint">Depressive-predominant polarity, mixed episodes, rapid cycling ≥4/year, comorbid substance use, prior attempts...</div>
+        <textarea class="auto-expand" data-key="d2_bad" placeholder="Type here..."></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Net prognostic statement</label>
+      <textarea class="auto-expand" data-key="d2_prog" placeholder="In this patient..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- D3. Bipolar Depression -->
+<div class="card" id="cardD3">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D3</span>
+    <h3>Bipolar Depression</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="pearl-box">
+      <strong>Exam Pearl — HIGHEST YIELD</strong>
+      Antidepressant monotherapy is NOT recommended in bipolar depression (IPS-CPG 2026, explicit). This is the single highest-yield recommendation in the BD chapter. Always screen for past hypomania before any antidepressant.
+    </div>
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Bipolar depression carries higher suicide risk than unipolar. C-SSRS at presentation. Active ideation with plan/intent → admission under Section 89. Medical screen + review recent stimulant/antidepressant exposure. Means restriction through family.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">Suicide risk (C-SSRS) at presentation</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d3_cssrs" value="low" data-key="d3_cssrs"> Low — no active ideation</label>
+        <label class="option-chip"><input type="radio" name="d3_cssrs" value="moderate" data-key="d3_cssrs"> Moderate — ideation, no plan</label>
+        <label class="option-chip"><input type="radio" name="d3_cssrs" value="high" data-key="d3_cssrs"> High — active ideation with plan/intent → admit</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Means restriction arranged</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d3_means_pest"> Pesticides secured</label>
+        <label class="option-chip"><input type="checkbox" data-key="d3_means_meds"> Medications locked/supervised</label>
+        <label class="option-chip"><input type="checkbox" data-key="d3_means_sharp"> Sharp objects removed</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Recent antidepressant/stimulant exposure reviewed</label>
+      <textarea class="auto-expand" data-key="d3_recent" placeholder="Document any recent exposure and switch risk"></textarea>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Evidence-based first-line agent <span class="field-sublabel">NOT antidepressant monotherapy</span></label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d3_fl" value="ofc" data-key="d3_fl"> Olanzapine-fluoxetine combo (OFC) 6/25 or 12/50 → 10/20 or 12/50; 6–9 months post-remission; ~₹125–145/strip</label>
+        <label class="option-chip"><input type="radio" name="d3_fl" value="quetiapine" data-key="d3_fl"> Quetiapine 50 mg night → 300 mg by d4–5 → 300–600 mg/day; 6–9 months; ~₹165–180/strip 200 mg</label>
+        <label class="option-chip"><input type="radio" name="d3_fl" value="lurasidone" data-key="d3_fl"> Lurasidone 20 mg OD with food (≥350 kcal) → 40–80 mg/day; ~₹130–170/strip 40 mg</label>
+        <label class="option-chip"><input type="radio" name="d3_fl" value="cariprazine" data-key="d3_fl"> Cariprazine 1.5 mg OD → 1.5–3 mg/day over week 1</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Lithium add-on (for anti-suicide + manic-switch prophylaxis)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d3_lith" value="yes" data-key="d3_lith"> Yes — target 0.6–1.0 mEq/L</label>
+        <label class="option-chip"><input type="radio" name="d3_lith" value="no" data-key="d3_lith"> No — contraindicated/poorly tolerated</label>
+        <label class="option-chip"><input type="radio" name="d3_lith" value="already" data-key="d3_lith"> Already on maintenance lithium</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Second-Line / Augmentation</div>
+    <div class="field">
+      <label class="field-label">Options (select all applicable)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d2_lamotrigine"> Lamotrigine 25 mg OD ×2w → 50 mg ×2w → 100 mg OD; target 100–200 mg/day (slow titration mandatory for SJS risk)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ssri_add"> SSRI or bupropion as ADD-ON only — second-line only, only after first-line failure, only under mood stabiliser/antipsychotic cover</label>
+        <label class="option-chip"><input type="checkbox" data-key="d2_ect_bd"> ECT — psychotic bipolar depression, severe suicidal ideation, or stuporose presentations</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d3_cbt"> CBT for bipolar depression 16–20 sessions (activity scheduling, cognitive restructuring, relapse signatures)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d3_ipsrt"> IPSRT once euthymic</label>
+        <label class="option-chip"><input type="checkbox" data-key="d3_fft"> FFT for high-EE families</label>
+        <label class="option-chip"><input type="checkbox" data-key="d3_switch_ed"> Psychoeducation about switch risk with family</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family meeting within 24 hours, occupational disclosure with consent post-recovery, financial counselling if work loss...</div>
+      <textarea class="auto-expand" data-key="d3_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD if mild-moderate without active SI, capacity intact, family supportive. Admit Sec 89 if severe with active SI, psychotic features, or capacity impaired. Transition: weekly OPD → 2-weekly ×3 months → monthly.</div>
+      <textarea class="auto-expand" data-key="d3_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: first episode, no prior mixed states, response to first-line, no psychotic features... Bad: depressive-predominant polarity, mixed features, psychotic features, prior treatment-emergent switch...</div>
+      <textarea class="auto-expand" data-key="d3_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D4. Major Depressive Disorder -->
+<div class="card" id="cardD4">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D4</span>
+    <h3>Major Depressive Disorder (Severe, Melancholic Features)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Active suicidal ideation with plan but no rehearsal. C-SSRS-rated risk. Means restriction (organophosphate access is the commonest method in rural India). 24-hour supervision if managed at home. Medical screen: CBC, RFT, LFT, TSH, fasting glucose, ECG, B12, folate, vitamin D.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">Suicide risk level (C-SSRS)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d4_cssrs" value="low" data-key="d4_cssrs"> Low</label>
+        <label class="option-chip"><input type="radio" name="d4_cssrs" value="moderate" data-key="d4_cssrs"> Moderate</label>
+        <label class="option-chip"><input type="radio" name="d4_cssrs" value="high" data-key="d4_cssrs"> High — admit under Section 89</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Means restriction (tick all arranged)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d4_means_pest"> Pesticides (organophosphates) secured/removed</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_means_meds"> Excess medications removed</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_means_sharp"> Sharp objects</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_means_rope"> Ropes/hanging materials</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">24-hour supervision arranged (if OPD)</label>
+      <input type="text" data-key="d4_supervision" placeholder="Family member name and relationship">
+    </div>
+    <div class="field">
+      <label class="field-label">Medical screen ordered</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d4_cbc"> CBC</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_rft"> RFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_lft"> LFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_tsh"> TSH</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_fbg"> Fasting glucose</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ecg"> ECG</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_b12"> B12</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_folate"> Folate</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_vitd"> Vitamin D</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Antidepressant selected <span class="field-sublabel">With drug, dose, titration, target, duration, monitoring</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d4_ad" value="escitalopram" data-key="d4_ad"> Escitalopram 10 mg OD → 20 mg by week 2; 16–24 weeks post-remission; total 6–9 months first episode, ≥2 years recurrent; ~₹50–85/strip</label>
+        <label class="option-chip"><input type="radio" name="d4_ad" value="sertraline" data-key="d4_ad"> Sertraline 50 mg OD → 100–200 mg/day by week 2–4; preferred in cardiac comorbidity, pregnancy, lactation; ~₹70–125/strip</label>
+        <label class="option-chip"><input type="radio" name="d4_ad" value="mirtazapine" data-key="d4_ad"> Mirtazapine 15 mg night → 30–45 mg/day by week 2; preferred for insomnia/weight loss; monitor weight/LFT/FBC; ~₹40–125/strip</label>
+        <label class="option-chip"><input type="radio" name="d4_ad" value="vortioxetine" data-key="d4_ad"> Vortioxetine 10 mg OD → 20 mg by week 2; preferred for cognitive dysfunction; branded only ~₹140–200/strip</label>
+        <label class="option-chip"><input type="radio" name="d4_ad" value="venlafaxine" data-key="d4_ad"> Venlafaxine XR 75 mg OD → 150–225 mg/day by week 2–4; preferred for comorbid pain/atypical fatigue; baseline/ongoing BP every 2 weeks during titration; ~₹100–125/strip</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Antipsychotic augmentation (if psychotic features / severe)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d4_aug" value="olanzapine" data-key="d4_aug"> Olanzapine 5–10 mg</label>
+        <label class="option-chip"><input type="radio" name="d4_aug" value="quetiapine" data-key="d4_aug"> Quetiapine 50–300 mg</label>
+        <label class="option-chip"><input type="radio" name="d4_aug" value="aripiprazole" data-key="d4_aug"> Aripiprazole 2–10 mg</label>
+        <label class="option-chip"><input type="radio" name="d4_aug" value="none" data-key="d4_aug"> None — not indicated</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Second-Line / ECT / Neurostimulation</div>
+    <div class="field">
+      <label class="field-label">ECT first-line indication (tick all that apply)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_psychotic"> Psychotic depression</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_si"> Severe suicidal ideation</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_stupor"> Melancholic stupor</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_refuse"> Refusal to eat</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_preg"> Pregnancy</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ect_resistant"> Treatment resistance</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">ECT details (if applicable)</label>
+      <div class="field-hint">6–12 sessions, modified bilateral or right-unilateral, twice or thrice weekly</div>
+      <textarea class="auto-expand" data-key="d4_ect_detail" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">rTMS (if TRD)</label>
+      <textarea class="auto-expand" data-key="d4_rtms" placeholder="High-frequency left DLPFC, 20–30 sessions"></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Ketamine / esketamine (if TRD or MDD with active SI)</label>
+      <div class="field-hint">Ketamine IV 0.5 mg/kg over 40 min twice weekly ×2 weeks; or intranasal esketamine 56–84 mg twice weekly ×4 weeks</div>
+      <textarea class="auto-expand" data-key="d4_ketamine" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Switch/augment sequence (IPS-CPG 2026 Table 12)</label>
+      <div class="field-hint">Optimise → Switch → Augment (lithium 600–900 mg target 0.4–0.8, T3 25–50 µg, aripiprazole 2–15 mg) → Combination</div>
+      <textarea class="auto-expand" data-key="d4_seq" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d4_cbt"> CBT or IPT 12–20 sessions (continuation phase or alongside pharmacotherapy in mild-moderate)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_ba"> Behavioural activation 6–12 sessions (low-skill alternative where CBT unavailable)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d4_mbct"> MBCT for relapse prevention after ≥2 episodes, 8 sessions</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family psychoeducation about depression as illness not weakness, occupational disclosure with consent, return-to-work planning, financial counselling, DMHP linkage...</div>
+      <textarea class="auto-expand" data-key="d4_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD with weekly review until remission (mild-moderate, family supportive). Admit Sec 89 if severe SI, psychotic, refusal to eat, stuporose, capacity-impaired. Transition: weekly OPD to week 4 → 2-weekly to week 12 → monthly.</div>
+      <textarea class="auto-expand" data-key="d4_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: first episode, acute onset, clear precipitant, early response ≥25% at 2 weeks predicts remission... Bad: recurrent, chronic &gt;2 years, melancholic/psychotic features, prior attempts, comorbid anxiety/SUD, childhood adversity, residual symptoms post-treatment (strongest predictor of relapse)...</div>
+      <textarea class="auto-expand" data-key="d4_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- D5. Substance Use Disorder (Alcohol) -->
+<div class="card" id="cardD5">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D5</span>
+    <h3>Substance Use Disorder — Alcohol</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      36 hours after last drink: tremor, sweating, tachycardia, anxiety. CIWA-Ar-guided inpatient vs outpatient detox decision. Thiamine BEFORE any glucose. Symptom-triggered benzodiazepines. Medical screen: CBC, RFT, LFT, glucose, electrolytes (Na, K, Mg, phosphate), ECG, urine drug screen, HIV/HCV serology.
+    </div>
+    <div class="subsection-title">Immediate Actions & Detox</div>
+    <div class="field">
+      <label class="field-label">CIWA-Ar score at presentation</label>
+      <input type="number" data-key="d5_ciwa" placeholder="0–67">
+    </div>
+    <div class="field">
+      <label class="field-label">Inpatient detox indicated?</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_seizure"> Seizures</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_dt"> Prior DT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_ciwa15"> CIWA ≥15</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_home"> Unstable home</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_poly"> Polysubstance use</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_ip_comorb"> Significant comorbidity</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Thiamine protocol <span class="field-sublabel">BEFORE any glucose</span></label>
+      <div class="field-hint">100 mg IM/IV TDS ×3 days, then oral 100 mg TDS ×≥2 weeks</div>
+      <textarea class="auto-expand" data-key="d5_thiamine" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Symptom-triggered benzodiazepine for detox</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d5_bzd" value="lorazepam" data-key="d5_bzd"> Lorazepam 2 mg (CIWA 10–15), 4 mg (16–20), repeat hourly until CIWA &lt;10; preferred in hepatic compromise</label>
+        <label class="option-chip"><input type="radio" name="d5_bzd" value="diazepam" data-key="d5_bzd"> Diazepam 10 mg (10–15), 20 mg (16–20); preferred in younger patients with intact LFT</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Withdrawal seizure management</label>
+      <div class="field-hint">Parenteral lorazepam 2–4 mg IV. Phenytoin is NOT effective for alcohol withdrawal seizures.</div>
+      <textarea class="auto-expand" data-key="d5_seizure" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Delirium tremens (48–96h post-last-drink) plan</label>
+      <div class="field-hint">Admit, IV access, parenteral lorazepam 2–4 mg q1h to sedation, dexmedetomidine if BZD-resistant, treat coexisting sepsis/hepatic decompensation...</div>
+      <textarea class="auto-expand" data-key="d5_dt" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Anti-Craving / Post-Detox Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Anti-craving agent selected <span class="field-sublabel">Start after 7–10 days abstinence; continue 6–12 months minimum</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d5_ac" value="naltrexone" data-key="d5_ac"> Naltrexone 50 mg OD; baseline LFT; monitor LFT baseline, 4 weeks, 3-monthly; contraindicated in active opioid use and severe hepatic impairment; ~₹780–850/strip</label>
+        <label class="option-chip"><input type="radio" name="d5_ac" value="acamprosate" data-key="d5_ac"> Acamprosate 666 mg TDS (if ≥60 kg, else 333 mg TDS + 666 mg BD); baseline U&E; monitor renal 3-monthly; preferred in hepatic impairment; ~₹90–110/strip</label>
+        <label class="option-chip"><input type="radio" name="d5_ac" value="disulfiram" data-key="d5_ac"> Disulfiram 250 mg OD supervised by family member; baseline and 3-monthly LFT; contraindicated in hepatic disease, cardiac disease, psychosis, pregnancy; ~₹25–45/strip</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Second-line / adjunct options</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d5_baclofen"> Baclofen 10 mg TDS → 30–75 mg/day (hepatic impairment where acamprosate contraindicated)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_topiramate"> Topiramate 25 mg OD → 150–300 mg/day (off-label but Level 1 evidence for craving)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_gabapentin"> Gabapentin 300 mg TDS → 1800 mg/day (mild withdrawal and craving)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d5_met"> Motivational enhancement therapy (MET) 4 sessions, FRAMES framework</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_cbt"> CBT for relapse prevention 12–16 sessions (trigger mapping, craving management, lapse planning)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_12step"> 12-step facilitation / Alcoholics Anonymous referral</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_cra"> Community reinforcement approach (severe dependence)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d5_mbrp"> Mindfulness-based relapse prevention 8 sessions</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family intervention (AAFT model), Al-Anon referral, occupational reintegration, financial counselling, legal aid if criminal involvement, NGO de-addiction network linkage...</div>
+      <textarea class="auto-expand" data-key="d5_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">Inpatient detox 7–10 days (moderate-severe, seizures, prior DT, unstable home, polysubstance, comorbidity). Outpatient detox (mild, stable home, reliable family). Residential rehabilitation 3–6 months (chronic relapsing, failed outpatient). Transition: weekly OPD ×1 month → biweekly ×2nd month → monthly.</div>
+      <textarea class="auto-expand" data-key="d5_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: late onset, short duration, Cloninger type I, family support, employed, stable housing, action stage, no comorbidity, AA engagement, anti-craving pharmacotherapy... Bad: early onset &lt;25, long duration, Cloninger type II, polysubstance, no support, unemployed, homeless, comorbid mood/ASPD/BPD, medical complications, forensic involvement, multiple failed quit attempts, denial...</div>
+      <textarea class="auto-expand" data-key="d5_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D6. Anxiety / Panic Disorder -->
+<div class="card" id="cardD6">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D6</span>
+    <h3>Anxiety / Panic Disorder</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Suicide risk elevated in chronic untreated panic with agoraphobia. Medical exclusion: TSH, ECG, fasting glucose. Urine metanephrines only if clinically indicated. Psychoeducation about 4–6 week SSRI lag and early worsening risk. Avoid PRN benzodiazepine as long-term strategy.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">C-SSRS risk level</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d6_cssrs" value="low" data-key="d6_cssrs"> Low</label>
+        <label class="option-chip"><input type="radio" name="d6_cssrs" value="moderate" data-key="d6_cssrs"> Moderate</label>
+        <label class="option-chip"><input type="radio" name="d6_cssrs" value="high" data-key="d6_cssrs"> High</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Medical screen</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d6_tsh"> TSH</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_ecg"> ECG</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_fbg"> Fasting glucose</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_metanephrines"> Urine metanephrines (if clinically indicated)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">SSRI selected <span class="field-sublabel">Start VERY LOW dose to avoid paradoxical early worsening</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d6_ssri" value="escitalopram" data-key="d6_ssri"> Escitalopram 5 mg OD week 1 → 10 mg/day → target 10–20 mg/day; 12 months post-remission; ~₹50–85/strip</label>
+        <label class="option-chip"><input type="radio" name="d6_ssri" value="sertraline" data-key="d6_ssri"> Sertraline 25 mg OD week 1 → 50 mg/day → target 50–200 mg/day; ~₹70–125/strip</label>
+        <label class="option-chip"><input type="radio" name="d6_ssri" value="paroxetine" data-key="d6_ssri"> Paroxetine 10 mg OD → 20–40 mg/day; note anticholinergic load and discontinuation syndrome on taper</label>
+        <label class="option-chip"><input type="radio" name="d6_ssri" value="venlafaxine" data-key="d6_ssri"> Venlafaxine XR 37.5 mg OD week 1 → 75 mg/day → target 75–225 mg/day; monitor BP</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Bridging benzodiazepine (short course 2–4 weeks ONLY)</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d6_bridge" value="clonazepam" data-key="d6_bridge"> Clonazepam 0.25–0.5 mg BD</label>
+        <label class="option-chip"><input type="radio" name="d6_bridge" value="lorazepam" data-key="d6_bridge"> Lorazepam 0.5–1 mg BD</label>
+        <label class="option-chip"><input type="radio" name="d6_bridge" value="none" data-key="d6_bridge"> None — avoiding benzodiazepines</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Second-Line / Adjunct</div>
+    <div class="field">
+      <label class="field-label">Options</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d6_pregabalin"> Pregabalin 75 mg BD → 150–600 mg/day (for GAD, not panic)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_buspirone"> Buspirone 5 mg TDS → 30–60 mg/day (GAD with BZD avoidance)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_mirtazapine"> Mirtazapine 15–45 mg night (insomnia dominates)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_propranolol"> Propranolol 10–40 mg PRN (performance-anxiety subtype)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological treatment</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d6_cbt"> CBT with interoceptive exposure 12–16 sessions — gold standard (paced breathing, cognitive restructuring, in vivo exposure)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d6_applied_relax"> Applied relaxation (lower-intensity alternative where CBT unavailable)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family psychoeducation about panic as illness and the avoidance trap, employer accommodation if work affected, support group referral...</div>
+      <textarea class="auto-expand" data-key="d6_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD throughout. Inpatient rarely needed and may reinforce avoidance. Transition: weekly OPD ×1 month → biweekly ×2nd month → monthly until remission.</div>
+      <textarea class="auto-expand" data-key="d6_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: acute onset with clear precipitant, short duration before treatment, single episode, no agoraphobia, response to SSRI/CBT within 6–8 weeks... Bad: long duration before treatment, severe agoraphobic avoidance, comorbid MDD, comorbid alcohol use disorder, comorbid personality disorder (Cluster C), childhood adversity, occupational disability...</div>
+      <textarea class="auto-expand" data-key="d6_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- D7. OCD -->
+<div class="card" id="cardD7">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D7</span>
+    <h3>OCD</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Ego-dystonic suicidal or violent obsessions — screen directly and reframe as obsessions, not intent. C-SSRS + explicit enquiry about ego-dystonic obsessions. Family Accommodation Scale (FAS). Psychoeducation about OCD cycle and longer SSRI trial duration (12 weeks). Undertreatment with sub-therapeutic SSRI dosing is the commonest reason for "treatment-resistant OCD" in resource-constrained settings.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">C-SSRS and explicit ego-dystonic obsession enquiry</label>
+      <div class="field-hint">Document screening for ego-dystonic suicidal/violent obsessions and reframing as obsessions not intent...</div>
+      <textarea class="auto-expand" data-key="d7_safety" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Family Accommodation Scale (FAS) screen</label>
+      <input type="text" data-key="d7_fas" placeholder="Score / qualitative assessment">
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">High-dose SSRI selected <span class="field-sublabel">Ceiling higher than depression ceiling. Adequate trial = therapeutic dose for 12 weeks.</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d7_ssri" value="fluoxetine" data-key="d7_ssri"> Fluoxetine 20 mg OD week 1 → +20 mg every 2 weeks → target 60–80 mg/day; ≥1–2 years post-remission; ~₹40/strip 20 mg</label>
+        <label class="option-chip"><input type="radio" name="d7_ssri" value="sertraline" data-key="d7_ssri"> Sertraline 50 mg OD → 150–200 mg/day over 4–6 weeks; ~₹70–125/strip</label>
+        <label class="option-chip"><input type="radio" name="d7_ssri" value="escitalopram" data-key="d7_ssri"> Escitalopram 10 mg OD → 20–30 mg/day (off-label above 20); ECG at baseline and after dose increase &gt;20 mg; ~₹50–85/strip</label>
+        <label class="option-chip"><input type="radio" name="d7_ssri" value="fluvoxamine" data-key="d7_ssri"> Fluvoxamine 50 mg OD → 200–300 mg/day in divided doses</label>
+        <label class="option-chip"><input type="radio" name="d7_ssri" value="paroxetine" data-key="d7_ssri"> Paroxetine 20 mg OD → 40–60 mg/day</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Second-Line / Augmentation</div>
+    <div class="field">
+      <label class="field-label">Options (select all applicable)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d7_clomipramine"> Clomipramine 25 mg OD → 150–250 mg/day over 4–6 weeks; baseline ECG, repeat at 150 mg and 250 mg; reserved for partial responders to two SSRI trials</label>
+        <label class="option-chip"><input type="checkbox" data-key="d7_erp_first"> CBT/ERP first as augmenting strategy of choice (IPS-CPG 2026) if not already received</label>
+        <label class="option-chip"><input type="checkbox" data-key="d7_risperidone_aug"> Risperidone 1–3 mg/day antipsychotic augmentation</label>
+        <label class="option-chip"><input type="checkbox" data-key="d7_aripiprazole_aug"> Aripiprazole 5–15 mg/day augmentation</label>
+        <label class="option-chip"><input type="checkbox" data-key="d7_dbs"> Deep brain stimulation (tertiary centres only — ALIC, VC/VS, BNST, amSTN)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological treatment</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d7_erp"> CBT with ERP 12–20 sessions over 3–4 months (in-person preferred, video-based non-inferior)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d7_family_incl"> Family-inclusive treatment to reduce accommodation (measured reduction improves outcomes)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Psychoeducation for family on accommodation reduction, school/workplace accommodation planning, support group linkage (OCD India, online groups)...</div>
+      <textarea class="auto-expand" data-key="d7_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD throughout. Inpatient/residential ERP only for severely impaired unable to engage with outpatient ERP. Transition: weekly during active ERP → monthly after → quarterly review.</div>
+      <textarea class="auto-expand" data-key="d7_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: acute onset, episodic, clear precipitant, short duration, predominant compulsions, good insight (BABS good/fair), no comorbid depression/tic/schizotypal, low family accommodation, motivated for ERP, response to first-line SSRI within 12 weeks... Bad: insidious onset, chronic, no precipitant, long duration &gt;10 years, predominant obsessions without compulsions, poor insight, comorbid depression/tic/schizotypal, hoarding subtype, high accommodation, refusal of ERP, multiple failed SSRI trials at sub-therapeutic doses, early age at onset...</div>
+      <textarea class="auto-expand" data-key="d7_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D8. PTSD -->
+<div class="card" id="cardD8">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D8</span>
+    <h3>PTSD</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      Benzodiazepines are NOT recommended in PTSD. They impair fear-extinction learning, worsen long-term outcomes, and increase substance-use disorder risk (IPS-CPG 2017 explicit recommendation against).
+    </div>
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Suicide risk high with comorbid depression and substance use. C-SSRS at every visit. Screen for comorbid depression, alcohol use, dissociation, sleep disturbance. Stabilisation first (grounding, sleep hygiene, substance reduction) before trauma processing, particularly in complex PTSD.
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">C-SSRS risk level</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d8_cssrs" value="low" data-key="d8_cssrs"> Low</label>
+        <label class="option-chip"><input type="radio" name="d8_cssrs" value="moderate" data-key="d8_cssrs"> Moderate</label>
+        <label class="option-chip"><input type="radio" name="d8_cssrs" value="high" data-key="d8_cssrs"> High</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Comorbid screens completed</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d8_comorb_dep"> Depression</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_comorb_alc"> Alcohol use</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_comorb_diss"> Dissociation</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_comorb_sleep"> Sleep disturbance</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Stabilisation before trauma processing?</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d8_stab" value="yes" data-key="d8_stab"> Yes — grounding, sleep hygiene, substance reduction first</label>
+        <label class="option-chip"><input type="radio" name="d8_stab" value="no" data-key="d8_stab"> No — can proceed directly to trauma-focused therapy</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">First-Line Pharmacotherapy</div>
+    <div class="field">
+      <label class="field-label">Primary agent</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d8_fl" value="sertraline" data-key="d8_fl"> Sertraline 25 mg OD week 1 → 50 mg/day → 50–200 mg/day by week 4; FDA-approved; ≥12 months in responders; ~₹70–125/strip</label>
+        <label class="option-chip"><input type="radio" name="d8_fl" value="paroxetine" data-key="d8_fl"> Paroxetine 20 mg OD → 20–60 mg/day; FDA-approved; note discontinuation syndrome on taper</label>
+        <label class="option-chip"><input type="radio" name="d8_fl" value="venlafaxine" data-key="d8_fl"> Venlafaxine XR 75 mg OD → 75–225 mg/day; monitor BP</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Prazosin for trauma-related nightmares</label>
+      <div class="field-hint">1 mg at night → +1 mg every 3 days → 2–10 mg at night; monitor orthostatic BP</div>
+      <textarea class="auto-expand" data-key="d8_prazosin" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Second-Line / Adjunct</div>
+    <div class="field">
+      <label class="field-label">Options</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d8_mirtazapine"> Mirtazapine 15–45 mg night (insomnia/weight loss dominate)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_quetiapine"> Quetiapine 25–200 mg night augmentation (sleep/hyperarousal; limited evidence, refractory only)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_topiramate"> Topiramate 25 mg → 100–200 mg/day (hyperarousal/re-experiencing; off-label)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Trauma-focused psychological treatment</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d8_tfcbt"> Trauma-focused CBT 8–12 sessions (narrative exposure or written trauma account)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_pe"> Prolonged exposure therapy (Foa) 8–15 sessions</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_emdr"> EMDR 8–12 sessions</label>
+        <label class="option-chip"><input type="checkbox" data-key="d8_net"> Narrative exposure therapy (multiple/continuous trauma)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">If trauma-focused therapy unavailable</label>
+      <div class="field-hint">Brief psychoeducation, grounding techniques, supportive therapy, symptom-targeted pharmacotherapy...</div>
+      <textarea class="auto-expand" data-key="d8_alt" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Psychoeducation about PTSD as normal response to abnormal events, support group linkage, avoidance-of-avoidance work (gentle return to driving for RTA), workplace liaison...</div>
+      <textarea class="auto-expand" data-key="d8_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD throughout. Admit Sec 89 only for acute dissociative crisis with high SI, or severe comorbid depression with active SI. Transition: weekly during active therapy → monthly during continuation.</div>
+      <textarea class="auto-expand" data-key="d8_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: single discrete trauma, adult-onset, intact pre-trauma functioning, strong social support, early treatment within 3–6 months, no peri-traumatic dissociation, no comorbid depression/SUD, good response to TFCBT/EMDR within 12 sessions... Bad: chronic/repeated trauma (especially interpersonal), childhood trauma, complex PTSD, poor pre-trauma functioning, lack of support, delayed treatment, prominent dissociation, comorbid depression/alcohol/TBI, ongoing exposure to stressor, litigation involvement, high peri-traumatic dissociation, prior PTSD episodes...</div>
+      <textarea class="auto-expand" data-key="d8_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- D9. Eating Disorder (Anorexia Nervosa) -->
+<div class="card" id="cardD9">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D9</span>
+    <h3>Eating Disorder — Anorexia Nervosa (Restricting Type)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      AN carries the highest mortality of any psychiatric illness. Medical risk against MARSIPAN. Refeeding plan that avoids refeeding syndrome. Start low (10–20 kcal/kg/day), slow (increase by 200–300 kcal/day), thiamine first, phosphate replacement, daily electrolytes × first week, ECG monitoring. Compulsory admission (Sec 89) if BMI &lt;13 or any red flag and patient refuses voluntary admission.
+    </div>
+    <div class="subsection-title">Immediate Actions & Medical Risk</div>
+    <div class="grid-2">
+      <div class="field">
+        <label class="field-label">BMI</label>
+        <input type="number" step="0.1" data-key="d9_bmi" placeholder="e.g., 12.5">
+      </div>
+      <div class="field">
+        <label class="field-label">Weight loss per week (kg)</label>
+        <input type="number" step="0.1" data-key="d9_wl" placeholder="e.g., 1.2">
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">MARSIPAN red flags present</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_bmi"> BMI &lt;13</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_intake"> Intake &lt;500 kcal/day</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_wl"> Weight loss &gt;1 kg/week</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_syncope"> Syncope</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_brady"> Bradycardia &lt;40</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_hypo"> Hypotension</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_k"> Hypokalaemia</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_gluc"> Hypoglycaemia</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_qtc"> Prolonged QTc</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_rf_suss"> Severe muscle wasting on SUSS test</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Medical investigations ordered</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d9_postural"> Postural BP and pulse</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_ecg"> ECG (QTc, bradycardia)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_lytes"> Electrolytes (K, Mg, phosphate)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_lft"> LFT</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_fbc"> FBC</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_gluc"> Glucose</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Refeeding protocol</label>
+      <div class="field-hint">Start 10–20 kcal/kg/day, increase by 200–300 kcal/day. Thiamine first. Phosphate replacement. Daily electrolytes × first week. ECG monitoring. Phosphate-Sandoz 1–2 tablets TDS prophylactically if phosphate low-normal.</div>
+      <textarea class="auto-expand" data-key="d9_refeed" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Compulsory admission (Sec 89) required?</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d9_comp" value="yes" data-key="d9_comp"> Yes — BMI &lt;13 or red flag + refuses voluntary</label>
+        <label class="option-chip"><input type="radio" name="d9_comp" value="no" data-key="d9_comp"> No — voluntary admission acceptable</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Pharmacotherapy (Adjuncts Only)</div>
+    <div class="field">
+      <label class="field-label">Adjunct medications <span class="field-sublabel">No pharmacotherapy has strong evidence for AN itself</span></label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d9_thiamine"> Thiamine 100 mg IM OD ×3 days → oral 100 mg TDS (before refeeding)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_phos"> Phosphate replacement prophylactically during early refeeding</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_olanzapine"> Olanzapine 2.5 mg night → 5 mg, target 2.5–10 mg/day (off-label, weak evidence; for obsessional eating concerns/body-image rigidity/agitation blocking refeeding)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_ssri"> SSRI (fluoxetine 20–60 mg or sertraline 50–200 mg) for comorbid depression/anxiety — only after partial weight restoration</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_mirtazapine"> Mirtazapine 15–45 mg night (post-weight-restoration, insomnia/appetite loss)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Nasogastric feeding (if oral refeeding failed)</label>
+      <div class="field-hint">Under MHCA with explicit legal documentation and ethics review if medical risk high and oral refeeding failed...</div>
+      <textarea class="auto-expand" data-key="d9_ng" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological treatment</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d9_fbt"> Family-based treatment (Maudsley method) 18–20 sessions — first-line for adolescents/young adults with supportive family</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_cbte"> CBT-E (enhanced CBT) 20–40 sessions — first-line for adults</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_mantra"> MANTRA (Maudsley Anorexia Nervosa Treatment for Adults) — alternative</label>
+        <label class="option-chip"><input type="checkbox" data-key="d9_sscm"> Specialist supportive clinical management (SSCM) where specialist modalities unavailable</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family meeting (family is the treatment system in FBT), school/college liaison, peer support, carer support group...</div>
+      <textarea class="auto-expand" data-key="d9_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">Medical ward/ICU for acute medical instability (MARSIPAN red flags). Specialist eating-disorder unit where available. Admit Sec 89 for BMI &lt;13, red flags, or refusal with incapacity. OPD FBT/CBT-E for stable patients with BMI &gt;15 and motivation. Transition: weekly weight in early treatment → biweekly later → monthly medical review until weight-restored → long-term psychiatric follow-up ≥2 years post weight restoration.</div>
+      <textarea class="auto-expand" data-key="d9_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: adolescent onset, short duration &lt;3 years, restricting subtype, supportive family for FBT, no comorbid psychiatric illness, no premorbid obesity, higher minimum BMI, no purging, response to weight-restoration in first 4 weeks, good therapeutic alliance, motivation... Bad: adult onset, long duration &gt;5 years, binge-purge subtype, very low BMI &lt;14, severe medical complications, comorbid depression/OCD/SUD/OCPD/BPD, childhood sexual abuse, family conflict, severe body-image distortion, motivational ambivalence, multiple prior treatment failures, chronicity &gt;10 years...</div>
+      <textarea class="auto-expand" data-key="d9_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D10. Dissociative / Functional Neurological Disorder -->
+<div class="card" id="cardD10">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D10</span>
+    <h3>Dissociative / Functional Neurological Disorder</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Avoid iatrogenic harm from over-investigation, repeated invasive procedures, contradictory labels. Positive diagnosis (not diagnosis of exclusion): Hoover's sign, tremor entrainment, dissociative-seizure semiology. Avoid "not real", "in your head", "psychosomatic" — these damage alliance and are a common viva failure point. Screen comorbid depression, anxiety, trauma, chronic pain. Limit further investigations once diagnosis confirmed.
+    </div>
+    <div class="subsection-title">Immediate Actions & Diagnosis</div>
+    <div class="field">
+      <label class="field-label">Positive diagnosis demonstrated</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d10_hoover"> Hoover's sign</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_entrain"> Tremor entrainment</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_semiology"> Dissociative-seizure semiology</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_other"> Other positive sign (specify below)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Explanation given to patient <span class="field-sublabel">Frame as real, treatable, not conscious control</span></label>
+      <div class="field-hint">'Your nervous system has the wiring intact but the software is mis-firing. This is real, it is not under your conscious control, and it is treatable.'</div>
+      <textarea class="auto-expand" data-key="d10_explain" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Comorbid conditions screened</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d10_comorb_dep"> Depression</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_comorb_anx"> Anxiety</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_comorb_trauma"> Trauma history</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_comorb_pain"> Chronic pain</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Pharmacotherapy (Comorbid Conditions Only)</div>
+    <div class="field">
+      <label class="field-label">No medication treats the functional symptom itself. Pharmacotherapy is reserved for comorbid depression/anxiety.</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d10_escitalopram"> Escitalopram 10 mg OD → 20 mg by week 2 (comorbid depression/anxiety)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_sertraline"> Sertraline 50 mg OD → 100–200 mg/day (alternative)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_amitriptyline"> Amitriptyline 10 mg night → 25–75 mg night (comorbid chronic pain or insomnia; ECG baseline if &gt;50 years)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_pregabalin"> Pregabalin 75 mg BD → 150–300 mg/day (comorbid pain)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_mirtazapine"> Mirtazapine 15–45 mg night (insomnia with appetite loss)</label>
+      </div>
+    </div>
+    <div class="pearl-box">
+      <strong>Clinical Anchor</strong>
+      Avoid benzodiazepines — they worsen dissociation and create dependence.
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d10_pos_expl"> Positive explanation as first therapeutic intervention (therapeutic in 30–50% of acute presentations)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_fnd_pt"> Specialist FND physiotherapy with explicit retraining of normal movement patterns (motor FND)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_cbt_fnd"> CBT for FND 12–16 sessions (chronic or severe presentations)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_family_ed"> Psychoeducation for the family</label>
+        <label class="option-chip"><input type="checkbox" data-key="d10_trauma"> Trauma-focused therapy where trauma is a clear maintaining factor</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family psychoeducation about FND as real and treatable, return-to-work planning, address maintaining psychosocial stressors, MDT review (psychiatry, neurology, physiotherapy)...</div>
+      <textarea class="auto-expand" data-key="d10_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD throughout. Avoid admission wherever possible as it may reinforce sick role. Specialist neuropsychiatric/rehabilitation unit for severe motor FND unresponsive to outpatient treatment. Transition: weekly ×1 month → monthly.</div>
+      <textarea class="auto-expand" data-key="d10_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: acute onset, identifiable acute stressor, short duration &lt;6 months, early diagnosis with positive explanation, good alliance, no comorbid depression/anxiety, no prior FND, no secondary gain, engagement with physiotherapy/psychotherapy, intact premorbid functioning, supportive family that accepts diagnosis... Bad: insidious/fluctuating onset, no identifiable stressor, long duration &gt;1 year, delayed diagnosis with multiple negative investigations, motor deficits worse than sensory/seizure subtypes, comorbid chronic pain/fatigue, comorbid depression/anxiety, secondary gain, prior FND episodes, dependent personality features, family that rejects diagnosis, iatrogenic harm from over-investigation, dissociative seizures at high frequency...</div>
+      <textarea class="auto-expand" data-key="d10_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- D11. Personality Disorder (BPD-emphasised) -->
+<div class="card" id="cardD11">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D11</span>
+    <h3>Personality Disorder — BPD Emphasised</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      BPD has 5–10% lifetime suicide mortality. Brief, planned crisis intervention — NOT a long admission (iatrogenic). Written crisis plan with named contacts. Explicit plan to avoid polypharmacy. No new drug starts during an acute crisis. Consistent plan across providers (inconsistency is iatrogenic).
+    </div>
+    <div class="subsection-title">Immediate Actions</div>
+    <div class="field">
+      <label class="field-label">C-SSRS and risk formulation</label>
+      <textarea class="auto-expand" data-key="d11_risk" placeholder="Document current risk level and formulation..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Written crisis plan completed</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d11_warn"> Warning signs identified</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_steps"> Steps the patient will take</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_contacts"> Named contacts listed</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_means"> Means restriction arranged</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">New drug starts during this acute crisis?</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d11_newdrug" value="no" data-key="d11_newdrug"> No — crisis plan and safety first</label>
+        <label class="option-chip"><input type="radio" name="d11_newdrug" value="yes" data-key="d11_newdrug"> Yes — exceptional circumstance (document)</label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Pharmacotherapy (Targeted, Time-Limited, Minimal)</div>
+    <div class="pearl-box">
+      <strong>Clinical Anchor</strong>
+      NICE CG78 is explicit: drug treatment should NOT be used specifically for BPD or for individual BPD symptoms/behaviours. Where used at all, targets are co-occurring conditions. Prescribing principle: minimum dose, minimum duration, single agent. Benzodiazepines are contraindicated — they disinhibit, worsen impulsivity, increase self-harm, and are habit-forming.
+    </div>
+    <div class="field">
+      <label class="field-label">Co-occurring condition treatment (if clearly present)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d11_ssri"> SSRI (sertraline 50–200 mg or escitalopram 10–20 mg) for comorbid depression — start only when clearly present, not transient reaction; review at 4/8/12 weeks and withdraw if no benefit</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_quetiapine"> Quetiapine 25 mg night → 50–150 mg night, time-limited (review at 6 weeks, taper if possible) — for transient stress-related paranoid thinking and severe sleep disruption</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_topiramate"> Topiramate 25–200 mg (severe affective instability, limited evidence, time-limited trial)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_lamotrigine"> Lamotrigine 25–200 mg with slow titration (severe affective instability)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d11_aripiprazole"> Low-dose aripiprazole 5–10 mg (severe dyscontrol, time-limited)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Polypharmacy avoidance — exit criteria for every drug</label>
+      <div class="field-hint">Every drug added needs an explicit exit criterion. Document review dates and taper plans...</div>
+      <textarea class="auto-expand" data-key="d11_exit" placeholder="Type here..."></textarea>
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological treatment — structured psychotherapy (select primary)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="dbt" data-key="d11_therapy"> DBT 12-month structured programme: weekly individual + weekly skills group + telephone coaching + weekly therapist consultation (gold standard)</label>
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="mbt" data-key="d11_therapy"> MBT 18-month outpatient: weekly individual + weekly group</label>
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="schema" data-key="d11_therapy"> Schema therapy 12–24 months (effective in RCTs for BPD)</label>
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="tfp" data-key="d11_therapy"> TFP weekly twice individual, 12 months minimum</label>
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="stepps" data-key="d11_therapy"> STEPPS 20 sessions group (adjunct)</label>
+        <label class="option-chip"><input type="radio" name="d11_therapy" value="gpm" data-key="d11_therapy"> Good psychiatric management (GPM, Gunderson) — most pragmatic for non-specialist Indian settings; first recommendation where DBT unavailable</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Family psychoeducation about BPD as real and treatable (not bad behaviour), workplace adjustments, peer support (online BPD support groups, carer groups)...</div>
+      <textarea class="auto-expand" data-key="d11_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">OPD as default. Brief planned admission (&lt;72 hours) only for acute risk that cannot be safely contained outpatient, with planned discharge date set at admission. Avoid long admissions and repeated brief admissions (iatrogenic). Admit Sec 89 only in exceptional crisis with confirmed incapacity. Transition: weekly individual contact during first year of any structured psychotherapy, long-term continuity with one primary clinician.</div>
+      <textarea class="auto-expand" data-key="d11_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Good: engagement with structured psychotherapy, continuity with one primary clinician, no comorbid substance use/antisocial features, intact occupational functioning, supportive long-term relationship, no childhood sexual abuse, age (~85% remit by age 50 per McLean), avoidance of polypharmacy, avoidance of long admissions, motivation for change... Bad: comorbid substance use, comorbid antisocial personality features, severe childhood trauma (especially repeated sexual abuse), repeated self-harm/suicide attempts, multiple short hospitalisations (iatrogenic), long admissions (iatrogenic), polypharmacy, frequent therapist changes, family rejection, occupational disability, severe affective instability, severe identity disturbance, chronic suicidality, comorbid eating disorder...</div>
+      <textarea class="auto-expand" data-key="d11_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- D12. Neurocognitive Disorder (Delirium & Dementia) -->
+<div class="card" id="cardD12">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">D12</span>
+    <h3>Neurocognitive Disorder — Delirium & Dementia</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="subsection-title">DELIRIUM</div>
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Falls prevention, identification and treatment of cause, symptomatic control with lowest effective dose of non-benzodiazepine agent. Gentle reorientation, family at bedside, photograph of family, hearing aid and glasses returned. Stop precipitating drugs: opioids, anticholinergics, benzodiazepines, steroids, antihistamines.
+    </div>
+    <div class="field">
+      <label class="field-label">Falls precautions</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_sitter"> Sitter</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_band"> ID wristband</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_rails"> Side rails up</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_mat"> Padded floor mat</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Precipitating drugs stopped</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_stop_opioid"> Opioids</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_stop_ach"> Anticholinergics</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_stop_bzd"> Benzodiazepines</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_stop_steroid"> Steroids</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_stop_antihist"> Antihistamines</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Causes ruled out and treated</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_infection"> Infection (urinalysis, chest X-ray, blood cultures)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_hypoxia"> Hypoxia</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_hypoglyc"> Hypoglycaemia</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_lytes"> Electrolyte derangement</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_dehydration"> Dehydration</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_constipation"> Constipation</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_retention"> Urinary retention</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_cause_pain"> Pain</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Symptomatic control agent</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="d12_del_agent" value="haloperidol" data-key="d12_del_agent"> Haloperidol 0.5 mg PO/IM, repeat 30–60 min PRN, max 3 mg/day elderly (2 mg frail); ECG for QTc baseline and daily; taper and stop once settled 48h</label>
+        <label class="option-chip"><input type="radio" name="d12_del_agent" value="risperidone" data-key="d12_del_agent"> Risperidone 0.25–0.5 mg BD, max 1 mg/day elderly; monitor EPS and orthostasis</label>
+        <label class="option-chip"><input type="radio" name="d12_del_agent" value="olanzapine" data-key="d12_del_agent"> Olanzapine 2.5–5 mg OD (where sedation acceptable)</label>
+        <label class="option-chip"><input type="radio" name="d12_del_agent" value="dexmed" data-key="d12_del_agent"> Dexmedetomidine infusion (ICU, conventional agents failed)</label>
+        <label class="option-chip"><input type="radio" name="d12_del_agent" value="quetiapine" data-key="d12_del_agent"> Quetiapine 12.5–50 mg night (Parkinson's/Lewy body — contraindicates D2 blockade)</label>
+      </div>
+    </div>
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      Benzodiazepines are contraindicated in delirium EXCEPT when cause is alcohol or benzodiazepine withdrawal, in which case lorazepam is the treatment.
+    </div>
+
+    <div class="subsection-title">DEMENTIA (Alzheimer's Pattern, Mild-to-Moderate)</div>
+    <div class="instruction-box">
+      <strong>Immediate priorities</strong>
+      Wandering risk, kitchen safety, driving cessation, financial protection, falls prevention, capacity assessment for treatment decisions, advance care planning, MHCA Section 5 advance directive introduced early.
+    </div>
+    <div class="field">
+      <label class="field-label">Cognitive assessment</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_mmse"> MMSE</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_hmse"> HMSE (Hindi)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_ace"> ACE-III</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Functional assessment</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_iadl"> IADL scales</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_adl"> ADL scales</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Carer assessment</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_zarit"> Zarit Burden Interview</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Medical screen</label>
+      <div class="option-group">
+        <label class="option-chip"><input type="checkbox" data-key="d12_b12"> B12</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_folate_dem"> Folate</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_tsh_dem"> TSH</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_vdrl"> VDRL</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_hiv"> HIV</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_ct"> CT or MRI brain</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_routine"> Routine bloods</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Capacity assessment (MHCA 4-domain framework)</label>
+      <textarea class="auto-expand" data-key="d12_capacity" placeholder="Document all 4 domains for treatment decisions..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Cholinesterase inhibitor selected</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="radio" name="d12_achei" value="donepezil" data-key="d12_achei"> Donepezil 5 mg night ×4 weeks → 10 mg/day; continue as long as cognitive/functional benefit; monitor pulse (bradycardia), GI upset, insomnia, vivid dreams at week 4 and 8; ECG baseline if cardiac history; ~₹130–420/strip</label>
+        <label class="option-chip"><input type="radio" name="d12_achei" value="rivastigmine" data-key="d12_achei"> Rivastigmine 1.5 mg BD oral → 6 mg BD over 4–8 weeks; OR patch 4.6 mg/24h → 9.5 mg or 13.3 mg/24h; preferred for Lewy body dementia and Parkinson's disease dementia</label>
+        <label class="option-chip"><input type="radio" name="d12_achei" value="galantamine" data-key="d12_achei"> Galantamine 8 mg/day → 16–24 mg/day over 4–8 weeks</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Memantine (moderate-to-severe or combination)</label>
+      <div class="field-hint">5 mg/day → 10 mg BD over 4 weeks, target 20 mg/day; monitor renal function baseline and 6-monthly; ~₹190–285/strip</div>
+      <textarea class="auto-expand" data-key="d12_memantine" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">BPSD management — non-pharmacological first</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_unmet"> Identify and treat unmet needs (pain, hunger, thirst, toilet, infection, medication side effects, environmental over-stimulation)</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_routine"> Structured routine</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_remin"> Reminiscence therapy</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_music"> Music therapy</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_family_ed"> Family education</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">BPSD — pharmacological (time-limited, review at 6 weeks, taper if possible)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_risperidone"> Risperidone 0.25 mg BD → 0.5 mg BD, max 1 mg/day; only antipsychotic with regulatory approval for severe BPSD in many jurisdictions; monitor stroke risk factors, BP, EPS, metabolic baseline and 6 weeks</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_ssri"> SSRI (citalopram 10–20 mg or sertraline 50–100 mg) for comorbid depression or agitation where antipsychotic undesirable</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_bpsd_trazodone"> Trazodone 25–100 mg night for sleep disturbance in BPSD</label>
+      </div>
+    </div>
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      Antipsychotics carry a black-box warning for mortality in dementia (cerebrovascular events and all-cause mortality). Time-limit use, review at 6 weeks, taper where possible.
+    </div>
+
+    <div class="subsection-title">Psychological, Social, Disposition & Prognosis</div>
+    <div class="field">
+      <label class="field-label">Psychological interventions</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="d12_cst"> Cognitive stimulation therapy (CST) group, 14 sessions, twice weekly</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_remin"> Reminiscence therapy 6–12 sessions</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_validation"> Validation therapy for moderate-to-severe dementia</label>
+        <label class="option-chip"><input type="checkbox" data-key="d12_caregiver_cbt"> Caregiver CBT for caregiver burden</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">Social/family interventions</label>
+      <div class="field-hint">Caregiver psychoeducation (caregiver burden is strongest predictor of nursing-home placement), respite care and ARDSI linkage, driving cessation discussion, financial protection (power of attorney, joint account), advance care planning and end-of-life discussion...</div>
+      <textarea class="auto-expand" data-key="d12_social" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disposition</label>
+      <div class="field-hint">Delirium: manage on medical/surgical ward where underlying cause treated, psychiatry consultation-liaison; specialist Older Adults Mental Health unit if available. Dementia: home-based care with caregiver support default in Indian context; day-care for moderate stages; specialist dementia care home for severe stages where home care unsustainable. Admit Sec 89 for severe BPSD with risk and incapacity. Follow-up: cognitive reassessment 4–6 weeks post-delirium discharge; 6-monthly cognitive review in dementia (MMSE/HMSE); quarterly caregiver review.</div>
+      <textarea class="auto-expand" data-key="d12_disp" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Prognosis — net statement</label>
+      <div class="field-hint">Delirium good: identifiable reversible cause, prompt treatment, short duration &lt;1 week, no premorbid cognitive impairment, younger age, no comorbidity, supportive family at bedside... Delirium bad: multiple irreversible causes, delayed treatment, long duration, pre-existing cognitive impairment, advanced age, multiple comorbidities, hypoactive/mixed subtype, ICU-acquired, mechanical ventilation, benzodiazepine sedation... Dementia good: later age at onset, slower progression, intact insight early, supportive caregiver, early cholinesterase inhibitor, good vascular risk factor control, absence of BPSD/comorbid depression, advance care planning in place... Dementia bad: early-onset &lt;65, rapid decline, frontotemporal subtype, severe BPSD, comorbid depression, poor caregiver support, caregiver burnout, multiple medical comorbidities, recurrent delirium episodes...</div>
+      <textarea class="auto-expand" data-key="d12_prog" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== E. PROGNOSIS ACROSS DISORDERS ===== -->
+<div class="card" id="cardE">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">E</span>
+    <h3>Prognosis Across Disorders — Consolidated</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>How to document</strong>
+      Never give a flat "the prognosis is good" or "the prognosis is poor". The viva-grade answer is always qualified: which factors are favourable, which are unfavourable, what is the net statement, and what would change the trajectory most.
+    </div>
+    <div class="pearl-box">
+      <strong>Exam Pearl</strong>
+      For every disorder the viva expects a qualified net statement. The format is: "good factors are X, Y, Z, bad factors are A, B, C, the net in this patient is [guarded / cautiously favourable / poor], and the single change that would most improve the trajectory is [specific intervention]."
+    </div>
+    <div class="field">
+      <label class="field-label">E1. Always qualify <span class="field-sublabel">Never flat good/poor. Qualify: favourable vs unfavourable, net statement, what would change trajectory most.</span></label>
+      <div class="field-hint">In this patient, the prognosis is [guarded/cautiously favourable/poor] because...</div>
+      <textarea class="auto-expand" data-key="e1_qualify" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">E2. Map to the patient <span class="field-sublabel">Walk through factors for this specific patient, not a generic list.</span></label>
+      <div class="field-hint">'In this patient, the prognosis is guarded but cautiously favourable because A, B, and C, despite D and E.'</div>
+      <textarea class="auto-expand" data-key="e2_map" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">E3. Common favourable factors across disorders (tick present in this patient)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="e3_acute"> Acute onset with identifiable precipitant</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_short"> Short duration before treatment</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_premorbid"> Good premorbid functioning</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_family"> Supportive low-EE family</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_insight"> Intact insight</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_nosub"> No comorbid substance use</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_response"> Good response to first-line treatment</label>
+        <label class="option-chip"><input type="checkbox" data-key="e3_alliance"> Good therapeutic alliance</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">E4. Common unfavourable factors across disorders (tick present in this patient)</label>
+      <div class="option-group" style="flex-direction:column;">
+        <label class="option-chip"><input type="checkbox" data-key="e4_insidious"> Insidious onset</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_long"> Long duration before treatment</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_poorpm"> Poor premorbid functioning</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_high_ee"> High-EE or rejecting family</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_noinsight"> Absent insight</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_subuse"> Comorbid substance use</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_resistant"> Treatment resistance</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_adversity"> Childhood adversity</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_chronic_stress"> Chronic psychosocial stress</label>
+        <label class="option-chip"><input type="checkbox" data-key="e4_attempts"> Suicide attempts</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">E5. Residual symptoms at end of acute treatment? <span class="field-sublabel">Across depression, bipolar disorder, schizophrenia, OCD, and anxiety disorders, residual symptoms are the single strongest predictor of relapse. Target is full remission, not partial response.</span></label>
+      <div class="option-group">
+        <label class="option-chip"><input type="radio" name="e5_residual" value="none" data-key="e5_residual"> None — full remission targeted</label>
+        <label class="option-chip"><input type="radio" name="e5_residual" value="some" data-key="e5_residual"> Some residual symptoms — plan to address</label>
+        <label class="option-chip"><input type="radio" name="e5_residual" value="significant" data-key="e5_residual"> Significant — high relapse risk, escalate treatment</label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">E6. Continuity of care plan <span class="field-sublabel">The single strongest outcome predictor in BPD, and a major predictor across all chronic mental illnesses.</span></label>
+      <div class="field-hint">Named primary clinician, scheduled follow-up frequency, contingency plan if clinician changes...</div>
+      <textarea class="auto-expand" data-key="e6_continuity" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== G. SAMPLE STEMS ===== -->
+<div class="card" id="cardG">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">G</span>
+    <h3>Sample Stems (Verbatim Viva Openings)</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="instruction-box">
+      <strong>How to document</strong>
+      These are canonical opening sentences for the viva. Customise each for your patient by inserting the diagnosis, drug names, doses, and patient-specific features. Practise saying them aloud until they are automatic.
+    </div>
+    <div class="field">
+      <label class="field-label">Generic management opening</label>
+      <div class="field-hint">My management of this patient with [diagnosis] would proceed in five domains. I would address safety first, then biological treatment, then psychological intervention, then social and family work, and finally disposition and follow-up. Across three time phases, immediate, short-term, and long-term.</div>
+      <textarea class="auto-expand" data-key="g_generic" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Safety opening (customised for this case)</label>
+      <div class="field-hint">The most pressing concern in this case is [specific risk]. I would address this immediately by [specific action]. The rationale is [patient-specific feature].</div>
+      <textarea class="auto-expand" data-key="g_safety" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Drug-defence opening (customised for this case)</label>
+      <div class="field-hint">I would start [drug] at [dose], titrating to [target dose] over [duration]. The indication is [diagnosis]. The IPS-CPG 2026 lists this as a [first-line/second-line] option. The reason I prefer this over [alternative] in this patient is [specific feature]. I would monitor [named investigation] at [frequency] and review response at [week]. If response is inadequate by [week], I would [specific next step].</div>
+      <textarea class="auto-expand" data-key="g_drug" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Family meeting opening</label>
+      <div class="field-hint">I would convene a family meeting within 24 hours of admission. Present would be the patient where capacity allows, the primary caregiver, and the key family decision-maker. The agenda would cover the diagnosis in lay language, the treatment plan with rationale, the expected timeline of response, side effects to watch for, early warning signs of relapse, the family's specific role, and what to do in a crisis.</div>
+      <textarea class="auto-expand" data-key="g_family" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">MHCA Section 89 opening (if applicable)</label>
+      <div class="field-hint">This patient meets criteria for supported admission under MHCA Section 89 because they have shown an inability to care for themselves to a degree that places them at risk, they lack capacity to make the admission decision, and admission is the least restrictive option that ensures safety. The application would be made by [family member] as the nominated representative, and the admission confirmed by two psychiatrists. Mental Health Review Board notification is required if the admission extends beyond 30 days.</div>
+      <textarea class="auto-expand" data-key="g_mhca" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Discharge planning opening</label>
+      <div class="field-hint">Discharge planning began on day one. The discharge package consists of a written prescription with timing and doses, a follow-up appointment within 2 weeks, a crisis plan with three named contacts, a family briefing about relapse-warning signs, and a referral to the local DMHP outreach worker for continuity. The patient leaves with the medication in hand, not a prescription to fill.</div>
+      <textarea class="auto-expand" data-key="g_discharge" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Disorder-specific opening (customise for this case)</label>
+      <div class="field-hint">Select and customise the relevant disorder-specific opening from the textbook...</div>
+      <textarea class="auto-expand" data-key="g_disorder" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== H. CROSS-REFERENCES ===== -->
+<div class="card" id="cardH">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="section-id">H</span>
+    <h3>Cross-References to Other Chapters</h3>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="field">
+      <label class="field-label">Chapter 03 (HOPI) — index episode that this management plan treats</label>
+      <textarea class="auto-expand" data-key="h_ch03" placeholder="Symptom chronology that informs drug choice..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 04 (Negative history) — comorbidities ruled out</label>
+      <div class="field-hint">Comorbidities ruled out that would have changed the plan...</div>
+      <textarea class="auto-expand" data-key="h_ch04" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 05 (Past history) — past treatment response narrative</label>
+      <div class="field-hint">Past treatment response that predicts current response; ISBD nomenclature for course modifiers...</div>
+      <textarea class="auto-expand" data-key="h_ch05" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 06 (Family history) — treatment response in relatives</label>
+      <div class="field-hint">Family history of lithium responder, clozapine responder, etc...</div>
+      <textarea class="auto-expand" data-key="h_ch06" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapters 09–10 (GPE & Head-to-toe) — physical findings modifying drug choice</label>
+      <div class="field-hint">Physical findings that contraindicate or modify drug choice...</div>
+      <textarea class="auto-expand" data-key="h_ch09" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 11 (MSE) — cross-sectional severity determining admission; catatonia screen</label>
+      <div class="field-hint">MSE findings that determined admission, catatonia screen triggering lorazepam challenge or ECT...</div>
+      <textarea class="auto-expand" data-key="h_ch11" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 12 (Diagnosis) — formal diagnosis justifying drug class</label>
+      <div class="field-hint">Formal diagnosis and justification for selected drug class...</div>
+      <textarea class="auto-expand" data-key="h_ch12" placeholder="Type here..."></textarea>
+    </div>
+    <div class="field">
+      <label class="field-label">Chapter 13 (Investigations) — baseline panel and ongoing monitoring</label>
+      <div class="field-hint">Baseline investigations before pharmacotherapy and ongoing monitoring plan...</div>
+      <textarea class="auto-expand" data-key="h_ch13" placeholder="Type here..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===== I. CHAPTER REFERENCES ===== -->
+
+<!-- ===== STICKY BOTTOM BAR ===== -->
+<div class="sticky-bar">
+  <button class="btn btn-primary" onclick="window.print()">🖨️ Export PDF</button>
+  <button class="btn btn-success" onclick="copySummary()">📋 Copy Summary</button>
+  <button class="btn btn-secondary" onclick="resyncSummary()">🔄 Re-sync</button>
+  <button class="btn btn-danger" onclick="clearAll()">🗑 Clear</button>
+</div>
+
+<!-- ===== STATUS BAR ===== -->
+<div class="status-bar" id="statusBar">
+  <span class="status-dot"></span>
+  <span id="lastSaved">Last saved: just now</span>
+</div>
+
+
+
+<script>
+// ===== STATE =====
+let manualEdit = false;
+let saveTimer = null;
+const STORAGE_KEY = 'ch14_mgmt_planning_v1';
+const BACKUP_PREFIX = 'ch14_backup_';
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  
+  // Final safety resize after everything settles
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => {
+      resizeTextarea(el);
+    });
+  }, 300);
+});
+
+// ===== TOGGLE CARDS / QR PANELS =====
+function toggleCard(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('open');
+  saveData();
+}
+
+function toggleQr(header) {
+  const panel = header.closest('.qr-panel');
+  panel.classList.toggle('open');
+  saveData();
+}
+
+// ===== AUTO-EXPAND TEXTAREAS =====
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  // First, mirror all placeholders to title attributes so users can long-press to read full text
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    if (el.placeholder && !el.title) {
+      el.title = el.placeholder;
+    }
+  });
+
+  // Set up auto-expand for ALL textareas (including ones just converted from inputs)
+  document.querySelectorAll('textarea').forEach(el => {
+    // Remove any inline height that might be constraining
+    el.style.overflow = 'hidden';
+    
+    const grow = function() {
+      resizeTextarea(this);
+    };
+    
+    el.addEventListener('input', grow);
+    el.addEventListener('paste', function() {
+      // Paste needs a small delay for content to register
+      setTimeout(() => resizeTextarea(this), 10);
+    });
+    
+    // Initial sizing after a brief delay to ensure fonts/rendering settled
+    setTimeout(() => resizeTextarea(el), 50);
+  });
+}
+
+// ===== CHIP STYLES =====
+function initChipStyles() {
+  document.querySelectorAll('.option-chip input').forEach(input => {
+    const update = () => {
+      const chip = input.closest('.option-chip');
+      if (input.checked || input.type === 'radio') {
+        // For radios, uncheck siblings first
+        if (input.type === 'radio' && input.checked) {
+          const name = input.name;
+          document.querySelectorAll('input[name="' + name + '"]').forEach(rb => {
+            rb.closest('.option-chip').classList.toggle('checked', rb.checked);
+          });
+        } else {
+          chip.classList.toggle('checked', input.checked);
+        }
+      }
+    };
+    input.addEventListener('change', () => { update(); updateSummary(); });
+    update();
+  });
+}
+
+// ===== AUTO-SAVE =====
+function initAutoSave() {
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    el.addEventListener('input', () => {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        saveData();
+      }, 800);
+    });
+    el.addEventListener('change', () => {
+      saveData();
+    });
+  });
+}
+
+function saveData() {
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    if (el.type === 'checkbox') {
+      data[key] = el.checked;
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  // Save card open states
+  document.querySelectorAll('.card').forEach(card => {
+    data['_card_' + card.id] = card.classList.contains('open');
+  });
+  // Save QR panel states
+  document.querySelectorAll('.qr-panel').forEach(panel => {
+    data['_qr_' + panel.id] = panel.classList.contains('open');
+  });
+  // Save summary manual edit state
+  data['_manualEdit'] = manualEdit;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  updateTimestamp();
+}
+
+function restoreData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+      const key = el.getAttribute('data-key');
+      if (data.hasOwnProperty(key)) {
+        if (el.type === 'checkbox') {
+          el.checked = data[key];
+        } else if (el.type === 'radio') {
+          el.checked = (data[key] === el.value);
+        } else {
+          el.value = data[key];
+        }
+      }
+    });
+    // Restore card states
+    document.querySelectorAll('.card').forEach(card => {
+      const key = '_card_' + card.id;
+      if (data.hasOwnProperty(key)) {
+        card.classList.toggle('open', data[key]);
+      }
+    });
+    // Restore QR panel states
+    document.querySelectorAll('.qr-panel').forEach(panel => {
+      const key = '_qr_' + panel.id;
+      if (data.hasOwnProperty(key)) {
+        panel.classList.toggle('open', data[key]);
+      }
+    });
+    // Restore manual edit state
+    if (data._manualEdit) manualEdit = true;
+
+    // Re-init chip styles after restore
+    initChipStyles();
+    
+    // Resize all textareas after restore so content is fully visible
+    setTimeout(() => {
+      document.querySelectorAll('textarea').forEach(el => {
+        resizeTextarea(el);
+      });
+    }, 100);
+  } catch (e) {
+    console.error('Restore failed', e);
+  }
+}
+
+function updateTimestamp() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('lastSaved').textContent = 'Last saved: ' + timeStr;
+}
+
+// ===== SUMMARY =====
+function updateSummary() {
+  if (manualEdit) return;
+
+  const parts = [];
+
+  // Gather key fields for auto-summary
+  const getVal = (key) => {
+    const el = document.querySelector('[data-key="' + key + '"]');
+    return el ? el.value.trim() : '';
+  };
+  const getRadio = (name) => {
+    const el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  };
+
+  const diag = getVal('c1_stem') || getVal('d1_disp') || getVal('d2_disp') || '';
+  const safety = getVal('a1_safety') || getVal('b1_tonight') || '';
+  const bio = getVal('a1_bio') || getVal('b1_whydrug') || '';
+  const psycho = getVal('a1_psych') || '';
+  const social = getVal('a1_social') || '';
+  const disp = getVal('a1_disp') || '';
+  const mhca = getRadio('mhca_sec');
+  const drug = getVal('c2_drug') || '';
+  const dose = getVal('c2_dose') || '';
+  const exit = getVal('c2_exit') || '';
+  const monitor = getVal('b1_monitor') || getVal('c2_safety') || '';
+  const prog = getVal('e1_qualify') || '';
+
+  if (diag) parts.push('MANAGEMENT PLAN: ' + diag.substring(0, 200));
+  if (safety) parts.push('SAFETY: ' + safety.substring(0, 150));
+  if (mhca) parts.push('MHCA: Section ' + mhca);
+  if (drug) parts.push('DRUG: ' + drug + (dose ? ' at ' + dose : ''));
+  if (monitor) parts.push('MONITORING: ' + monitor.substring(0, 120));
+  if (exit) parts.push('EXIT CRITERIA: ' + exit.substring(0, 120));
+  if (bio) parts.push('BIOLOGICAL: ' + bio.substring(0, 120));
+  if (psycho) parts.push('PSYCHOLOGICAL: ' + psycho.substring(0, 120));
+  if (social) parts.push('SOCIAL: ' + social.substring(0, 120));
+  if (disp) parts.push('DISPOSITION: ' + disp.substring(0, 150));
+  if (prog) parts.push('PROGNOSIS: ' + prog.substring(0, 200));
+
+  const summary = parts.join('\n\n');
+  const ta = document.getElementById('liveSummary');
+  if (ta && !manualEdit) {
+    ta.value = summary;
+    resizeTextarea(ta);
+  }
+}
+
+// Track manual edits on summary
+const summaryTa = document.getElementById('liveSummary');
+if (summaryTa) {
+  summaryTa.addEventListener('input', function() {
+    manualEdit = true;
+    resizeTextarea(this);
+    saveData();
+  });
+}
+
+function resyncSummary() {
+  manualEdit = false;
+  saveData();
+  updateSummary();
+  // Visual feedback
+  const btn = event ? event.target : null;
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Re-synced';
+    setTimeout(() => btn.textContent = orig, 1500);
+  }
+}
+
+function copySummary() {
+  const ta = document.getElementById('liveSummary');
+  if (!ta) return;
+  ta.select();
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+
+  const btn = event ? event.target : null;
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = orig, 1500);
+  }
+}
+
+// ===== CLEAR ALL =====
+function clearAll() {
+  if (!confirm('Clear ALL data? This will create a timestamped backup first. This cannot be undone.')) return;
+
+  // Create backup
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    const backupKey = BACKUP_PREFIX + new Date().toISOString().replace(/[:.]/g, '-');
+    localStorage.setItem(backupKey, raw);
+  }
+
+  // Clear current
+  localStorage.removeItem(STORAGE_KEY);
+
+  // Clear form
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = false;
+    } else {
+      el.value = '';
+    }
+  });
+
+  // Reset chips
+  document.querySelectorAll('.option-chip').forEach(chip => chip.classList.remove('checked'));
+
+  // Reset summary
+  manualEdit = false;
+  const ta = document.getElementById('liveSummary');
+  if (ta) ta.value = '';
+
+  updateTimestamp();
+  alert('All data cleared. A timestamped backup was saved to localStorage.');
+}
+
+// ===== PRINT PREP =====
+window.addEventListener('beforeprint', function() {
+  // Ensure all textareas are sized for print
+  document.querySelectorAll('textarea').forEach(ta => resizeTextarea(ta));
+  // Open all cards for print
+  document.querySelectorAll('.card').forEach(card => card.classList.add('open'));
+  document.querySelectorAll('.qr-panel').forEach(panel => panel.classList.add('open'));
+  document.querySelectorAll('.help-panel').forEach(panel => panel.classList.add('open'));
+});
+
+window.addEventListener('afterprint', function() {
+  // Optional: could restore previous states, but leaving open is fine
+});
+</script>
+
+</body>
+</html>

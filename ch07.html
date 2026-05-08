@@ -1,0 +1,3003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chapter 07 — Personal History</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #000000;
+  color: #e0e0e0;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  padding-bottom: 120px;
+}
+
+/* ===== AMOLED DARK THEME ===== */
+:root {
+  --bg-primary: #000000;
+  --bg-card: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-input: #161616;
+  --border: #2a2a2a;
+  --border-focus: #4a9eff;
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a0a0;
+  --text-muted: #707070;
+  --accent: #4a9eff;
+  --accent-soft: rgba(74,158,255,0.15);
+  --accent-glow: rgba(74,158,255,0.3);
+  --success: #34c759;
+  --warning: #ff9500;
+  --danger: #ff3b30;
+  --instruction-bg: #0d1b2a;
+  --instruction-border: #1b3a5c;
+  --help-bg: #1a1a2e;
+  --help-border: #2d2d44;
+  --pearl-bg: #1a1200;
+  --pearl-border: #4a3a00;
+  --anchor-bg: #001a12;
+  --anchor-border: #004d33;
+  --quickref-bg: #111;
+  --chip-bg: #1f1f1f;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px;
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.app-header .subtitle {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.save-indicator {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.save-indicator.saved { color: var(--success); }
+
+/* ===== QUICK REFERENCE PANELS ===== */
+.quickref-bar {
+  padding: 12px 16px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  max-width: 100%;
+}
+.quickref-bar[open] {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.quickref-bar summary {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+.quickref-bar summary::-webkit-details-marker { display: none; }
+.quickref-bar summary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform 0.2s;
+}
+.quickref-bar[open] summary::before { transform: rotate(90deg); }
+.quickref-content {
+  padding: 12px 0;
+  display: grid;
+  gap: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.quickref-card {
+  background: var(--quickref-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.quickref-card h4 {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.quickref-card ul, .quickref-card ol {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.quickref-card li { margin-bottom: 4px; }
+
+/* ===== DATA TABLE WRAP ===== */
+.data-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.quickref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 360px;
+}
+.quickref-table th, .quickref-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.quickref-table th {
+  color: var(--text-primary);
+  font-weight: 600;
+  background: var(--bg-elevated);
+}
+
+/* ===== SUMMARY BOX ===== */
+.summary-box {
+  margin: 12px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.summary-box h3 {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary-textarea {
+  width: 100%;
+  min-height: 56px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow: hidden;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  outline: none;
+}
+.summary-textarea::placeholder { color: #777777; opacity: 1; }
+.summary-textarea:focus { border-color: var(--border-focus); }
+.summary-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== ACCORDION CARDS ===== */
+.accordion {
+  margin: 10px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  min-height: 52px;
+  cursor: pointer;
+  background: var(--bg-card);
+  border: none;
+  width: 100%;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.accordion-header:active { background: var(--bg-elevated); }
+.accordion-header .chevron {
+  transition: transform 0.25s ease;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+.accordion[open] .chevron { transform: rotate(180deg); }
+.accordion-body {
+  padding: 0 16px 16px;
+  display: none;
+}
+.accordion[open] .accordion-body { display: block; }
+.section-badge {
+  display: inline-block;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== INSTRUCTION BOXES ===== */
+.instruction-box {
+  background: var(--instruction-bg);
+  border-left: 3px solid var(--instruction-border);
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.instruction-box strong {
+  color: var(--accent);
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.instruction-box ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.instruction-box li { margin-bottom: 4px; }
+
+/* ===== CLINICAL ANCHOR / EXAM PEARL ===== */
+.pearl-box {
+  background: var(--pearl-bg);
+  border-left: 3px solid var(--pearl-border);
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  color: #c9a84c;
+}
+.pearl-box strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.anchor-box {
+  background: var(--anchor-bg);
+  border-left: 3px solid var(--anchor-border);
+  border-radius: 0 8px 8px 0;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  color: #4cd9a4;
+}
+.anchor-box strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group {
+  margin: 14px 0;
+}
+.form-group > label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.form-group .label-hint {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%;
+  min-height: 52px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* ===== TEXTAREA ===== */
+textarea {
+  width: 100%;
+  min-height: 56px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  overflow: hidden;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+textarea::placeholder { color: #777777; opacity: 1; }
+textarea:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+/* ===== FIELD HINT ===== */
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  word-wrap: break-word;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* ===== OPTION CHIPS ===== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+@media (min-width: 480px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+}
+.option-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  min-height: 52px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 100%;
+  overflow-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
+}
+.option-chip:active { background: var(--bg-elevated); }
+.option-chip.checked {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text-primary);
+}
+input[type="checkbox"], input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.option-chip .chip-text { flex: 1; }
+
+/* ===== HELP PANEL ===== */
+.help-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: var(--help-bg);
+  border: 1px solid var(--help-border);
+  color: var(--accent);
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-left: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.help-panel {
+  display: none;
+  background: var(--help-bg);
+  border: 1px solid var(--help-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.help-panel.visible { display: block; }
+.help-panel strong { color: var(--accent); }
+.help-panel em { color: #c9a84c; font-style: normal; }
+
+/* ===== SUBSECTION HEADERS ===== */
+.subsection-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 18px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  min-height: 52px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s, opacity 0.15s;
+  outline: none;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-success {
+  background: var(--success);
+  color: #000;
+}
+
+/* ===== STICKY BOTTOM BAR ===== */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.sticky-bar .btn { flex: 1 1 140px; max-width: 220px; }
+
+/* ===== DISORDER BLOCK D ===== */
+.disorder-grid {
+  display: grid;
+  gap: 10px;
+}
+.disorder-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+.disorder-card h4 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+.disorder-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== PRINT CSS ===== */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    padding-bottom: 0 !important;
+    font-size: 11pt !important;
+    overflow-x: visible !important;
+    max-width: none !important;
+  }
+  .app-header, .sticky-bar, .quickref-bar, .btn, .help-trigger,
+  .accordion-header, .summary-actions, .instruction-box, .pearl-box, .anchor-box {
+    display: none !important;
+  }
+  .accordion { border: 1px solid #ccc !important; margin: 10px 0 !important; }
+  .accordion-body { display: block !important; padding: 12px !important; }
+  .accordion-header-print {
+    display: block !important;
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 8px 0;
+    border-bottom: 2px solid #000;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+  input, select {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #999 !important;
+    color: #000 !important;
+    padding: 4px 0 !important;
+    box-shadow: none !important;
+  }
+  textarea {
+    background: transparent !important;
+    border: 1px solid #999 !important;
+    color: #000 !important;
+    overflow: visible !important;
+    resize: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 4px 0 !important;
+    box-shadow: none !important;
+  }
+  .option-chip {
+    background: transparent !important;
+    border: none !important;
+    padding: 2px 0 !important;
+    min-height: auto !important;
+  }
+  .option-chip:not(.checked) { display: none !important; }
+  .option-chip.checked::before {
+    content: "[x] ";
+  }
+  .option-chip.checked {
+    background: transparent !important;
+  }
+  .help-panel { display: none !important; }
+  .section-badge { color: #000 !important; background: #ddd !important; }
+  .form-group label { color: #000 !important; }
+  .subsection-title { color: #000 !important; border-color: #999 !important; }
+  .disorder-card { border: 1px solid #ccc !important; }
+  .disorder-card h4 { color: #000 !important; }
+  .disorder-card p { color: #333 !important; }
+  .quickref-card { border: 1px solid #ccc !important; }
+  .quickref-card h4 { color: #000 !important; }
+  .quickref-table th, .quickref-table td { border-color: #ccc !important; color: #000 !important; }
+  .summary-box { border: 1px solid #ccc !important; }
+  .summary-box h3 { color: #000 !important; }
+  .summary-textarea { border: 1px solid #999 !important; }
+  .field-hint { color: #333 !important; border-color: #999 !important; }
+
+  .page-break { page-break-before: always; }
+  .no-break { page-break-inside: avoid; }
+}
+.accordion-header-print { display: none; }
+
+/* ===== MODAL / CONFIRM ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.visible { display: flex; }
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+.modal-box h3 { margin: 0 0 10px; font-size: 1rem; }
+.modal-box p { margin: 0 0 16px; font-size: 0.9rem; color: var(--text-secondary); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ===== UTILITIES ===== */
+.text-muted { color: var(--text-muted); }
+.text-small { font-size: 0.8rem; }
+.flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.mb-0 { margin-bottom: 0; }
+.mt-10 { margin-top: 10px; }
+.inline-field { display: inline-block; width: auto; min-width: 80px; }
+</style>
+</head>
+<body>
+
+
+<!-- HEADER -->
+<header class="app-header">
+  <h1>Chapter 07 — Personal History</h1>
+  <p class="subtitle">The Adult Psychiatry History-Taking Compendium · NIMHANS Framework</p>
+  <div class="header-meta">
+    <span class="save-indicator" id="saveIndicator">Ready</span>
+    <button class="btn btn-danger" style="min-height:40px;padding:6px 12px;font-size:0.75rem;" onclick="clearAll()">Clear All</button>
+  </div>
+</header>
+
+<!-- QUICK REFERENCE -->
+<details class="quickref-bar" id="quickref">
+  <summary>Quick Reference: PERSONAL Mnemonic &amp; Key Grids</summary>
+  <div class="quickref-content">
+    <div class="quickref-card">
+      <h4>PERSONAL Mnemonic (Viva Walk-Through)</h4>
+      <ul>
+        <li><b>P</b> — Perinatal (antenatal, perinatal, neonatal, milestones)</li>
+        <li><b>E</b> — Early childhood, temperament (A2)</li>
+        <li><b>R</b> — Reported ACEs (A4)</li>
+        <li><b>S</b> — Schooling (A5)</li>
+        <li><b>O</b> — Occupation (A6)</li>
+        <li><b>N</b> — Nuptial / Marital (A9)</li>
+        <li><b>A</b> — Addictions / Substance trajectory (A10)</li>
+        <li><b>L</b> — Legal / Forensic (A11)</li>
+      </ul>
+      <p class="text-small text-muted" style="margin:6px 0 0;">Menstrual &amp; reproductive sit inside the relevant epoch for women; religious identity (A12) after L; premorbid personality (Ch 08) follows.</p>
+    </div>
+    <div class="quickref-card">
+      <h4>ACE Ten-Item Structure (Felitti et al. 1998)</h4>
+      <div class="data-table-wrap"><table class="quickref-table">
+        <tr><th>Group</th><th>Items</th><th>Clinical note</th></tr>
+        <tr><td>Abuse (3)</td><td>Physical, emotional, sexual</td><td>Sexual abuse almost always intrafamilial; rarely volunteered</td></tr>
+        <tr><td>Neglect (2)</td><td>Physical, emotional</td><td>Emotional invalidation often normalised as parenting</td></tr>
+        <tr><td>Household dysfunction (5)</td><td>Parental separation, witnessed domestic violence, household substance use, household mental illness, incarcerated member</td><td>ACE ≥4 = substantially elevated lifetime risk</td></tr>
+      </table></div>
+    </div>
+    <div class="quickref-card">
+      <h4>Thomas &amp; Chess Temperament Types</h4>
+      <div class="data-table-wrap"><table class="quickref-table">
+        <tr><th>Type</th><th>Prevalence</th><th>Features</th><th>Risk association</th></tr>
+        <tr><td>Easy</td><td>40%</td><td>Predictable rhythms, positive mood, easily soothed</td><td>Low</td></tr>
+        <tr><td>Difficult</td><td>10%</td><td>Irregular rhythms, intense negative reactions, slow adapt</td><td>Elevated CD/ADHD</td></tr>
+        <tr><td>Slow-to-warm</td><td>15%</td><td>Low activity, mild reactions, gradual adaptation</td><td>Moderate</td></tr>
+        <tr><td>Behaviourally inhibited</td><td>—</td><td>High fearful distress, withdrawal from novelty</td><td>Anxiety, social phobia, depression</td></tr>
+      </table></div>
+    </div>
+    <div class="quickref-card">
+      <h4>Substance Trajectory — Six Questions</h4>
+      <ol>
+        <li>First exposure — age, context, introducer, reaction</li>
+        <li>First regular use — transition, function served</li>
+        <li>Escalation — inflection points</li>
+        <li>Peak — heaviest pattern, consequences</li>
+        <li>Quit attempts — number, longest abstinence, relapse triggers</li>
+        <li>Current pattern — quantity, frequency, route, continuing harm</li>
+      </ol>
+    </div>
+    <div class="quickref-card">
+      <h4>Conduct Disorder → ASPD Trajectory (Three Phases)</h4>
+      <div class="data-table-wrap"><table class="quickref-table">
+        <tr><th>Phase</th><th>Age</th><th>Key items</th></tr>
+        <tr><td>Childhood conduct</td><td>~8–12</td><td>Aggression, cruelty, fire-setting, theft, truancy, running away</td></tr>
+        <tr><td>Adolescent escalation</td><td>13–17</td><td>Delinquent peers, suspension, juvenile justice, first arrest, substance co-onset</td></tr>
+        <tr><td>Adult forensic</td><td>18+</td><td>Arrests by category, convictions, incarceration, parole, violence in home</td></tr>
+      </table></div>
+    </div>
+    <div class="quickref-card">
+      <h4>5P Sexual History Framework</h4>
+      <ol>
+        <li><b>Partners</b> — current, number, gender</li>
+        <li><b>Practices</b> — behaviours, functioning (libido, arousal, orgasm, pain)</li>
+        <li><b>Protection</b> — contraception, barrier use</li>
+        <li><b>Past STI</b> — history, testing</li>
+        <li><b>Pregnancy intention</b> — plus sexual trauma (end)</li>
+      </ol>
+    </div>
+    <div class="quickref-card">
+      <h4>Disorder-Specific Tailoring Priorities</h4>
+      <div class="data-table-wrap"><table class="quickref-table">
+        <tr><th>Disorder</th><th>Highest-yield epoch</th></tr>
+        <tr><td>Schizophrenia / FEP</td><td>Schooling decline; cannabis screen; religious help-seeking</td></tr>
+        <tr><td>Mania / BP-I</td><td>Perinatal psychiatric history (women); occupational episodic collapse</td></tr>
+        <tr><td>BP depression</td><td>Prior unrecognised hypomania probe</td></tr>
+        <tr><td>MDD</td><td>Childhood loss &lt;11; ACEs; perinatal psychiatric history</td></tr>
+        <tr><td>Alcohol SUD</td><td>Witnessed paternal alcohol + maternal beating (ACEs); developmental walk</td></tr>
+        <tr><td>Panic disorder</td><td>Behaviourally inhibited childhood; school refusal; conscientious-overachiever</td></tr>
+        <tr><td>OCD</td><td>Childhood rituals; religious/moral scrupulosity; long pre-presentation phase</td></tr>
+        <tr><td>PTSD</td><td>Index trauma documentation; childhood sexual abuse</td></tr>
+        <tr><td>Anorexia nervosa</td><td>Feeding history; peri-pubertal body image; cultural weight teasing</td></tr>
+        <tr><td>Dissociative / FND</td><td>ACEs (very high); alexithymia; remembered "model"</td></tr>
+        <tr><td>BPD</td><td>Attachment disruption; emotional invalidation; first self-harm 12–16</td></tr>
+        <tr><td>ASPD</td><td>Childhood-onset conduct symptoms; forensic arc; occupational instability</td></tr>
+        <tr><td>Neurocognitive</td><td>Educational level (cognitive reserve); occupational complexity; trajectory of decline</td></tr>
+      </table></div>
+    </div>
+  </div>
+</details>
+
+<!-- AUTO-GENERATED SUMMARY -->
+<div class="summary-box no-break">
+  <h3>Live Summary</h3>
+  <div class="field-hint">Summary builds as you fill sections. Edit to pause auto-sync.</div>
+<textarea data-key="summaryBox" class="summary-textarea" id="summaryBox" placeholder="Type here..."></textarea>
+  <div class="summary-actions">
+    <button class="btn btn-secondary" onclick="resyncSummary()">Re-sync Auto</button>
+    <button class="btn btn-primary" onclick="copySummary()">Copy Summary</button>
+  </div>
+</div>
+
+
+<!-- A1 -->
+<details class="accordion" id="A1" open>
+  <summary class="accordion-header"><div><span class="section-badge">A1</span>Antenatal, Perinatal &amp; Neonatal</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Perinatal complications (prolonged labour, hypoxia, low birth weight, winter birth) are over-represented in schizophrenia. Obstetric history shapes cognitive reserve and neurodevelopmental risk.</li>
+        <li><b>Ask:</b> The mother or oldest available informant. The patient cannot remember her own perinatal course.</li>
+        <li><b>Document:</b> If unknowable, write exactly: "Birth and early development not known to the available informants." Do not invent.</li>
+        <li><b>Pitfall:</b> Documenting antenatal history in a 45-year-old without naming an informant implies fabrication.</li>
+      </ul>
+    </div>
+
+    <div class="anchor-box no-break">
+      <strong>Clinical Anchor</strong>
+      In adult Indian practice, A1 is very frequently unknowable. The honest documentation is "Birth and early development not known to the available informants." Examiners do not penalise honest absence; they penalise confabulated detail.
+    </div>
+
+    <div class="form-group">
+      <label>Informant for this section <button class="help-trigger" onclick="toggleHelp('A1_help1')">ℹ</button></label>
+      <input  data-key="a1_informant"type="text" id="a1_informant" placeholder="Name, relation, age" oninput="updateSummary()">
+      <div class="help-panel" id="A1_help1">
+        <em>Sample phrasing:</em> "I need to ask about your birth and early childhood. Do you have your mother or an older relative who was around at that time?"<br>
+        If no informant: "Sometimes people cannot tell me much about early childhood — that is alright."
+      </div>
+    </div>
+
+    <div class="subsection-title">Antenatal</div>
+    <div class="form-group">
+      <label>Pregnancy planned?</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_planned"type="radio" name="a1_planned" value="Planned" onchange="updateSummary()"><span class="chip-text">Planned</span></label>
+        <label class="option-chip"><input  data-key="a1_planned"type="radio" name="a1_planned" value="Unplanned" onchange="updateSummary()"><span class="chip-text">Unplanned</span></label>
+        <label class="option-chip"><input  data-key="a1_planned"type="radio" name="a1_planned" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Maternal age at pregnancy</label>
+      <input  data-key="a1_maternal_age"type="number" id="a1_maternal_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Antenatal care <button class="help-trigger" onclick="toggleHelp('A1_help_anc')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_anc"type="radio" name="a1_anc" value="Regular" onchange="updateSummary()"><span class="chip-text">Regular</span></label>
+        <label class="option-chip"><input  data-key="a1_anc"type="radio" name="a1_anc" value="Irregular" onchange="updateSummary()"><span class="chip-text">Irregular</span></label>
+        <label class="option-chip"><input  data-key="a1_anc"type="radio" name="a1_anc" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a1_anc"type="radio" name="a1_anc" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+      <div class="help-panel" id="A1_help_anc">Document number of visits, place of care, any high-risk flags identified.</div>
+    </div>
+    <div class="form-group">
+      <label>Maternal physical illness in pregnancy</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="Gestational diabetes" onchange="updateSummary()"><span class="chip-text">Gestational diabetes</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="Hypertension/Pre-eclampsia" onchange="updateSummary()"><span class="chip-text">Hypertension / Pre-eclampsia</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="Thyroid disease" onchange="updateSummary()"><span class="chip-text">Thyroid disease</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="TORCH / Rubella" onchange="updateSummary()"><span class="chip-text">TORCH / Rubella</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="Other infection" onchange="updateSummary()"><span class="chip-text">Other infection</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="None" onchange="updateSummary()"><span class="chip-text">None reported</span></label>
+        <label class="option-chip"><input  data-key="a1_maternal_illness"type="checkbox" name="a1_maternal_illness" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Maternal psychiatric illness in pregnancy</label>
+      <div class="field-hint">Document diagnosis, treatment, any teratogenic exposure (valproate, isotretinoin, lithium, warfarin)</div>
+<textarea data-key="a1_maternal_psych" id="a1_maternal_psych" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Substance exposure in pregnancy</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Alcohol" onchange="updateSummary()"><span class="chip-text">Alcohol</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Tobacco" onchange="updateSummary()"><span class="chip-text">Tobacco</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Cannabis" onchange="updateSummary()"><span class="chip-text">Cannabis</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Solvents" onchange="updateSummary()"><span class="chip-text">Solvents</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Prescription teratogens" onchange="updateSummary()"><span class="chip-text">Prescription teratogens</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a1_exposure"type="checkbox" name="a1_exposure" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Antenatal depression / anxiety / severe psychosocial stress</label>
+      <div class="field-hint">Describe severity, treatment, any violence exposure</div>
+<textarea data-key="a1_antenatal_stress" id="a1_antenatal_stress" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Perinatal (Natal)</div>
+    <div class="form-group">
+      <label>Place of delivery</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_delivery_place"type="radio" name="a1_delivery_place" value="Institutional" onchange="updateSummary()"><span class="chip-text">Institutional</span></label>
+        <label class="option-chip"><input  data-key="a1_delivery_place"type="radio" name="a1_delivery_place" value="Home" onchange="updateSummary()"><span class="chip-text">Home</span></label>
+        <label class="option-chip"><input  data-key="a1_delivery_place"type="radio" name="a1_delivery_place" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Gestational age at delivery</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_gest_age"type="radio" name="a1_gest_age" value="Term" onchange="updateSummary()"><span class="chip-text">Term (37–42 wks)</span></label>
+        <label class="option-chip"><input  data-key="a1_gest_age"type="radio" name="a1_gest_age" value="Preterm" onchange="updateSummary()"><span class="chip-text">Preterm (&lt;37 wks)</span></label>
+        <label class="option-chip"><input  data-key="a1_gest_age"type="radio" name="a1_gest_age" value="Post-term" onchange="updateSummary()"><span class="chip-text">Post-term (&gt;42 wks)</span></label>
+        <label class="option-chip"><input  data-key="a1_gest_age"type="radio" name="a1_gest_age" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Mode of delivery</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_delivery_mode"type="radio" name="a1_delivery_mode" value="Normal vaginal" onchange="updateSummary()"><span class="chip-text">Normal vaginal</span></label>
+        <label class="option-chip"><input  data-key="a1_delivery_mode"type="radio" name="a1_delivery_mode" value="Instrumental" onchange="updateSummary()"><span class="chip-text">Instrumental (forceps/vacuum)</span></label>
+        <label class="option-chip"><input  data-key="a1_delivery_mode"type="radio" name="a1_delivery_mode" value="Caesarean" onchange="updateSummary()"><span class="chip-text">Caesarean — document indication</span></label>
+        <label class="option-chip"><input  data-key="a1_delivery_mode"type="radio" name="a1_delivery_mode" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Birth weight (grams)</label>
+      <input  data-key="a1_birth_weight"type="number" id="a1_birth_weight" placeholder="e.g. 2800" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Perinatal complications <button class="help-trigger" onclick="toggleHelp('A1_help_peri')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Prolonged labour" onchange="updateSummary()"><span class="chip-text">Prolonged labour</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Obstructed labour" onchange="updateSummary()"><span class="chip-text">Obstructed labour</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Cord around neck" onchange="updateSummary()"><span class="chip-text">Cord around neck</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Meconium-stained liquor" onchange="updateSummary()"><span class="chip-text">Meconium-stained liquor</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Birth asphyxia" onchange="updateSummary()"><span class="chip-text">Birth asphyxia</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Delayed first cry" onchange="updateSummary()"><span class="chip-text">Delayed first cry</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="NICU admission" onchange="updateSummary()"><span class="chip-text">NICU admission</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a1_peri_comp"type="checkbox" name="a1_peri_comp" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+      <div class="help-panel" id="A1_help_peri">If NICU admission: document reason and duration. Asphyxia / hypoxia are especially relevant for later neurodevelopmental risk.</div>
+    </div>
+
+    <div class="subsection-title">Neonatal</div>
+    <div class="form-group">
+      <label>Feeding</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_feeding"type="radio" name="a1_feeding" value="Breastfed" onchange="updateSummary()"><span class="chip-text">Breastfed</span></label>
+        <label class="option-chip"><input  data-key="a1_feeding"type="radio" name="a1_feeding" value="Formula" onchange="updateSummary()"><span class="chip-text">Formula</span></label>
+        <label class="option-chip"><input  data-key="a1_feeding"type="radio" name="a1_feeding" value="Mixed" onchange="updateSummary()"><span class="chip-text">Mixed</span></label>
+        <label class="option-chip"><input  data-key="a1_feeding"type="radio" name="a1_feeding" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Latch and feeding rhythm</label>
+      <textarea data-key="a1_latch" id="a1_latch" placeholder="Document any difficulty" oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Neonatal complications / events</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Jaundice" onchange="updateSummary()"><span class="chip-text">Neonatal jaundice + treatment</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Seizures" onchange="updateSummary()"><span class="chip-text">Neonatal seizures</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Hypoglycaemia" onchange="updateSummary()"><span class="chip-text">Hypoglycaemia</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Sepsis" onchange="updateSummary()"><span class="chip-text">Sepsis</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Congenital anomalies" onchange="updateSummary()"><span class="chip-text">Congenital anomalies recognised</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a1_neonatal"type="checkbox" name="a1_neonatal" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Developmental Milestones</div>
+    <div class="form-group">
+      <label>Gross motor</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Neck holding by 3m" onchange="updateSummary()"><span class="chip-text">Neck holding by 3 months</span></label>
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Sitting by 6m" onchange="updateSummary()"><span class="chip-text">Sitting by 6 months</span></label>
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Standing by 9m" onchange="updateSummary()"><span class="chip-text">Standing by 9 months</span></label>
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Walking by 12-15m" onchange="updateSummary()"><span class="chip-text">Walking by 12–15 months</span></label>
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Delayed" onchange="updateSummary()"><span class="chip-text">Delayed — document domain &amp; magnitude</span></label>
+        <label class="option-chip"><input  data-key="a1_gross"type="checkbox" name="a1_gross" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Fine motor</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_fine"type="checkbox" name="a1_fine" value="Reaching" onchange="updateSummary()"><span class="chip-text">Reaching</span></label>
+        <label class="option-chip"><input  data-key="a1_fine"type="checkbox" name="a1_fine" value="Transferring" onchange="updateSummary()"><span class="chip-text">Transferring</span></label>
+        <label class="option-chip"><input  data-key="a1_fine"type="checkbox" name="a1_fine" value="Pincer grasp" onchange="updateSummary()"><span class="chip-text">Pincer grasp</span></label>
+        <label class="option-chip"><input  data-key="a1_fine"type="checkbox" name="a1_fine" value="Delayed" onchange="updateSummary()"><span class="chip-text">Delayed</span></label>
+        <label class="option-chip"><input  data-key="a1_fine"type="checkbox" name="a1_fine" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Language</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="Cooing" onchange="updateSummary()"><span class="chip-text">Cooing</span></label>
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="Babbling" onchange="updateSummary()"><span class="chip-text">Babbling</span></label>
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="First word by 12m" onchange="updateSummary()"><span class="chip-text">First word by 12 months</span></label>
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="Two-word phrases by 24m" onchange="updateSummary()"><span class="chip-text">Two-word phrases by 24 months</span></label>
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="Delayed" onchange="updateSummary()"><span class="chip-text">Delayed</span></label>
+        <label class="option-chip"><input  data-key="a1_language"type="checkbox" name="a1_language" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Social and personal</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Social smile by 6w" onchange="updateSummary()"><span class="chip-text">Social smile by 6 weeks</span></label>
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Stranger anxiety by 8-9m" onchange="updateSummary()"><span class="chip-text">Stranger anxiety by 8–9 months</span></label>
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Parallel play" onchange="updateSummary()"><span class="chip-text">Parallel play</span></label>
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Toilet training" onchange="updateSummary()"><span class="chip-text">Toilet training</span></label>
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Delayed" onchange="updateSummary()"><span class="chip-text">Delayed</span></label>
+        <label class="option-chip"><input  data-key="a1_social"type="checkbox" name="a1_social" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Milestone summary / free-text</label>
+      <div class="field-hint">e.g. 'Developmental milestones were attained appropriately for age' OR document domain and magnitude of any delay</div>
+<textarea data-key="a1_milestone_free" id="a1_milestone_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A2 -->
+<details class="accordion" id="A2">
+  <summary class="accordion-header"><div><span class="section-badge">A2</span>Early Childhood, Temperament &amp; Trait/State Boundary</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Behaviourally inhibited infants carry elevated risk of later anxiety, social phobia, and depression. Highly impulsive infants carry risk of conduct disorder and ADHD.</li>
+        <li><b>How it shifts differential:</b> Temperament sits on the boundary between developmental event (Ch 07) and stable trait (Ch 08). Describe as developmental fact here; stable adult trait belongs in Chapter 08.</li>
+        <li><b>Document:</b> Goodness-of-fit (match between temperament and parental environment) — it modifies risk more than either alone.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Thomas &amp; Chess temperament type</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a2_temperament"type="radio" name="a2_temperament" value="Easy" onchange="updateSummary()"><span class="chip-text">Easy (40%)</span></label>
+        <label class="option-chip"><input  data-key="a2_temperament"type="radio" name="a2_temperament" value="Difficult" onchange="updateSummary()"><span class="chip-text">Difficult (10%)</span></label>
+        <label class="option-chip"><input  data-key="a2_temperament"type="radio" name="a2_temperament" value="Slow-to-warm" onchange="updateSummary()"><span class="chip-text">Slow-to-warm (15%)</span></label>
+        <label class="option-chip"><input  data-key="a2_temperament"type="radio" name="a2_temperament" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Rothbart &amp; Bates dimensions (check all that apply) <button class="help-trigger" onclick="toggleHelp('A2_help_roth')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Activity level" onchange="updateSummary()"><span class="chip-text">Activity level</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Rhythmicity" onchange="updateSummary()"><span class="chip-text">Rhythmicity</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Approach/withdrawal" onchange="updateSummary()"><span class="chip-text">Approach / withdrawal</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Adaptability" onchange="updateSummary()"><span class="chip-text">Adaptability</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Mood" onchange="updateSummary()"><span class="chip-text">Mood</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Intensity of reaction" onchange="updateSummary()"><span class="chip-text">Intensity of reaction</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Attention span/persistence" onchange="updateSummary()"><span class="chip-text">Attention span &amp; persistence</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Distractibility" onchange="updateSummary()"><span class="chip-text">Distractibility</span></label>
+        <label class="option-chip"><input  data-key="a2_rothbart"type="checkbox" name="a2_rothbart" value="Threshold of responsiveness" onchange="updateSummary()"><span class="chip-text">Threshold of responsiveness</span></label>
+      </div>
+      <div class="help-panel" id="A2_help_roth">Rate each on a scale if useful: high / low / not known. Note that behaviourally inhibited temperament (high fearful distress, withdrawal from novelty) is the high-risk subtype for anxiety disorders.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Behaviourally inhibited? <span class="label-hint">high fearful distress, withdrawal from novelty</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a2_inhibited"type="radio" name="a2_inhibited" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a2_inhibited"type="radio" name="a2_inhibited" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a2_inhibited"type="radio" name="a2_inhibited" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Highly impulsive / unregulated?</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a2_impulsive"type="radio" name="a2_impulsive" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a2_impulsive"type="radio" name="a2_impulsive" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a2_impulsive"type="radio" name="a2_impulsive" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Parental environment / goodness-of-fit <button class="help-trigger" onclick="toggleHelp('A2_help_fit')">ℹ</button></label>
+      <div class="field-hint">Describe parental sensitivity, scaffolding vs critical/demanding style. Note the match between child's temperament and parenting received.</div>
+<textarea data-key="a2_goodness_fit" id="a2_goodness_fit" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A2_help_fit">
+        <em>Key concept:</em> A behaviourally inhibited child with a sensitive, scaffolding parent does well; the same child with a critical, demanding parent develops anxiety. Note this in the formulation — it matters more than either trait or environment alone.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Free-text: early childhood narrative</label>
+      <div class="field-hint">Describe early childhood environment, key relationships, any notable events, separation, moves, caregiving arrangements</div>
+<textarea data-key="a2_free" id="a2_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A3 -->
+<details class="accordion" id="A3">
+  <summary class="accordion-header"><div><span class="section-badge">A3</span>Middle Childhood (ages ~4–11): Behaviour, Illness, Hospitalisations</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Screens conduct disorder constellation, childhood psychiatric history, and physical illnesses with neuropsychiatric sequelae.</li>
+        <li><b>How it shifts differential:</b> School refusal, separation anxiety, tics, childhood OCD often emerge here and are missed. Significant head injury, encephalitis, rheumatic fever change risk profiles.</li>
+        <li><b>Document:</b> If positive for conduct symptoms, cross-reference A11 (forensic) for full trajectory.</li>
+      </ul>
+    </div>
+
+    <div class="subsection-title">Behavioural Disturbances</div>
+    <div class="form-group">
+      <label>Check all that apply</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Thumb sucking past age 4" onchange="updateSummary()"><span class="chip-text">Thumb sucking past age 4</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Nail biting" onchange="updateSummary()"><span class="chip-text">Nail biting</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Enuresis" onchange="updateSummary()"><span class="chip-text">Enuresis — primary / secondary / nocturnal / diurnal</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Encopresis" onchange="updateSummary()"><span class="chip-text">Encopresis</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Lying beyond norms" onchange="updateSummary()"><span class="chip-text">Lying beyond developmental norms</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Stealing" onchange="updateSummary()"><span class="chip-text">Stealing</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Truancy" onchange="updateSummary()"><span class="chip-text">Truancy</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Aggression" onchange="updateSummary()"><span class="chip-text">Aggression</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Cruelty to animals" onchange="updateSummary()"><span class="chip-text">Cruelty to animals</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Fire-setting" onchange="updateSummary()"><span class="chip-text">Fire-setting</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Bullying perpetrator" onchange="updateSummary()"><span class="chip-text">Bullying — perpetrator</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Bullying victim" onchange="updateSummary()"><span class="chip-text">Bullying — victim</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Poor peer relationships" onchange="updateSummary()"><span class="chip-text">Poor peer relationships</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Poor teacher relationships" onchange="updateSummary()"><span class="chip-text">Poor relationships with teachers</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Harsh discipline response" onchange="updateSummary()"><span class="chip-text">Harsh / abnormal response to discipline</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="None" onchange="updateSummary()"><span class="chip-text">None reported</span></label>
+        <label class="option-chip"><input  data-key="a3_behaviour"type="checkbox" name="a3_behaviour" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Details / free-text for behavioural items</label>
+      <div class="field-hint">Document ages, frequency, severity, intervention, outcome</div>
+<textarea data-key="a3_behaviour_detail" id="a3_behaviour_detail" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Physical Illness &amp; Hospitalisations</div>
+    <div class="form-group">
+      <label>Significant illnesses / events</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Encephalitis" onchange="updateSummary()"><span class="chip-text">Encephalitis</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Meningitis" onchange="updateSummary()"><span class="chip-text">Meningitis</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Severe febrile illness with CNS" onchange="updateSummary()"><span class="chip-text">Severe febrile illness (possible CNS involvement)</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Rheumatic fever" onchange="updateSummary()"><span class="chip-text">Rheumatic fever</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Epilepsy" onchange="updateSummary()"><span class="chip-text">Epilepsy</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Head injury with LOC" onchange="updateSummary()"><span class="chip-text">Head injury with loss of consciousness</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Surgeries" onchange="updateSummary()"><span class="chip-text">Surgeries</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Prolonged hospitalisations" onchange="updateSummary()"><span class="chip-text">Prolonged hospitalisations</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Chronic illness" onchange="updateSummary()"><span class="chip-text">Chronic illness (asthma, diabetes, cardiac)</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a3_physical"type="checkbox" name="a3_physical" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Details (duration of LOC, ages, sequelae)</label>
+      <div class="field-hint">Document ages at events, duration of unconsciousness, any neuropsychiatric sequelae, relationship to medical settings</div>
+<textarea data-key="a3_physical_detail" id="a3_physical_detail" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Childhood Psychiatric History</div>
+    <div class="form-group">
+      <label>Check all that apply</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Separation anxiety" onchange="updateSummary()"><span class="chip-text">Separation anxiety</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="School refusal" onchange="updateSummary()"><span class="chip-text">School refusal</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Selective mutism" onchange="updateSummary()"><span class="chip-text">Selective mutism</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Tics" onchange="updateSummary()"><span class="chip-text">Tics</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Persistent compulsions" onchange="updateSummary()"><span class="chip-text">Persistent compulsions (childhood OCD)</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Persistent night terrors" onchange="updateSummary()"><span class="chip-text">Persistent night terrors</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Somatic complaints" onchange="updateSummary()"><span class="chip-text">Somatic complaints without organic cause</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a3_child_psych"type="checkbox" name="a3_child_psych" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Details / free-text</label>
+      <div class="field-hint">Ages, severity, treatment, impact on functioning. Childhood OCD often emerges here and is missed.</div>
+<textarea data-key="a3_child_psych_detail" id="a3_child_psych_detail" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A4 -->
+<details class="accordion" id="A4">
+  <summary class="accordion-header"><div><span class="section-badge">A4</span>Adverse Childhood Experiences (ACEs)</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> ACEs are the single highest-yield item in adult psychiatric personal history. ACE count ≥4 = substantially elevated lifetime risk for depression, suicide attempt, SUD, severe obesity, IHD, COPD, early death.</li>
+        <li><b>How it shifts differential:</b> Childhood sexual abuse is over-represented in dissociative/FND, BPD, binge-purge AN, PTSD. Witnessed paternal alcohol + maternal beating is the highest-yield pair in Indian alcohol SUD.</li>
+        <li><b>How to ask:</b> This is a <em>process</em>, not a checklist. Frame → normalise → sequence from less to more sensitive → pause and acknowledge.</li>
+        <li><b>Pitfall:</b> Reciting the ten items as questions in order will produce refusals. The framing in §C4 is the difference.</li>
+      </ul>
+    </div>
+
+    <div class="pearl-box no-break">
+      <strong>Exam Pearl</strong>
+      In an Indian adult case, the highest-yield ACE items are: (i) parental loss (death, abandonment) before age 10; (ii) witnessed paternal alcohol use with maternal beating; (iii) sexual abuse (almost always intrafamilial, rarely volunteered); (iv) emotional invalidation / harsh discipline normalised as parenting; (v) early child labour or sent away to relatives for "discipline". Screen all five explicitly. None will be volunteered.
+    </div>
+
+    <div class="form-group">
+      <label>ACE elicitation method used <button class="help-trigger" onclick="toggleHelp('A4_help_frame')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_method"type="radio" name="a4_method" value="Chronological walk" onchange="updateSummary()"><span class="chip-text">Chronological walk (default)</span></label>
+        <label class="option-chip"><input  data-key="a4_method"type="radio" name="a4_method" value="Funnelled approach" onchange="updateSummary()"><span class="chip-text">Funnelled approach</span></label>
+        <label class="option-chip"><input  data-key="a4_method"type="radio" name="a4_method" value="Informant only" onchange="updateSummary()"><span class="chip-text">Informant only (patient declined)</span></label>
+      </div>
+      <div class="help-panel" id="A4_help_frame">
+        <em>Frame:</em> "Many people who come to see me have had difficult things happen in their childhood, things they have rarely, if ever, told anyone. I am going to ask you about a few of these. You don't have to answer anything you don't want to."<br><br>
+        <em>Normalise:</em> "Many people who come to see me" — locates the patient inside a community of people who have answered before.<br><br>
+        <em>Sequence:</em> Parental separation → household substance use / mental illness → physical discipline / emotional invalidation → witnessed violence → sexual abuse (last).<br><br>
+        <em>Acknowledge:</em> After a disclosure, pause. "Thank you for telling me, that must have been very hard." Do not immediately move to the next question.
+      </div>
+    </div>
+
+    <div class="subsection-title">Abuse (3 items)</div>
+    <div class="form-group">
+      <label>Physical abuse <span class="label-hint">hit, beat, kicked, burned, physically hurt</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_physical_abuse"type="radio" name="a4_physical_abuse" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — document age, perpetrator, frequency, worst episode</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_abuse"type="radio" name="a4_physical_abuse" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_abuse"type="radio" name="a4_physical_abuse" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined to answer</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_abuse"type="radio" name="a4_physical_abuse" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Emotional abuse <span class="label-hint">insulted, humiliated, sworn at, made to feel unloved/threatened</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_emotional_abuse"type="radio" name="a4_emotional_abuse" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_abuse"type="radio" name="a4_emotional_abuse" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_abuse"type="radio" name="a4_emotional_abuse" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_abuse"type="radio" name="a4_emotional_abuse" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Sexual abuse <span class="label-hint">touched sexually, forced to touch, attempted/completed intercourse</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_sexual_abuse"type="radio" name="a4_sexual_abuse" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — document age, relationship to perpetrator, duration</span></label>
+        <label class="option-chip"><input  data-key="a4_sexual_abuse"type="radio" name="a4_sexual_abuse" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_sexual_abuse"type="radio" name="a4_sexual_abuse" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined</span></label>
+        <label class="option-chip"><input  data-key="a4_sexual_abuse"type="radio" name="a4_sexual_abuse" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Neglect (2 items)</div>
+    <div class="form-group">
+      <label>Physical neglect <span class="label-hint">not enough to eat, dirty clothes, no one to protect you</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_physical_neglect"type="radio" name="a4_physical_neglect" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_neglect"type="radio" name="a4_physical_neglect" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_neglect"type="radio" name="a4_physical_neglect" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined</span></label>
+        <label class="option-chip"><input  data-key="a4_physical_neglect"type="radio" name="a4_physical_neglect" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Emotional neglect <span class="label-hint">no one to make you feel loved, no one to look out for you</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_emotional_neglect"type="radio" name="a4_emotional_neglect" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_neglect"type="radio" name="a4_emotional_neglect" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_neglect"type="radio" name="a4_emotional_neglect" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined</span></label>
+        <label class="option-chip"><input  data-key="a4_emotional_neglect"type="radio" name="a4_emotional_neglect" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Household Dysfunction (5 items)</div>
+    <div class="form-group">
+      <label>Parental separation or divorce</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_separation"type="radio" name="a4_separation" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — document age, circumstances</span></label>
+        <label class="option-chip"><input  data-key="a4_separation"type="radio" name="a4_separation" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_separation"type="radio" name="a4_separation" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Witnessed domestic violence <span class="label-hint">mother typically the target</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_dv"type="radio" name="a4_dv" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a4_dv"type="radio" name="a4_dv" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_dv"type="radio" name="a4_dv" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Household substance use</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_hh_substance"type="radio" name="a4_hh_substance" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — substance, who used, impact</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_substance"type="radio" name="a4_hh_substance" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_substance"type="radio" name="a4_hh_substance" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Household mental illness</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_hh_mental"type="radio" name="a4_hh_mental" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — diagnosis, relationship, impact</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_mental"type="radio" name="a4_hh_mental" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_mental"type="radio" name="a4_hh_mental" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Household member incarcerated</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_hh_incarcerated"type="radio" name="a4_hh_incarcerated" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_incarcerated"type="radio" name="a4_hh_incarcerated" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a4_hh_incarcerated"type="radio" name="a4_hh_incarcerated" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>ACE count (auto-calculated from above)</label>
+      <input  data-key="a4_ace_count"type="number" id="a4_ace_count" placeholder="Will auto-count" readonly>
+    </div>
+    <div class="form-group">
+      <label>Additional ACEs not in the ten-item structure <span class="label-hint">Indian-specific</span></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a4_extra"type="checkbox" name="a4_extra" value="Parental loss before age 10" onchange="updateSummary()"><span class="chip-text">Parental loss (death/abandonment) before age 10</span></label>
+        <label class="option-chip"><input  data-key="a4_extra"type="checkbox" name="a4_extra" value="Early child labour" onchange="updateSummary()"><span class="chip-text">Early child labour</span></label>
+        <label class="option-chip"><input  data-key="a4_extra"type="checkbox" name="a4_extra" value="Sent away for discipline" onchange="updateSummary()"><span class="chip-text">Sent away to relative for "discipline"</span></label>
+        <label class="option-chip"><input  data-key="a4_extra"type="checkbox" name="a4_extra" value="Community violence" onchange="updateSummary()"><span class="chip-text">Community / neighbourhood violence</span></label>
+        <label class="option-chip"><input  data-key="a4_extra"type="checkbox" name="a4_extra" value="Bullying severe/prolonged" onchange="updateSummary()"><span class="chip-text">Severe or prolonged bullying</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>ACE narrative / free-text</label>
+      <div class="field-hint">Document the patient's words, your observations during disclosure, any emotional response, and the context of each endorsed ACE</div>
+<textarea data-key="a4_free" id="a4_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A5 -->
+<details class="accordion" id="A5">
+  <summary class="accordion-header"><div><span class="section-badge">A5</span>Schooling</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Academic trajectory is often more diagnostic than absolute level. A decline in late adolescence (80% in class 10 → 50% in class 12 → failed first-year college) is the single most common premorbid signature of first-episode psychosis.</li>
+        <li><b>How to document:</b> Plot the trajectory against the symptom timeline. Always ask for grades at 10th, 12th, graduation.</li>
+        <li><b>Pitfall:</b> Recording only the highest qualification without the trajectory loses the diagnostic signal.</li>
+      </ul>
+    </div>
+
+    <div class="anchor-box no-break">
+      <strong>Clinical Anchor</strong>
+      A declining academic trajectory in late adolescence, the bright child who was scoring 80% until class 10 and then dropped to 50% in class 12 and then failed first-year college, is the single most common premorbid signature of first-episode psychosis. Always plot the academic trajectory against the symptom timeline.
+    </div>
+
+    <div class="form-group">
+      <label>Age at school entry</label>
+      <input  data-key="a5_age_entry"type="number" id="a5_age_entry" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Type of school entry</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a5_school_type"type="radio" name="a5_school_type" value="Government" onchange="updateSummary()"><span class="chip-text">Government</span></label>
+        <label class="option-chip"><input  data-key="a5_school_type"type="radio" name="a5_school_type" value="Private" onchange="updateSummary()"><span class="chip-text">Private</span></label>
+        <label class="option-chip"><input  data-key="a5_school_type"type="radio" name="a5_school_type" value="Residential" onchange="updateSummary()"><span class="chip-text">Residential</span></label>
+        <label class="option-chip"><input  data-key="a5_school_type"type="radio" name="a5_school_type" value="Anganwadi" onchange="updateSummary()"><span class="chip-text">Anganwadi entry</span></label>
+        <label class="option-chip"><input  data-key="a5_school_type"type="radio" name="a5_school_type" value="Other" onchange="updateSummary()"><span class="chip-text">Other</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Medium of instruction</label>
+      <input  data-key="a5_medium"type="text" id="a5_medium" placeholder="e.g. English, Kannada, Hindi, Tamil" oninput="updateSummary()">
+    </div>
+
+    <div class="subsection-title">Academic Trajectory</div>
+    <div class="form-group">
+      <label>Early performance</label>
+      <div class="field-hint">Classes 1–5: grades, teacher remarks, any special educational needs</div>
+<textarea data-key="a5_early_perf" id="a5_early_perf" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Peak performance</label>
+      <div class="field-hint">Highest academic achievement, class/age, percentage/grade</div>
+<textarea data-key="a5_peak_perf" id="a5_peak_perf" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Decline, if any — timing against symptom timeline <button class="help-trigger" onclick="toggleHelp('A5_help_decline')">ℹ</button></label>
+      <div class="field-hint">When did decline begin? What was attributed to at the time? When did symptoms begin? Overlay the two timelines.</div>
+<textarea data-key="a5_decline" id="a5_decline" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A5_help_decline">
+        <em>High-yield question:</em> "You said you were scoring 80% in class 10. What happened in class 12?" Then: "When did you first notice something was not right with your thoughts / mood / energy?"
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Grades at major examinations</label>
+      <div class="flex-row">
+        <label class="label-hint">10th:</label>
+        <input  data-key="a5_grade_10"type="text" id="a5_grade_10" class="inline-field" placeholder="% / grade" oninput="updateSummary()">
+        <label class="label-hint">12th:</label>
+        <input  data-key="a5_grade_12"type="text" id="a5_grade_12" class="inline-field" placeholder="% / grade" oninput="updateSummary()">
+        <label class="label-hint">Graduation:</label>
+        <input  data-key="a5_grade_grad"type="text" id="a5_grade_grad" class="inline-field" placeholder="% / grade" oninput="updateSummary()">
+      </div>
+    </div>
+
+    <div class="subsection-title">Behaviour &amp; Social</div>
+    <div class="form-group">
+      <label>Behavioural difficulties at school</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a5_behav"type="checkbox" name="a5_behav" value="Fights" onchange="updateSummary()"><span class="chip-text">Fights</span></label>
+        <label class="option-chip"><input  data-key="a5_behav"type="checkbox" name="a5_behav" value="Suspensions" onchange="updateSummary()"><span class="chip-text">Suspensions</span></label>
+        <label class="option-chip"><input  data-key="a5_behav"type="checkbox" name="a5_behav" value="Truancy" onchange="updateSummary()"><span class="chip-text">Truancy</span></label>
+        <label class="option-chip"><input  data-key="a5_behav"type="checkbox" name="a5_behav" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Peer relationships</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a5_peers"type="radio" name="a5_peers" value="Friendships sustained" onchange="updateSummary()"><span class="chip-text">Friendships sustained</span></label>
+        <label class="option-chip"><input  data-key="a5_peers"type="radio" name="a5_peers" value="Isolated" onchange="updateSummary()"><span class="chip-text">Isolated</span></label>
+        <label class="option-chip"><input  data-key="a5_peers"type="radio" name="a5_peers" value="Scapegoated" onchange="updateSummary()"><span class="chip-text">Scapegoated</span></label>
+        <label class="option-chip"><input  data-key="a5_peers"type="radio" name="a5_peers" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Bullying</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a5_bullying"type="radio" name="a5_bullying" value="Perpetrator" onchange="updateSummary()"><span class="chip-text">Perpetrator</span></label>
+        <label class="option-chip"><input  data-key="a5_bullying"type="radio" name="a5_bullying" value="Victim" onchange="updateSummary()"><span class="chip-text">Victim</span></label>
+        <label class="option-chip"><input  data-key="a5_bullying"type="radio" name="a5_bullying" value="Both" onchange="updateSummary()"><span class="chip-text">Both</span></label>
+        <label class="option-chip"><input  data-key="a5_bullying"type="radio" name="a5_bullying" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a5_bullying"type="radio" name="a5_bullying" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Reasons for any change of school</label>
+      <textarea data-key="a5_school_change" id="a5_school_change" placeholder="Document each change, age, reason" oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Highest level of education completed</label>
+      <input  data-key="a5_highest_edu"type="text" id="a5_highest_edu" placeholder="e.g. Class 10, Class 12, BA, MBBS" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Reason for stopping, if not completed</label>
+      <textarea data-key="a5_stop_reason" id="a5_stop_reason" placeholder="Illness, financial, family, academic failure, etc." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A6 -->
+<details class="accordion" id="A6">
+  <summary class="accordion-header"><div><span class="section-badge">A6</span>Occupational History</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Frequent job changes, terminations, occupational drift downward, or sudden collapse suggest mood instability, impulsivity (BPD/ADHD), substance use, prodromal psychosis, or intolerant personality structure.</li>
+        <li><b>How to document:</b> Chronological list with duration, reason for each change, level of responsibility. For homemakers: assess household role, satisfaction, autonomy, stressors equivalently.</li>
+        <li><b>High-yield:</b> In BP-I, look for high achievement punctuated by episodic collapses corresponding to episodes.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Age at first paid work</label>
+      <input  data-key="a6_first_work_age"type="number" id="a6_first_work_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Nature of first job</label>
+      <input  data-key="a6_first_job"type="text" id="a6_first_job" placeholder="e.g. farm labour, shop assistant, domestic work" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Chronological list of jobs <button class="help-trigger" onclick="toggleHelp('A6_help_jobs')">ℹ</button></label>
+      <div class="field-hint">Job | Duration | Reason for change | Nature of work | Level of responsibility</div>
+<textarea data-key="a6_jobs_list" id="a6_jobs_list" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A6_help_jobs">
+        Template per entry:<br>
+        1. [Job title] — [Duration] — [Reason for leaving] — [Nature / responsibility]<br>
+        Flag: terminations, downward drift, sudden collapse, conflict-driven exits.
+      </div>
+    </div>
+
+    <div class="subsection-title">Current Status</div>
+    <div class="form-group">
+      <label>Current occupational status</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="Employed" onchange="updateSummary()"><span class="chip-text">Employed</span></label>
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="Unemployed" onchange="updateSummary()"><span class="chip-text">Unemployed</span></label>
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="On medical leave" onchange="updateSummary()"><span class="chip-text">On medical leave</span></label>
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="Retired" onchange="updateSummary()"><span class="chip-text">Retired</span></label>
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="Never employed" onchange="updateSummary()"><span class="chip-text">Never employed</span></label>
+        <label class="option-chip"><input  data-key="a6_current_status"type="radio" name="a6_current_status" value="Homemaker" onchange="updateSummary()"><span class="chip-text">Homemaker</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Job satisfaction, interpersonal relationships at work, conflict, exploitation</label>
+      <div class="field-hint">Describe relationships with colleagues, supervisors, any bullying, harassment, exploitation</div>
+<textarea data-key="a6_work_relations" id="a6_work_relations" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Periods of unemployment — reason and duration</label>
+      <textarea data-key="a6_unemployment" id="a6_unemployment" placeholder="List each period with dates/weeks and reason" oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>For homemakers: household role assessment</label>
+      <div class="field-hint">Role satisfaction, autonomy in decision-making, financial control, domestic workload, support from family</div>
+<textarea data-key="a6_homemaker" id="a6_homemaker" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>High-yield findings / free-text occupational narrative</label>
+      <div class="field-hint">Document any downward occupational drift, episodic collapses, brilliant productivity periods (BP), or any adult trauma embedded in occupational history</div>
+<textarea data-key="a6_free" id="a6_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A7 -->
+<details class="accordion" id="A7">
+  <summary class="accordion-header"><div><span class="section-badge">A7</span>Menstrual &amp; Reproductive History (Women)</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Reproductive transitions are independent psychiatric vulnerability windows. Postpartum psychosis even decades earlier reframes the entire case as bipolar spectrum with ~30–50% recurrence risk.</li>
+        <li><b>How to document:</b> Order: age at menarche → current cycle → premenstrual symptoms → LMP → obstetric history → perinatal psychiatric episodes → contraception.</li>
+        <li><b>Pitfall:</b> Missing this section entirely in women, or omitting the postpartum psychosis screen.</li>
+        <li><b>Screen:</b> "After any of your deliveries, did you become unwell with confusion, severe sleep loss, hearing voices, or feeling that something bad was about to happen?"</li>
+      </ul>
+    </div>
+
+    <div class="pearl-box no-break">
+      <strong>Exam Pearl</strong>
+      A history of postpartum psychosis carries a recurrence risk of approximately 30–50% with the next pregnancy and the great majority of these women have an underlying bipolar diathesis even if the postpartum episode was the first lifetime episode. This is one of the most reliably reproduced findings in perinatal psychiatry.
+    </div>
+
+    <div class="form-group">
+      <label>Age at menarche</label>
+      <input  data-key="a7_menarche"type="number" id="a7_menarche" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Cycle regularity</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a7_cycle_reg"type="radio" name="a7_cycle_reg" value="Regular" onchange="updateSummary()"><span class="chip-text">Regular</span></label>
+        <label class="option-chip"><input  data-key="a7_cycle_reg"type="radio" name="a7_cycle_reg" value="Irregular" onchange="updateSummary()"><span class="chip-text">Irregular</span></label>
+        <label class="option-chip"><input  data-key="a7_cycle_reg"type="radio" name="a7_cycle_reg" value="Amenorrhoea" onchange="updateSummary()"><span class="chip-text">Amenorrhoea</span></label>
+        <label class="option-chip"><input  data-key="a7_cycle_reg"type="radio" name="a7_cycle_reg" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Duration of menses (days)</label>
+      <input  data-key="a7_menses_duration"type="number" id="a7_menses_duration" placeholder="Days" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Dysmenorrhoea</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a7_dysmen"type="radio" name="a7_dysmen" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a7_dysmen"type="radio" name="a7_dysmen" value="Mild" onchange="updateSummary()"><span class="chip-text">Mild</span></label>
+        <label class="option-chip"><input  data-key="a7_dysmen"type="radio" name="a7_dysmen" value="Moderate" onchange="updateSummary()"><span class="chip-text">Moderate</span></label>
+        <label class="option-chip"><input  data-key="a7_dysmen"type="radio" name="a7_dysmen" value="Severe" onchange="updateSummary()"><span class="chip-text">Severe</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">Premenstrual &amp; Hormonal</div>
+    <div class="form-group">
+      <label>Premenstrual mood and irritability — screen for PMDD criteria <button class="help-trigger" onclick="toggleHelp('A7_help_pmdd')">ℹ</button></label>
+      <div class="field-hint">Document timing (luteal phase), severity, functional impairment, symptom cluster</div>
+<textarea data-key="a7_pmdd" id="a7_pmdd" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A7_help_pmdd">PMDD requires ≥5 symptoms (including affective lability, irritability, depressed mood, anxiety) in most cycles, luteal phase onset, remitting within a few days of menses onset, causing significant interference with work/school/relationships.</div>
+    </div>
+    <div class="form-group">
+      <label>Date of last menstrual period (LMP)</label>
+      <input  data-key="a7_lmp"type="date" id="a7_lmp" onchange="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Hormonal contraception or HRT — temporal relationship to mood change</label>
+      <div class="field-hint">Agent, duration, any mood change temporally linked to start/stop/change</div>
+<textarea data-key="a7_hormonal" id="a7_hormonal" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Obstetric &amp; Perinatal Psychiatric</div>
+    <div class="form-group">
+      <label>Obstetric history: Gravida / Para / Abortions / Live births</label>
+      <div class="flex-row">
+        <label class="label-hint">G:</label><input  data-key="a7_g"type="number" id="a7_g" class="inline-field" oninput="updateSummary()">
+        <label class="label-hint">P:</label><input  data-key="a7_p"type="number" id="a7_p" class="inline-field" oninput="updateSummary()">
+        <label class="label-hint">A:</label><input  data-key="a7_a"type="number" id="a7_a" class="inline-field" oninput="updateSummary()">
+        <label class="label-hint">Live births:</label><input  data-key="a7_live"type="number" id="a7_live" class="inline-field" oninput="updateSummary()">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Abortions — spontaneous vs induced</label>
+      <div class="field-hint">Document each with gestational age, circumstances, emotional impact</div>
+<textarea data-key="a7_abortions" id="a7_abortions" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Neonatal complications, if any</label>
+      <div class="field-hint">Per delivery: birth weight, gestational age, NICU, malformations</div>
+<textarea data-key="a7_neonatal_comp" id="a7_neonatal_comp" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Perinatal psychiatric history <button class="help-trigger" onclick="toggleHelp('A7_help_pp')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Antenatal depression" onchange="updateSummary()"><span class="chip-text">Antenatal depression</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Antenatal anxiety" onchange="updateSummary()"><span class="chip-text">Antenatal anxiety</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Postpartum blues" onchange="updateSummary()"><span class="chip-text">Postpartum blues</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Postpartum depression" onchange="updateSummary()"><span class="chip-text">Postpartum depression</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Postpartum psychosis" onchange="updateSummary()"><span class="chip-text">Postpartum psychosis</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a7_perinatal_psych"type="checkbox" name="a7_perinatal_psych" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+      <div class="help-panel" id="A7_help_pp">
+        <em>Postpartum psychosis screen:</em> "After any of your deliveries, did you become unwell with confusion, severe sleep loss, hearing voices, or feeling that something bad was about to happen?"<br><br>
+        Document: episode dating, treatment, breastfeeding status and pharmacotherapy decisions at the time.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Perinatal psychiatric episode details</label>
+      <div class="field-hint">Which pregnancy, age of patient then, symptoms, treatment, outcome, breastfeeding decisions</div>
+<textarea data-key="a7_perinatal_detail" id="a7_perinatal_detail" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Menopause</div>
+    <div class="form-group">
+      <label>Perimenopause / Menopause status</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a7_menopause"type="radio" name="a7_menopause" value="Premenopausal" onchange="updateSummary()"><span class="chip-text">Premenopausal</span></label>
+        <label class="option-chip"><input  data-key="a7_menopause"type="radio" name="a7_menopause" value="Perimenopausal" onchange="updateSummary()"><span class="chip-text">Perimenopausal</span></label>
+        <label class="option-chip"><input  data-key="a7_menopause"type="radio" name="a7_menopause" value="Postmenopausal" onchange="updateSummary()"><span class="chip-text">Postmenopausal</span></label>
+        <label class="option-chip"><input  data-key="a7_menopause"type="radio" name="a7_menopause" value="Not applicable" onchange="updateSummary()"><span class="chip-text">Not applicable</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age at menopause</label>
+      <input  data-key="a7_menopause_age"type="number" id="a7_menopause_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Vasomotor symptoms, mood symptoms, perimenopausal depression window</label>
+      <div class="field-hint">Hot flushes, night sweats, sleep disturbance, mood changes, any depressive episode temporally linked</div>
+<textarea data-key="a7_meno_symptoms" id="a7_meno_symptoms" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A8 -->
+<details class="accordion" id="A8">
+  <summary class="accordion-header"><div><span class="section-badge">A8</span>Sexual History</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> High-yield in mood disorders (libido follows mood), psychosis (hypersexuality in mania, asexual withdrawal in negative-symptom schizophrenia), OCD (sexual obsessions, scrupulosity), BPD (impulsive chaotic sex), trauma-related disorders.</li>
+        <li><b>How to ask:</b> Use the 5P framework prefaced with explicit confidentiality. Gender-neutral opening: "Are you currently in a sexual relationship with anyone, a man, a woman, more than one person?"</li>
+        <li><b>Pitfall:</b> Skipping or rushing sexual history under cultural discomfort. This is the most common single failure in viva. The 5P framework with confidentiality framing is the corrective.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Opening method / confidentiality frame used <button class="help-trigger" onclick="toggleHelp('A8_help_open')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a8_frame"type="radio" name="a8_frame" value="5P with confidentiality" onchange="updateSummary()"><span class="chip-text">5P with explicit confidentiality</span></label>
+        <label class="option-chip"><input  data-key="a8_frame"type="radio" name="a8_frame" value="Gender-neutral opening" onchange="updateSummary()"><span class="chip-text">Gender-neutral affirming opening</span></label>
+        <label class="option-chip"><input  data-key="a8_frame"type="radio" name="a8_frame" value="Culturally adapted" onchange="updateSummary()"><span class="chip-text">Culturally adapted (husband asked to step out, etc.)</span></label>
+      </div>
+      <div class="help-panel" id="A8_help_open">
+        <em>Confidentiality:</em> "What we discuss in this part of the interview stays in your file and is not shared with your family without your permission." Say it out loud.<br><br>
+        <em>Gender-neutral:</em> "Are you currently in a sexual relationship with anyone, a man, a woman, more than one person?"<br><br>
+        <em>Cultural sensitivity:</em> A male resident interviewing a married woman may get further if the husband is asked to step out and elicitation is anchored to medical relevance rather than curiosity.
+      </div>
+    </div>
+
+    <div class="subsection-title">Development &amp; Identity</div>
+    <div class="form-group">
+      <label>Age at puberty and development of secondary sexual characteristics</label>
+      <input  data-key="a8_puberty_age"type="number" id="a8_puberty_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Psychological reaction to puberty</label>
+      <div class="field-hint">Shame, pride, confusion, religious guilt, body image concerns</div>
+<textarea data-key="a8_puberty_reaction" id="a8_puberty_reaction" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Source and adequacy of sexual information</label>
+      <div class="field-hint">Peers, family, school, internet, religious framing, pornography</div>
+<textarea data-key="a8_sex_ed" id="a8_sex_ed" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Sexual orientation and gender identity <span class="label-hint">open and affirming manner</span></label>
+      <div class="field-hint">Patient's words; document with respect and precision</div>
+<input  data-key="a8_orientation"type="text" id="a8_orientation" placeholder="Type here..." oninput="updateSummary()">
+    </div>
+
+    <div class="subsection-title">5P Framework</div>
+    <div class="form-group">
+      <label>Partners <span class="label-hint">current, number, gender, stability</span></label>
+      <div class="field-hint">Current relationship(s): gender, duration, stability. Total lifetime partners if relevant.</div>
+<textarea data-key="a8_partners" id="a8_partners" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Practices <span class="label-hint">sexual functioning, behaviours</span></label>
+      <div class="field-hint">Libido, arousal, orgasm, pain. Distinguish lifelong vs acquired, generalised vs situational.</div>
+<textarea data-key="a8_practices" id="a8_practices" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Protection <span class="label-hint">contraception, barrier methods</span></label>
+      <div class="field-hint">Methods used, consistency, any STI prevention practices</div>
+<textarea data-key="a8_protection" id="a8_protection" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Past STI <span class="label-hint">history and testing</span></label>
+      <div class="field-hint">Any STI diagnosed, treated, tested for HIV/syphilis/hepatitis</div>
+<textarea data-key="a8_past_sti" id="a8_past_sti" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Pregnancy intention / reproductive plans</label>
+      <textarea data-key="a8_pregnancy_intent" id="a8_pregnancy_intent" placeholder="Current plans, concerns, fertility issues" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Masturbation, Cultural &amp; Trauma</div>
+    <div class="form-group">
+      <label>Masturbatory practices and associated guilt or beliefs <button class="help-trigger" onclick="toggleHelp('A8_help_dhat')">ℹ</button></label>
+      <div class="field-hint">Frequency, guilt, religious concerns, Dhat syndrome beliefs (semen loss causes weakness)</div>
+<textarea data-key="a8_masturbation" id="a8_masturbation" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A8_help_dhat">
+        <em>Dhat syndrome:</em> Common in Indian male patients — belief that semen loss through masturbation, nocturnal emission, or urination causes weakness, fatigue, and illness. Ask explicitly if patient holds this belief. Document without judgement.
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age at first sexual experience — consensual or non-consensual</label>
+      <div class="flex-row">
+        <input  data-key="a8_first_sex_age"type="number" id="a8_first_sex_age" class="inline-field" placeholder="Age" oninput="updateSummary()">
+        <div class="grid-2" style="flex:1;">
+          <label class="option-chip"><input  data-key="a8_first_sex_consent"type="radio" name="a8_first_sex_consent" value="Consensual" onchange="updateSummary()"><span class="chip-text">Consensual</span></label>
+          <label class="option-chip"><input  data-key="a8_first_sex_consent"type="radio" name="a8_first_sex_consent" value="Non-consensual" onchange="updateSummary()"><span class="chip-text">Non-consensual</span></label>
+          <label class="option-chip"><input  data-key="a8_first_sex_consent"type="radio" name="a8_first_sex_consent" value="Coercive" onchange="updateSummary()"><span class="chip-text">Coercive</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>High-risk sexual behaviour</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="Multiple partners" onchange="updateSummary()"><span class="chip-text">Multiple partners</span></label>
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="Unprotected intercourse" onchange="updateSummary()"><span class="chip-text">Unprotected intercourse</span></label>
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="Transactional sex" onchange="updateSummary()"><span class="chip-text">Transactional sex</span></label>
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="IV drug use in partners" onchange="updateSummary()"><span class="chip-text">IV drug use in partners</span></label>
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="History of STI" onchange="updateSummary()"><span class="chip-text">History of STI</span></label>
+        <label class="option-chip"><input  data-key="a8_highrisk"type="checkbox" name="a8_highrisk" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Sexual difficulties (desire, arousal, orgasm, pain, PE, ED)</label>
+      <div class="field-hint">Distinguish lifelong vs acquired, generalised vs situational. Current severity and duration.</div>
+<textarea data-key="a8_difficulties" id="a8_difficulties" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Sexual trauma — current and historical <button class="help-trigger" onclick="toggleHelp('A8_help_trauma')">ℹ</button></label>
+      <div class="field-hint">Most under-elicited item in personal history. Document age, relationship to perpetrator, duration, impact.</div>
+<textarea data-key="a8_sexual_trauma" id="a8_sexual_trauma" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A8_help_trauma">
+        <em>Framing is everything.</em> "Has anyone ever touched you sexually when you did not want them to? Has anyone ever forced you to do something sexual?" If yes: age, relationship, single event vs repeated, whether disclosed before.
+      </div>
+    </div>
+  </div>
+</details>
+
+
+<!-- A9 -->
+<details class="accordion" id="A9">
+  <summary class="accordion-header"><div><span class="section-badge">A9</span>Marital &amp; Relationship History</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Sexual relationship with spouse is often the most reliable index of relational satisfaction. Intimate partner violence rates in Indian women are much higher than spontaneous reporting suggests and require explicit framing.</li>
+        <li><b>How to ask about IPV:</b> "In many marriages there are arguments and sometimes things become physical. Has that ever happened in your marriage? Has your husband ever hit you, pushed you, or hurt you in any way? Have you ever felt afraid of him?"</li>
+        <li><b>For widowed patients:</b> Document grief course — normal grief, prolonged grief disorder, complicated bereavement, post-bereavement decompensation.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Marital status</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Never married" onchange="updateSummary()"><span class="chip-text">Never married</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Married" onchange="updateSummary()"><span class="chip-text">Married</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Separated" onchange="updateSummary()"><span class="chip-text">Separated</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Divorced" onchange="updateSummary()"><span class="chip-text">Divorced</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Widowed" onchange="updateSummary()"><span class="chip-text">Widowed</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Remarried" onchange="updateSummary()"><span class="chip-text">Remarried</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Cohabiting" onchange="updateSummary()"><span class="chip-text">Cohabiting</span></label>
+        <label class="option-chip"><input  data-key="a9_status"type="radio" name="a9_status" value="Long-term partnership" onchange="updateSummary()"><span class="chip-text">Long-term partnership</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">For Married Patients</div>
+    <div class="form-group">
+      <label>Type of marriage</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_marriage_type"type="radio" name="a9_marriage_type" value="Arranged" onchange="updateSummary()"><span class="chip-text">Arranged</span></label>
+        <label class="option-chip"><input  data-key="a9_marriage_type"type="radio" name="a9_marriage_type" value="Semi-arranged" onchange="updateSummary()"><span class="chip-text">Semi-arranged</span></label>
+        <label class="option-chip"><input  data-key="a9_marriage_type"type="radio" name="a9_marriage_type" value="Love marriage" onchange="updateSummary()"><span class="chip-text">Love marriage</span></label>
+        <label class="option-chip"><input  data-key="a9_marriage_type"type="radio" name="a9_marriage_type" value="Intercaste" onchange="updateSummary()"><span class="chip-text">Intercaste</span></label>
+        <label class="option-chip"><input  data-key="a9_marriage_type"type="radio" name="a9_marriage_type" value="Interreligious" onchange="updateSummary()"><span class="chip-text">Interreligious</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Age at marriage</label>
+      <input  data-key="a9_marriage_age"type="number" id="a9_marriage_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>With or without consent</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_consent"type="radio" name="a9_consent" value="With consent" onchange="updateSummary()"><span class="chip-text">With consent</span></label>
+        <label class="option-chip"><input  data-key="a9_consent"type="radio" name="a9_consent" value="Without consent" onchange="updateSummary()"><span class="chip-text">Without consent</span></label>
+        <label class="option-chip"><input  data-key="a9_consent"type="radio" name="a9_consent" value="Coerced" onchange="updateSummary()"><span class="chip-text">Coerced / pressured</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dowry-related conflict</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_dowry"type="radio" name="a9_dowry" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="a9_dowry"type="radio" name="a9_dowry" value="No" onchange="updateSummary()"><span class="chip-text">No</span></label>
+        <label class="option-chip"><input  data-key="a9_dowry"type="radio" name="a9_dowry" value="Not applicable" onchange="updateSummary()"><span class="chip-text">Not applicable</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Family acceptance of marriage</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_family_accept"type="radio" name="a9_family_accept" value="Supportive" onchange="updateSummary()"><span class="chip-text">Supportive</span></label>
+        <label class="option-chip"><input  data-key="a9_family_accept"type="radio" name="a9_family_accept" value="Neutral" onchange="updateSummary()"><span class="chip-text">Neutral</span></label>
+        <label class="option-chip"><input  data-key="a9_family_accept"type="radio" name="a9_family_accept" value="Opposed" onchange="updateSummary()"><span class="chip-text">Opposed / estranged</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Quality of marital relationship <button class="help-trigger" onclick="toggleHelp('A9_help_quality')">ℹ</button></label>
+      <div class="field-hint">Communication, affection, conflict frequency and resolution, expressed emotion (cross-reference Ch 06)</div>
+<textarea data-key="a9_quality" id="a9_quality" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A9_help_quality">High expressed emotion (criticism, hostility, emotional overinvolvement) is a robust predictor of relapse in schizophrenia and bipolar disorder. Note it here and cross-reference family history Chapter 06.</div>
+    </div>
+    <div class="form-group">
+      <label>Sexual relationship with spouse</label>
+      <div class="field-hint">Frequency, satisfaction, any difficulties, change over time</div>
+<textarea data-key="a9_spouse_sex" id="a9_spouse_sex" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Children — number, ages, health, primary attachment figure</label>
+      <div class="field-hint">For each child: age, health status, relationship quality, who is the primary attachment figure</div>
+<textarea data-key="a9_children" id="a9_children" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Marital discord, separation, divorce</label>
+      <div class="field-hint">Timeline, precipitants, legal status, impact on mental health</div>
+<textarea data-key="a9_discord" id="a9_discord" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Intimate partner violence (IPV) <button class="help-trigger" onclick="toggleHelp('A9_help_ipv')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a9_ipv"type="radio" name="a9_ipv" value="Victimisation" onchange="updateSummary()"><span class="chip-text">Victimisation</span></label>
+        <label class="option-chip"><input  data-key="a9_ipv"type="radio" name="a9_ipv" value="Perpetration" onchange="updateSummary()"><span class="chip-text">Perpetration</span></label>
+        <label class="option-chip"><input  data-key="a9_ipv"type="radio" name="a9_ipv" value="Bidirectional" onchange="updateSummary()"><span class="chip-text">Bidirectional</span></label>
+        <label class="option-chip"><input  data-key="a9_ipv"type="radio" name="a9_ipv" value="None" onchange="updateSummary()"><span class="chip-text">None disclosed</span></label>
+        <label class="option-chip"><input  data-key="a9_ipv"type="radio" name="a9_ipv" value="Declined" onchange="updateSummary()"><span class="chip-text">Declined to answer</span></label>
+      </div>
+      <div class="help-panel" id="A9_help_ipv">
+        <em>Sample phrasing:</em> "In many marriages there are arguments and sometimes things become physical. Has that ever happened in your marriage? Has your husband ever hit you, pushed you, or hurt you in any way? Have you ever felt afraid of him?"<br><br>
+        Hindi: "Kai shadiyon mein ladai-jhagde hote hain, aur kabhi-kabhi haath bhi uth jaata hai. Kya aapke saath bhi aisa hua hai?"
+      </div>
+    </div>
+    <div class="form-group">
+      <label>IPV details</label>
+      <div class="field-hint">Frequency, severity, types of violence, injuries, help-seeking, current safety</div>
+<textarea data-key="a9_ipv_detail" id="a9_ipv_detail" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Never-Married / Widowed</div>
+    <div class="form-group">
+      <label>For never-married: reason, attitude, family pressure, prior engagements</label>
+      <div class="field-hint">Patient's attitude, family pressure, prior broken engagements, social context</div>
+<textarea data-key="a9_never_married" id="a9_never_married" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>For widowed: date of bereavement, cause, grief course</label>
+      <div class="field-hint">Date, cause of death, grief course (normal / prolonged grief disorder / complicated / post-bereavement decompensation)</div>
+<textarea data-key="a9_widowed" id="a9_widowed" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A10 -->
+<details class="accordion" id="A10">
+  <summary class="accordion-header"><div><span class="section-badge">A10</span>Substance Use Trajectory (Developmental View)</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> For SUD index cases, HOPI carries the dependency syndrome; personal history carries the developmental walk that produced the pattern. For non-SUD cases, background exposure may still be relevant (alcohol as depressive coping, cannabis as psychosis precipitant).</li>
+        <li><b>How to document:</b> Six-question walk for each substance. Sequence interview: tobacco (least stigmatised) → alcohol → cannabis → prescribed sedatives → stigmatised substances.</li>
+        <li><b>Pitfall:</b> Bullet-listing substance use without the developmental trajectory. The six-question walk differentiates a casual history from a viva-ready one.</li>
+      </ul>
+    </div>
+
+    <div class="anchor-box no-break">
+      <strong>Clinical Anchor</strong>
+      Tobacco is the most-missed substance in psychiatric histories and the most relevant prognostically — it is the highest preventable contributor to the mortality gap in patients with serious mental illness. Always ask, separately for smoked and chewed forms.
+    </div>
+
+    <div class="form-group">
+      <label>Substances covered in interview <button class="help-trigger" onclick="toggleHelp('A10_help_subs')">ℹ</button></label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Tobacco smoked" onchange="updateSummary()"><span class="chip-text">Tobacco — smoked</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Tobacco chewed" onchange="updateSummary()"><span class="chip-text">Tobacco — chewed</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Alcohol" onchange="updateSummary()"><span class="chip-text">Alcohol</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Cannabis" onchange="updateSummary()"><span class="chip-text">Cannabis</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Opioids" onchange="updateSummary()"><span class="chip-text">Opioids (incl. prescribed, buprenorphine)</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Benzodiazepines/sedatives" onchange="updateSummary()"><span class="chip-text">Benzodiazepines / sedatives</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Stimulants" onchange="updateSummary()"><span class="chip-text">Stimulants</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Inhalants" onchange="updateSummary()"><span class="chip-text">Inhalants</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Cough syrups" onchange="updateSummary()"><span class="chip-text">Cough syrups (codeine)</span></label>
+        <label class="option-chip"><input  data-key="a10_substances"type="checkbox" name="a10_substances" value="Regional substance" onchange="updateSummary()"><span class="chip-text">Regional substance (arrack, locally distilled liquor, etc.)</span></label>
+      </div>
+      <div class="help-panel" id="A10_help_subs">In Karnataka and northern India: locally distilled liquor. In the northeast: heroin and inhalants. In coastal areas: cannabis and arrack. Ask about the regional substance of significance explicitly.</div>
+    </div>
+
+    <div class="subsection-title">Six-Question Developmental Walk</div>
+    <div class="form-group">
+      <label>1. First exposure — age, social context, who introduced, reaction</label>
+      <div class="field-hint">Per substance: age, occasion, peer/family introducer, patient's reaction to first use</div>
+<textarea data-key="a10_q1" id="a10_q1" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>2. First regular use — transition from experimental to regular, function served</label>
+      <div class="field-hint">What triggered regular use? Social function? Coping function?</div>
+<textarea data-key="a10_q2" id="a10_q2" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>3. Escalation — inflection points</label>
+      <div class="field-hint">Job loss, bereavement, marital separation, untreated psychiatric illness, trauma</div>
+<textarea data-key="a10_q3" id="a10_q3" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>4. Peak — heaviest pattern ever, consequences at that point</label>
+      <div class="field-hint">Maximum quantity/frequency/route, social and physical consequences</div>
+<textarea data-key="a10_q4" id="a10_q4" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>5. Quit attempts — number, longest abstinence, relapse triggers</label>
+      <div class="field-hint">Motivations for quitting, methods, duration of longest abstinence, what triggered each relapse</div>
+<textarea data-key="a10_q5" id="a10_q5" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>6. Current pattern — quantity, frequency, route, harm awareness <button class="help-trigger" onclick="toggleHelp('A10_help_stages')">ℹ</button></label>
+      <div class="field-hint">Current use details. Is the patient aware of harm? Does use continue despite harm?</div>
+<textarea data-key="a10_q6" id="a10_q6" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A10_help_stages">
+        <em>Stages of Change (Prochaska &amp; DiClemente):</em><br>
+        Precontemplation → Contemplation → Preparation → Action → Maintenance → Relapse. Use as conceptual lens for current pattern. Examiners expect this when relevant.
+      </div>
+    </div>
+
+    <div class="subsection-title">Alcohol Quantity (if applicable)</div>
+    <div class="form-group">
+      <label>Standard units per drinking day / drinking days per week</label>
+      <div class="flex-row">
+        <input  data-key="a10_alc_units"type="number" id="a10_alc_units" class="inline-field" placeholder="Units/day" oninput="updateSummary()">
+        <input  data-key="a10_alc_days"type="number" id="a10_alc_days" class="inline-field" placeholder="Days/week" oninput="updateSummary()">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Free-text substance trajectory summary</label>
+      <div class="field-hint">Narrative summary across all substances, highlighting the developmental arc and its relationship to psychiatric presentation</div>
+<textarea data-key="a10_free" id="a10_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A11 -->
+<details class="accordion" id="A11">
+  <summary class="accordion-header"><div><span class="section-badge">A11</span>Forensic History: Conduct Disorder → ASPD Trajectory</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> The conduct disorder → antisocial personality disorder trajectory is the only longitudinal psychiatric narrative the personal history can tell as a single arc. Without childhood-onset conduct evidence, adult ASPD cannot be diagnosed.</li>
+        <li><b>How to document:</b> Walk forward in three phases. In a viva, summarise as a single trajectory sentence, not bare facts.</li>
+        <li><b>Pitfall:</b> Not screening for conduct disorder antecedent in adult antisocial behaviour. "Any arrests?" alone misses the developmental sequence.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Informant for forensic history (especially childhood phase)</label>
+      <input  data-key="a11_informant"type="text" id="a11_informant" placeholder="Name, relation" oninput="updateSummary()">
+    </div>
+
+    <div class="subsection-title">Phase 1: Childhood Conduct (~8–12)</div>
+    <div class="form-group">
+      <label>Age at first conduct symptom</label>
+      <input  data-key="a11_first_conduct_age"type="number" id="a11_first_conduct_age" placeholder="Years" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Childhood-onset vs adolescent-onset</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a11_onset"type="radio" name="a11_onset" value="Childhood-onset (&lt;10)" onchange="updateSummary()"><span class="chip-text">Childhood-onset (&lt;10) — worse prognosis</span></label>
+        <label class="option-chip"><input  data-key="a11_onset"type="radio" name="a11_onset" value="Adolescent-onset" onchange="updateSummary()"><span class="chip-text">Adolescent-onset</span></label>
+        <label class="option-chip"><input  data-key="a11_onset"type="radio" name="a11_onset" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>DSM-5-TR / ICD-11 symptom clusters (check all)</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Fights" onchange="updateSummary()"><span class="chip-text">Fights</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Bullying" onchange="updateSummary()"><span class="chip-text">Bullying</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Weapon use" onchange="updateSummary()"><span class="chip-text">Weapon use</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Cruelty to animals" onchange="updateSummary()"><span class="chip-text">Cruelty to animals</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Cruelty to people" onchange="updateSummary()"><span class="chip-text">Cruelty to people</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Forced sexual activity" onchange="updateSummary()"><span class="chip-text">Forced sexual activity</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Fire-setting" onchange="updateSummary()"><span class="chip-text">Fire-setting</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Deliberate destruction" onchange="updateSummary()"><span class="chip-text">Deliberate destruction of property</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Breaking and entering" onchange="updateSummary()"><span class="chip-text">Breaking and entering</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Lying for gain" onchange="updateSummary()"><span class="chip-text">Lying for gain / conning</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Shoplifting" onchange="updateSummary()"><span class="chip-text">Shoplifting / theft</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Truancy before 13" onchange="updateSummary()"><span class="chip-text">Truancy before age 13</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Running away overnight" onchange="updateSummary()"><span class="chip-text">Running away overnight</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Staying out despite prohibition" onchange="updateSummary()"><span class="chip-text">Staying out at night despite prohibition</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+        <label class="option-chip"><input  data-key="a11_cd"type="checkbox" name="a11_cd" value="Not known" onchange="updateSummary()"><span class="chip-text">Not known</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Childhood conduct details</label>
+      <textarea data-key="a11_cd_detail" id="a11_cd_detail" placeholder="Ages, frequency, intervention, family response" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Phase 2: Adolescent Escalation (~13–17)</div>
+    <div class="form-group">
+      <label>Check all that apply</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="Delinquent peer affiliation" onchange="updateSummary()"><span class="chip-text">Delinquent peer affiliation</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="School suspension" onchange="updateSummary()"><span class="chip-text">School suspension</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="School expulsion" onchange="updateSummary()"><span class="chip-text">School expulsion</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="Juvenile justice" onchange="updateSummary()"><span class="chip-text">Juvenile justice involvement</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="First arrest" onchange="updateSummary()"><span class="chip-text">First arrest</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="First incarceration" onchange="updateSummary()"><span class="chip-text">First incarceration</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="Substance co-onset" onchange="updateSummary()"><span class="chip-text">Substance use co-onset</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="Early sexual activity" onchange="updateSummary()"><span class="chip-text">Early sexual activity (often coercive)</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="School dropout" onchange="updateSummary()"><span class="chip-text">School dropout</span></label>
+        <label class="option-chip"><input  data-key="a11_ado"type="checkbox" name="a11_ado" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Adolescent escalation details</label>
+      <textarea data-key="a11_ado_detail" id="a11_ado_detail" placeholder="Ages, severity, system contacts, family response" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">Phase 3: Adult Forensic Record (18+)</div>
+    <div class="form-group">
+      <label>Arrests by category</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Property" onchange="updateSummary()"><span class="chip-text">Property</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Person / assault" onchange="updateSummary()"><span class="chip-text">Person / assault</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Drug" onchange="updateSummary()"><span class="chip-text">Drug-related</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Public order" onchange="updateSummary()"><span class="chip-text">Public order</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Traffic" onchange="updateSummary()"><span class="chip-text">Traffic</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="Sexual" onchange="updateSummary()"><span class="chip-text">Sexual offences</span></label>
+        <label class="option-chip"><input  data-key="a11_adult"type="checkbox" name="a11_adult" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Charges, convictions, sentences served, periods of incarceration</label>
+      <div class="field-hint">Chronological list with dates, durations, locations</div>
+<textarea data-key="a11_convictions" id="a11_convictions" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Current legal issues</label>
+      <div class="field-hint">Pending charges, bail conditions, parole/probation status and compliance, restraining orders, civil litigation</div>
+<textarea data-key="a11_current_legal" id="a11_current_legal" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Violence in home not reaching criminal justice system <span class="label-hint">most common in India</span></label>
+      <div class="field-hint">Document even if unreported: threats, physical violence, property damage, financial control</div>
+<textarea data-key="a11_home_violence" id="a11_home_violence" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Viva-ready trajectory summary sentence</label>
+      <div class="field-hint">e.g. 'Childhood-onset conduct trajectory with first symptoms at age 9, escalation in adolescence with substance co-onset, adult record of 3 arrests for theft and 1 for assault, current parole status, consistent with developmental antecedents of ASPD.'</div>
+<textarea data-key="a11_trajectory" id="a11_trajectory" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- A12 -->
+<details class="accordion" id="A12">
+  <summary class="accordion-header"><div><span class="section-badge">A12</span>Religious &amp; Spiritual Identity</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <ul>
+        <li><b>Why it matters:</b> Religious help-seeking trajectory largely accounts for the long mean duration of untreated psychosis in India. Religious content woven into symptoms (scrupulosity, religious delusions, dissociative imagery) matters diagnostically.</li>
+        <li><b>Depth lives in Chapter 12 §G</b> (cultural formulation); this is the personal-history snapshot.</li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label>Religious affiliation by birth</label>
+      <div class="field-hint">e.g. Hindu, Muslim, Christian, Sikh, Jain, Buddhist, tribal</div>
+<input  data-key="a12_birth_rel"type="text" id="a12_birth_rel" placeholder="Type here..." oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Current religious identity</label>
+      <input  data-key="a12_current_rel"type="text" id="a12_current_rel" placeholder="Any change from birth affiliation?" oninput="updateSummary()">
+    </div>
+    <div class="form-group">
+      <label>Practice level</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a12_practice"type="radio" name="a12_practice" value="Passive cultural" onchange="updateSummary()"><span class="chip-text">Passive cultural identification</span></label>
+        <label class="option-chip"><input  data-key="a12_practice"type="radio" name="a12_practice" value="Occasional ritual" onchange="updateSummary()"><span class="chip-text">Occasional ritual</span></label>
+        <label class="option-chip"><input  data-key="a12_practice"type="radio" name="a12_practice" value="Active devotional" onchange="updateSummary()"><span class="chip-text">Active devotional practice</span></label>
+        <label class="option-chip"><input  data-key="a12_practice"type="radio" name="a12_practice" value="Intensive spiritual" onchange="updateSummary()"><span class="chip-text">Intensive (yoga, meditation retreats, kundalini, monastic interludes)</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Religious help-seeking trajectory in index illness <button class="help-trigger" onclick="toggleHelp('A12_help_help')">ℹ</button></label>
+      <div class="field-hint">Temple visits, prayer healing, faith healers, pir/dargah, AYUSH practitioners. Duration and order before psychiatric services.</div>
+<textarea data-key="a12_help" id="a12_help" placeholder="Type here..." oninput="updateSummary()"></textarea>
+      <div class="help-panel" id="A12_help_help">The mean duration of untreated psychosis in India is largely accounted for by this trajectory. Document each contact in order with approximate dates and duration.</div>
+    </div>
+    <div class="form-group">
+      <label>Religious content woven into symptom picture</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="a12_symptom"type="checkbox" name="a12_symptom" value="Scrupulosity OCD" onchange="updateSummary()"><span class="chip-text">Scrupulosity in OCD</span></label>
+        <label class="option-chip"><input  data-key="a12_symptom"type="checkbox" name="a12_symptom" value="Religious delusions" onchange="updateSummary()"><span class="chip-text">Religious delusions (psychosis / mania)</span></label>
+        <label class="option-chip"><input  data-key="a12_symptom"type="checkbox" name="a12_symptom" value="Religious imagery dissociation" onchange="updateSummary()"><span class="chip-text">Religious imagery in dissociative phenomena</span></label>
+        <label class="option-chip"><input  data-key="a12_symptom"type="checkbox" name="a12_symptom" value="Faith-based explanatory model" onchange="updateSummary()"><span class="chip-text">Faith-based explanatory model (patient / family)</span></label>
+        <label class="option-chip"><input  data-key="a12_symptom"type="checkbox" name="a12_symptom" value="None" onchange="updateSummary()"><span class="chip-text">None</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Free-text: religious and spiritual narrative</label>
+      <div class="field-hint">Any changes over time, spiritual crises, relationship between religious community and illness</div>
+<textarea data-key="a12_free" id="a12_free" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- B -->
+<details class="accordion" id="B">
+  <summary class="accordion-header"><div><span class="section-badge">B</span>Why Personal History Matters</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Four Jobs of Personal History in the Case</strong>
+      <ul>
+        <li><b>1. Developmental:</b> Establishes baseline trajectory against which the index illness is measured. Without it, the case is a snapshot; with it, the case is a film.</li>
+        <li><b>2. Aetiological:</b> Surfaces predisposing and precipitating factors for the 4P × bio-psycho-social grid (Chapter 12 §F). ACEs, perinatal complications, conduct trajectory, substance trajectory, marital trajectory, perinatal psychiatric history.</li>
+        <li><b>3. Risk-stratifying:</b> Childhood adversity, prior trauma, prior self-harm, prior loss, conduct-to-ASPD trajectory change short-term and lifetime risk estimates.</li>
+        <li><b>4. Therapeutic:</b> Schema-aware formulation, attachment-informed therapy choice, family work decisions, brief crisis intervention vs long-term work all rest on this chapter.</li>
+      </ul>
+    </div>
+    <div class="form-group">
+      <label>Clinician's notes on the four jobs for this patient</label>
+      <div class="field-hint">How does this patient's personal history serve each of the four jobs? What does it add to formulation, risk, and treatment planning?</div>
+<textarea data-key="b_notes" id="b_notes" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- C -->
+<details class="accordion" id="C">
+  <summary class="accordion-header"><div><span class="section-badge">C</span>How to Elicit (General Adult Interview)</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>C1. Framing the Section</strong>
+      <p>"I'd like to take some time now to understand who you were before any of this began. We'll walk through your life from the beginning. Some of the things I ask will feel personal, please tell me if anything is uncomfortable, and we can come back to it later. Nothing you say here will leave this room without your knowledge."</p>
+      <p style="margin-top:8px;">Four-part framing: the shift, the chronology, the consent to pause, the confidentiality.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Transition phrase used</label>
+      <textarea data-key="c1_frame" id="c1_frame" placeholder="Document the exact transition phrase you used" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">C2. Chronological Walk vs Funnelled Approach</div>
+    <div class="form-group">
+      <label>Approach chosen</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="c2_approach"type="radio" name="c2_approach" value="Chronological walk" onchange="updateSummary()"><span class="chip-text">Chronological walk (default)</span></label>
+        <label class="option-chip"><input  data-key="c2_approach"type="radio" name="c2_approach" value="Funnelled approach" onchange="updateSummary()"><span class="chip-text">Funnelled approach</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Rationale for approach</label>
+      <div class="field-hint">Patient stable and articulate = chronological. Acutely unwell, A&E referral, crisis = funnelled. Obvious developmental antecedent the patient is willing to discuss first = funnelled.</div>
+<textarea data-key="c2_rationale" id="c2_rationale" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">C3. Informant vs Patient</div>
+    <div class="form-group">
+      <label>Informant availability per epoch</label>
+      <div class="field-hint">First 4 epochs (A1-A4): require informant. Middle epochs (A5-A9): patient-led with corroboration. Last epochs (A10-A12): mixed. Document who was used and discrepancies.</div>
+<textarea data-key="c3_informant" id="c3_informant" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">C4. ACEs Micro-Protocol</div>
+    <div class="form-group">
+      <label>Frame used</label>
+      <div class="field-hint">Many people who come to see me have had difficult things happen in their childhood...</div>
+<textarea data-key="c4_frame" id="c4_frame" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Sequence from less to more sensitive — items asked in order</label>
+      <div class="field-hint">1. Parental separation → 2. Household substance use / mental illness → 3. Physical discipline / emotional invalidation → 4. Witnessed violence → 5. Sexual abuse (last)</div>
+<textarea data-key="c4_sequence" id="c4_sequence" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Pause and acknowledgement — how done</label>
+      <div class="field-hint">After each disclosure: pause, acknowledge in plain language, do not immediately move to next question</div>
+<textarea data-key="c4_ack" id="c4_ack" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="subsection-title">C5. Sexual History Micro-Protocol (5P)</div>
+    <div class="form-group">
+      <label>Confidentiality framing stated out loud</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="c5_confidential"type="radio" name="c5_confidential" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes — documented</span></label>
+        <label class="option-chip"><input  data-key="c5_confidential"type="radio" name="c5_confidential" value="No" onchange="updateSummary()"><span class="chip-text">No — note why</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Gender-neutral opening used</label>
+      <div class="field-hint">Are you currently in a sexual relationship with anyone, a man, a woman, more than one person?</div>
+<textarea data-key="c5_opening" id="c5_opening" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>5P order walked</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Partners" onchange="updateSummary()"><span class="chip-text">Partners</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Practices" onchange="updateSummary()"><span class="chip-text">Practices</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Protection" onchange="updateSummary()"><span class="chip-text">Protection</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Past STI" onchange="updateSummary()"><span class="chip-text">Past STI</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Pregnancy intention" onchange="updateSummary()"><span class="chip-text">Pregnancy intention</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Sexual functioning" onchange="updateSummary()"><span class="chip-text">Sexual functioning (added)</span></label>
+        <label class="option-chip"><input  data-key="c5_5p"type="checkbox" name="c5_5p" value="Sexual trauma" onchange="updateSummary()"><span class="chip-text">Sexual trauma (end)</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">C6. Substance Trajectory Micro-Protocol</div>
+    <div class="form-group">
+      <label>Interview sequencing used</label>
+      <div class="field-hint">Tobacco → alcohol → cannabis → prescribed sedatives → stigmatised substances</div>
+<textarea data-key="c6_sequence" id="c6_sequence" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Stages of Change applied</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Precontemplation" onchange="updateSummary()"><span class="chip-text">Precontemplation</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Contemplation" onchange="updateSummary()"><span class="chip-text">Contemplation</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Preparation" onchange="updateSummary()"><span class="chip-text">Preparation</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Action" onchange="updateSummary()"><span class="chip-text">Action</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Maintenance" onchange="updateSummary()"><span class="chip-text">Maintenance</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Relapse" onchange="updateSummary()"><span class="chip-text">Relapse</span></label>
+        <label class="option-chip"><input  data-key="c6_stages"type="radio" name="c6_stages" value="Not assessed" onchange="updateSummary()"><span class="chip-text">Not assessed</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">C7. Menstrual &amp; Reproductive Micro-Protocol</div>
+    <div class="form-group">
+      <label>Order walked</label>
+      <div class="field-hint">Age at menarche → current cycle → premenstrual symptoms → LMP → obstetric history → perinatal psychiatric episodes → contraception</div>
+<textarea data-key="c7_order" id="c7_order" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Postpartum psychosis screen asked</label>
+      <div class="grid-2">
+        <label class="option-chip"><input  data-key="c7_pp_screen"type="radio" name="c7_pp_screen" value="Yes" onchange="updateSummary()"><span class="chip-text">Yes</span></label>
+        <label class="option-chip"><input  data-key="c7_pp_screen"type="radio" name="c7_pp_screen" value="No" onchange="updateSummary()"><span class="chip-text">No — note why</span></label>
+        <label class="option-chip"><input  data-key="c7_pp_screen"type="radio" name="c7_pp_screen" value="N/A (no pregnancies)" onchange="updateSummary()"><span class="chip-text">N/A (no pregnancies)</span></label>
+      </div>
+    </div>
+
+    <div class="subsection-title">C8. Transition Phrases</div>
+    <div class="form-group">
+      <label>To family history (Ch 06)</label>
+      <div class="field-hint">That gives me a good picture of your own life. Now I'd like to ask about your family...</div>
+<textarea data-key="c8_family" id="c8_family" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>To premorbid personality (Ch 08)</label>
+      <div class="field-hint">Setting aside all of this, what kind of a person were you before any of this began? How would the people who know you best describe you?</div>
+<textarea data-key="c8_premorbid" id="c8_premorbid" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- D -->
+<details class="accordion" id="D">
+  <summary class="accordion-header"><div><span class="section-badge">D</span>Disorder-Specific Tailoring</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Clinical Instruction</strong>
+      <p>These are worked viva-prose templates for the developmental ground typical of each disorder. They are <em>not</em> index-episode descriptions (those live in Chapter 03 HOPI §D). Use these to guide your elicitation priorities.</p>
+    </div>
+
+    <div class="disorder-grid">
+      <div class="disorder-card no-break">
+        <h4>1. Schizophrenia / First-Episode Psychosis</h4>
+        <p>Look for: quiet/shy temperament, mild social difficulties in middle childhood, <b>academic decline in late adolescence</b> (the single most common premorbid signature), brief disrupted occupational history, minimal sexual/marital history, <b>cannabis screen</b>, religious help-seeking pre-presentation.</p>
+        <div class="form-group">
+          <label>Relevant findings for this patient</label>
+          <div class="field-hint">Document the specific elements from this patient's history that match or refute the FEP developmental signature.</div>
+<textarea data-key="d1" id="d1" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>2. Mania / Bipolar I Disorder</h4>
+        <p>Look for: high premorbid functioning, "bright one" of family, academically successful, socially extroverted, <b>occupational episodic collapses</b> with brilliant productivity in between, eventful marital history (love marriages, impulsive, higher divorce), <b>perinatal psychiatric history in women is the single most important specific item</b>.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document hypomanic temperament from late teens, occupational pattern, perinatal history if applicable.</div>
+<textarea data-key="d2" id="d2" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>3. Bipolar Depression (BD-I or BD-II Depressive Episode)</h4>
+        <p>Look for: same ground as mania case PLUS the <b>prior unrecognised hypomania probe</b>: "Has there ever been a period when you felt unusually high, energetic, needed less sleep, talked more, did more?" A positive answer reframes unipolar depression as bipolar II.</p>
+        <div class="form-group">
+          <label>Hypomania probe result</label>
+          <div class="field-hint">Patient's exact words. When? Duration? What did family say?</div>
+<textarea data-key="d3" id="d3" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>4. Major Depressive Disorder</h4>
+        <p>Look for: childhood loss (especially maternal &lt;11), ACEs (emotional neglect, parental separation), adolescent dysthymic spell described as "always quiet/sensitive", occupational stress-related decompensations anchored to losses, dependent/conflict-avoidant marital pattern, substance self-medication, perinatal psychiatric history in women.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document childhood loss, ACE load, adolescent mood spell, occupational anchors, marital pattern.</div>
+<textarea data-key="d4" id="d4" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>5. Substance Use Disorder, Alcohol</h4>
+        <p>Look for: witnessed paternal alcohol + maternal beating (highest-yield ACE pair in Indian alcohol cases), first exposure 12–16, first regular use late adolescence/early 20s, escalation mid-20s to 30s anchored to stress/separation, marital deterioration paralleling use, IPV as perpetrator under influence, occupational downward drift, traffic/assault forensic history.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document the specific trajectory elements for this patient.</div>
+<textarea data-key="d5" id="d5" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>6. Anxiety / Panic Disorder</h4>
+        <p>Look for: behaviourally inhibited childhood, separation anxiety, school refusal, conscientious-overachiever structure, "good child" who never gave trouble, onset late 20s–30s when pressures exceed coping capacity, stable occupation with chronic anticipatory anxiety, preserved marital history, <b>benzodiazepine use</b> often started by non-psychiatrist physician.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document temperamental ground, school refusal episodes, occupational stability, benzo history.</div>
+<textarea data-key="d6" id="d6" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>7. OCD and Related Disorders</h4>
+        <p>Look for: childhood compulsions/rituals not recognised as abnormal (counting, touching, ordering, refusing cracks, fixed repetitions, scrupulous handwashing), conscientious/perfectionist/rule-bound temperament, preserved schooling through compensatory effort, <b>religious/moral scrupulosity</b> (common in Indian OCD), long pre-presentation phase (mean 7–10 years internationally, longer in India).</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document childhood rituals, scrupulosity, religious preoccupations, duration before presentation.</div>
+<textarea data-key="d7" id="d7" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>8. PTSD and Trauma-Related Disorders</h4>
+        <p>Adult trauma = document pre-trauma baseline, prior coping, prior psychiatric history, support structure. Childhood trauma = the personal history <em>is</em> the trauma history; complex PTSD presentation with repeated adversity. <b>Childhood sexual abuse is the most under-elicited and most load-bearing item.</b> Substance self-medication (alcohol, benzodiazepines). Marital pattern of avoidance OR repetition of harmful relationships.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document trauma type, age, single vs repeated, pre-trauma baseline, coping, support, substance use, marital pattern.</div>
+<textarea data-key="d8" id="d8" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>9. Eating Disorder (Anorexia Nervosa, Restricting Type)</h4>
+        <p>Look for: early feeding difficulties, "fussy eater", perfectionist/rigid/conscientious/high-achieving temperament, preserved or excellent schooling, <b>peri-pubertal body image emergence</b>, remembered weight comment from relative/peer as trigger, concurrent menarche, cultural pro-thin/pro-fair attitudes, weight teasing (minimised as harmless), subculture risks (classical dance, modelling, athletics), secondary amenorrhoea.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document feeding history, body image emergence, triggers, subculture exposure, menstrual impact.</div>
+<textarea data-key="d9" id="d9" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>10. Dissociative Disorder / Functional Neurological Disorder</h4>
+        <p>Look for: <b>highest ACE rates in the entire compendium</b> (sexual abuse, neglect, household dysfunction), alexithymic temperament, remembered "model" (relative with stroke/seizure/chronic functional condition), variable schooling, accumulating stressors in year before presentation, IPV/sexual coercion not previously disclosed, trauma history is the most important item.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document ACE load, alexithymia, remembered model, stressor accumulation, undisclosed IPV.</div>
+<textarea data-key="d10" id="d10" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>11. Personality Disorder (BPD-Emphasised)</h4>
+        <p>Look for: attachment disruption, <b>emotional neglect and invalidation (universal)</b>, physical abuse (common), childhood sexual abuse (40–70% internationally), high emotional sensitivity/reactivity/slow return to baseline, difficult temperament full cluster, middle childhood behavioural difficulties and peer rejection, adolescence: identity disturbance, relational instability, first self-harm 12–16, substance/sexual experimentation, intense short-lived relationships. Occupational instability, marital pattern of idealisation-devaluation, repeated separations, bidirectional IPV.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document the developmental trajectory of attachment disruption, emotion dysregulation, identity disturbance, relational instability. This IS the diagnosis.</div>
+<textarea data-key="d11" id="d11" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>11b. Antisocial Personality Disorder / Conduct Disorder Trajectory</h4>
+        <p>Look for: witnessed paternal violence, harsh inconsistent discipline, emotional neglect (universal), childhood-onset conduct symptoms (before 10 = worse prognosis), aggression, cruelty, fire-setting, theft, truancy, running away, poor schooling, multiple suspensions/expulsions, dropout by class 8/9, adolescent delinquent peer affiliation, first arrests 14–17, first incarceration late adolescence, substance co-onset, adult multiple arrests across categories, failed parole, unstable occupation, IPV as perpetrator (near-universal), heavy early substance use. The personal history IS the diagnosis.</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document the full forensic arc. Without it, the diagnosis cannot be made.</div>
+<textarea data-key="d11b" id="d11b" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+      <div class="disorder-card no-break">
+        <h4>12. Neurocognitive (Delirium vs Dementia)</h4>
+        <p>Delirium: pre-illness functional/cognitive level, ADL independence, current comorbidities/medications. Dementia: <b>educational level</b> (strongest predictor of cognitive reserve), occupational complexity (skilled/professional > unskilled), social engagement, trajectory of decline against baseline. A retired schoolteacher with 12 years schooling who is now disoriented is a different case from a retired manual labourer with no formal education. Brief marital/sexual/substance unless directly relevant. Document religious/AYUSH help-seeking (accounts for long untreated duration).</p>
+        <div class="form-group">
+          <label>Relevant findings</label>
+          <div class="field-hint">Document cognitive reserve explicitly: education, occupational complexity, trajectory of decline, AYUSH trajectory.</div>
+<textarea data-key="d12" id="d12" placeholder="Type here..." oninput="updateSummary()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</details>
+
+
+<!-- E -->
+<details class="accordion" id="E">
+  <summary class="accordion-header"><div><span class="section-badge">E</span>Pitfalls &amp; Exam Traps</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>Checklist: Did you avoid these?</strong>
+      <ul>
+        <li>Skipping or rushing sexual history under cultural discomfort. <em>Corrective: 5P framework with explicit confidentiality framing (§C5).</em></li>
+        <li>Treating ACE elicitation as a checklist. <em>Corrective: The §C4 framing is the difference.</em></li>
+        <li>Failing to take an informant history for early epochs. <em>Corrective: Document honestly when unavailable.</em></li>
+        <li>Confabulating where data is missing. <em>Corrective: "Birth and early development not known to available informants."</em></li>
+        <li>Confusing premorbid personality (Ch 08, traits) with personal history (Ch 07, events). <em>Events here, traits next door.</em></li>
+        <li>Bullet-listing substance use without the developmental trajectory. <em>Corrective: Six-question walk in §A10.</em></li>
+        <li>Missing menstrual and reproductive history in women. <em>Postpartum psychosis decades earlier reframes the case.</em></li>
+        <li>Not connecting personal history findings forward to the 4P formulation grid (Ch 12 §F). <em>If findings do not appear in formulation, they were elicited for nothing.</em></li>
+        <li>Rehashing HOPI substance content for an SUD index case instead of the developmental view. <em>HOPI = dependency syndrome; Personal History = developmental walk.</em></li>
+        <li>Not screening for conduct disorder antecedent in adult antisocial behaviour. <em>Adult ASPD requires childhood-onset CD evidence.</em></li>
+      </ul>
+    </div>
+    <div class="form-group">
+      <label>Self-audit: which pitfalls did you actively avoid in this case?</label>
+      <div class="field-hint">Document your deliberate strategies to avoid each pitfall. What framing did you use? What did you check?</div>
+<textarea data-key="e_audit" id="e_audit" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Viva defence preparation: how would you defend your boundary decisions?</label>
+      <div class="field-hint">e.g. Why is temperament in A2 and not Ch 08? Why did you document absence of antenatal data this way?</div>
+<textarea data-key="e_defence" id="e_defence" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- F -->
+<details class="accordion" id="F">
+  <summary class="accordion-header"><div><span class="section-badge">F</span>Sample Phrasings</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="instruction-box no-break">
+      <strong>F1. Section Opening (General)</strong>
+      <p>"I'd like to take some time now to understand who you were before any of this began. We'll walk through your life from the beginning. Some of what I ask will feel personal, please tell me if anything is uncomfortable, and we'll come back to it. Nothing you say here leaves this room without your knowledge."</p>
+    </div>
+    <div class="form-group">
+      <label>Your actual opening phrase</label>
+      <textarea data-key="f1" id="f1" placeholder="Document what you actually said" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F2. ACE / Abuse Opening</strong>
+      <p>"Many people who come to see me have had difficult things happen in their childhood, things they have rarely, if ever, told anyone. I'm going to ask you about a few of these. You don't have to answer anything you don't want to. I am asking because what happens to a child shapes the adult, and I want to understand you fully. Was there ever a time, when you were growing up, when you felt unsafe in your own home, physically, or in any other way?"</p>
+      <p style="margin-top:6px;"><em>Hindi:</em> "Bahut sare log jo mere paas aate hain, unke bachpan mein kuch mushkil cheezein hui hoti hain... Kya aapko kabhi apne hi ghar mein asurakshit mehsoos hua tha, sharir ke star par, ya kisi aur tarah se?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your ACE opening and response</label>
+      <div class="field-hint">Document your framing and the patient's immediate response</div>
+<textarea data-key="f2" id="f2" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F3. Sexual History Opening</strong>
+      <p>"The next part of the interview is about your sexual life and your sexual relationships. I ask everyone these questions; they are part of a complete medical history. What you tell me here stays in your file and will not be shared with anyone, including your family, without your permission. Are you currently in a sexual relationship with anyone, a man, a woman, more than one person?"</p>
+      <p style="margin-top:6px;"><em>For sexual functioning in a married woman, husband out of room:</em> "Is sexual intercourse comfortable for you? Is it something you look forward to, or has that changed? Is there pain, dryness, or anything else that makes it difficult?"</p>
+      <p style="margin-top:6px;"><em>Hindi:</em> "Kya aapke pati ke saath sambandh banane mein aapko aaram milta hai? Kya woh aapke liye ek achhi cheez hai, ya woh badal gayi hai?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your sexual history opening and response</label>
+      <div class="field-hint">Document confidentiality statement and patient's comfort level</div>
+<textarea data-key="f3" id="f3" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F4. Marital History Opening</strong>
+      <p>"I'd like to ask about your marriage. How did the marriage come about, was it arranged by the families, or did you choose your husband, or both? Were you happy about it at the time? And how have things been between the two of you since?"</p>
+      <p style="margin-top:6px;"><em>IPV probe:</em> "In many marriages there are arguments and sometimes things become physical. Has that ever happened in your marriage? Has your husband ever hit you, pushed you, or hurt you in any way? Have you ever felt afraid of him?"</p>
+      <p style="margin-top:6px;"><em>Hindi IPV:</em> "Kai shadiyon mein ladai-jhagde hote hain, aur kabhi-kabhi haath bhi uth jaata hai. Kya aapke saath bhi aisa hua hai? Kya aapke pati ne kabhi aapko maara hai, dhakka diya hai, ya kisi tarah chot pahunchayi hai? Kya aap unse darti hain?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your marital and IPV phrasings</label>
+      <textarea data-key="f4" id="f4" placeholder="Document your phrasing and the patient's response" oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F5. Substance Trajectory Opening</strong>
+      <p>"I'd like to ask about anything you might use, tobacco, alcohol, anything else. People use these things for many different reasons and at many different levels, and I'm not here to judge. I want to understand the full picture. Let's start with tobacco, do you smoke, or chew tobacco in any form, and have you ever?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your substance opening</label>
+      <div class="field-hint">Document your non-judgmental opening and sequencing</div>
+<textarea data-key="f5" id="f5" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F6. Menstrual &amp; Reproductive Opening</strong>
+      <p>"I'd like to ask a few questions about your periods and any pregnancies you've had. When did you start having your periods? How regular are they? When was the last one? How many pregnancies have you had altogether, including any that ended early, and how many living children do you have? After any of your deliveries, did you become unwell, confused, very low on sleep, hearing voices, or feeling that something bad was about to happen?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your menstrual/reproductive opening</label>
+      <div class="field-hint">Document your approach and postpartum psychosis screen response</div>
+<textarea data-key="f6" id="f6" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F7. Forensic Opening</strong>
+      <p>"Have you ever been in any trouble with the law, even minor things, traffic offences, anything? Have you ever been to a police station? Have you ever spent any time in custody, or in jail?"</p>
+      <p style="margin-top:6px;"><em>For conduct disorder antecedent (ask informant separately):</em> "When he was a boy, ten, eleven, twelve years old, was there ever any trouble at school? Fights? Stealing? Running away? Hurting animals? Setting fires? Any of those things?"</p>
+    </div>
+    <div class="form-group">
+      <label>Your forensic phrasings</label>
+      <div class="field-hint">Document low-key embedded phrasing and conduct disorder antecedent probe</div>
+<textarea data-key="f7" id="f7" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+
+    <div class="instruction-box no-break">
+      <strong>F8. The "I Don't Remember and the Family Doesn't Know" Line</strong>
+      <p>"Sometimes people who come to see me cannot tell me much about their early childhood, their parents have passed away, or no one was keeping track. That is alright. We'll do our best with what we have, and we'll move forward to the parts you do remember."</p>
+      <p style="margin-top:6px;"><em>Document:</em> "Antenatal, perinatal, neonatal, and early childhood history not available, the patient is unable to recall and no informant from the relevant period is available."</p>
+    </div>
+    <div class="form-group">
+      <label>How you handled unknowable epochs</label>
+      <div class="field-hint">Document the exact line you used and the exact documentation phrase you will write</div>
+<textarea data-key="f8" id="f8" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- G -->
+<details class="accordion" id="G">
+  <summary class="accordion-header"><div><span class="section-badge">G</span>Cross-References</div><span class="chevron">▼</span></summary>
+  <div class="accordion-body">
+    <div class="quickref-card no-break">
+      <h4>Chapter 03 (HOPI)</h4>
+      <ul>
+        <li>Substance use HOPI for SUD index case — dependency syndrome lives there; developmental trajectory lives in §A10 here.</li>
+        <li>Trauma HOPI for PTSD index case — index trauma documented in both chapters: symptom-anchored in HOPI, developmental in §A4/§A8 here.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 05 (Past History)</h4>
+      <ul>
+        <li>ISBD Tohen 2009 nomenclature for prior episodes; life chart framework.</li>
+        <li>Personal history events become episode triggers in past history when the episode is a relapse.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 06 (Family History)</h4>
+      <ul>
+        <li>Pedigree convention, expressed emotion (high-yield in schizophrenia and BPAD relapse), parental psychiatric history, family attitudes to illness.</li>
+        <li>Boundary: family history = who else was ill; personal history = what happened to the patient.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 08 (Premorbid Personality)</h4>
+      <ul>
+        <li>Trait-versus-developmental-event boundary. Temperament sits on the boundary: §A2 here as developmental fact; stable adult personality structure in Ch 08.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 11 (MSE)</h4>
+      <ul>
+        <li>Cross-section observed on examination day is interpreted against the developmental ground established here. Blunted affect means something different in a previously vivacious patient vs a lifelong schizoid one.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 12 (Diagnosis / 4-Axis)</h4>
+      <ul>
+        <li>4P × bio-psycho-social formulation grid in §F draws predisposing and precipitating columns largely from this chapter.</li>
+        <li>Cultural formulation interview in §G overlaps with §A12 here.</li>
+        <li>Diagnostic criteria for personality disorders (§D11) and ASPD specifically depend on the developmental trajectory documented here.</li>
+      </ul>
+    </div>
+    <div class="quickref-card no-break">
+      <h4>Chapter 14 (Management)</h4>
+      <ul>
+        <li>Psychotherapy planning, family interventions, schema-aware formulation, attachment-informed therapy choice, long-term rehabilitation plan all rest on this chapter more than any other section.</li>
+      </ul>
+    </div>
+    <div class="form-group">
+      <label>Your cross-reference notes for this case</label>
+      <div class="field-hint">How will you connect this chapter's findings to Ch 08 (premorbid), Ch 12 (formulation), and Ch 14 (management)?</div>
+<textarea data-key="g_notes" id="g_notes" placeholder="Type here..." oninput="updateSummary()"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- STICKY BOTTOM BAR -->
+<div class="sticky-bar no-break">
+  <button class="btn btn-primary" onclick="exportPDF()">Export PDF</button>
+  <button class="btn btn-success" onclick="copySummary()">Copy Summary</button>
+  <button class="btn btn-secondary" onclick="resyncSummary()">Re-sync Summary</button>
+</div>
+
+<!-- CLEAR CONFIRMATION MODAL -->
+<div class="modal-overlay" id="clearModal">
+  <div class="modal-box">
+    <h3>Clear all data?</h3>
+    <p>This will erase all fields. A timestamped backup will be saved first.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="hideModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmClear()">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== HELP PANELS ===== */
+function toggleHelp(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible');
+}
+
+/* ===== AUTO-EXPANDING TEXTAREAS ===== */
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  document.querySelectorAll('textarea').forEach(el => {
+    el.addEventListener('input', () => resizeTextarea(el));
+    el.addEventListener('paste', () => setTimeout(() => resizeTextarea(el), 50));
+  });
+  // Initial sizing after 50ms
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  }, 50);
+}
+
+/* ===== CHIP STYLES ===== */
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip').forEach(chip => {
+    const input = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (input) {
+      chip.classList.toggle('checked', input.checked);
+    }
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip').forEach(chip => {
+    if (chip.dataset.chipInit) return;
+    chip.dataset.chipInit = '1';
+    const input = chip.querySelector('input[type="checkbox"], input[type="radio"]');
+    if (input) {
+      input.addEventListener('change', updateChipVisuals);
+    }
+  });
+  updateChipVisuals();
+}
+
+/* ===== SUMMARY ===== */
+let summaryManualEdit = false;
+const summaryBox = document.getElementById('summaryBox');
+if (summaryBox) {
+  summaryBox.addEventListener('input', function() {
+    summaryManualEdit = true;
+  });
+}
+
+function resyncSummary() {
+  summaryManualEdit = false;
+  updateSummary();
+}
+
+function updateSummary() {
+  if (summaryManualEdit) return;
+  const s = buildSummary();
+  summaryBox.value = s;
+  resizeTextarea(summaryBox);
+  saveData();
+}
+
+function buildSummary() {
+  let parts = [];
+  // Helper
+  function getVal(key) {
+    const el = document.querySelector('[data-key="' + key + '"]');
+    return el ? el.value.trim() : '';
+  }
+  function getRadio(name) {
+    const el = document.querySelector('input[data-key="' + name + '"]:checked, input[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
+  function getChecks(name) {
+    return Array.from(document.querySelectorAll('input[data-key^="' + name + '"]:checked, input[name="' + name + '"]:checked')).map(e => e.value);
+  }
+
+  // A1
+  const a1_informant = getVal('a1_informant');
+  const a1_planned = getRadio('a1_planned');
+  const a1_maternal_age = getVal('a1_maternal_age');
+  const a1_birth_weight = getVal('a1_birth_weight');
+  const a1_gest = getRadio('a1_gest_age');
+  const a1_delivery = getRadio('a1_delivery_mode');
+  const a1_peri = getChecks('a1_peri_comp');
+  const a1_neonatal = getChecks('a1_neonatal');
+  const a1_milestone = getVal('a1_milestone_free');
+  if (a1_informant || a1_planned || a1_maternal_age || a1_birth_weight) {
+    let p = 'A1 (Perinatal)';
+    if (a1_informant) p += ' — informant: ' + a1_informant;
+    if (a1_planned) p += ' — pregnancy: ' + a1_planned;
+    if (a1_maternal_age) p += ' — maternal age: ' + a1_maternal_age + 'y';
+    if (a1_gest) p += ' — gestation: ' + a1_gest;
+    if (a1_delivery) p += ' — delivery: ' + a1_delivery;
+    if (a1_birth_weight) p += ' — birth weight: ' + a1_birth_weight + 'g';
+    if (a1_peri.length) p += ' — complications: ' + a1_peri.join(', ');
+    if (a1_neonatal.length) p += ' — neonatal: ' + a1_neonatal.join(', ');
+    if (a1_milestone) p += ' — milestones: ' + a1_milestone;
+    parts.push(p + '.');
+  }
+  // A2
+  const a2_temp = getRadio('a2_temperament');
+  const a2_inhib = getRadio('a2_inhibited');
+  const a2_imp = getRadio('a2_impulsive');
+  const a2_fit = getVal('a2_goodness_fit');
+  if (a2_temp || a2_inhib || a2_imp) {
+    let p = 'A2 (Temperament)';
+    if (a2_temp) p += ' — ' + a2_temp;
+    if (a2_inhib) p += ' — behaviourally inhibited: ' + a2_inhib;
+    if (a2_imp) p += ' — impulsive: ' + a2_imp;
+    if (a2_fit) p += ' — goodness-of-fit: ' + a2_fit;
+    parts.push(p + '.');
+  }
+  // A3
+  const a3_behav = getChecks('a3_behaviour');
+  const a3_phys = getChecks('a3_physical');
+  const a3_cpsych = getChecks('a3_child_psych');
+  if (a3_behav.length || a3_phys.length || a3_cpsych.length) {
+    let p = 'A3 (Middle childhood)';
+    if (a3_behav.length) p += ' — behaviour: ' + a3_behav.join(', ');
+    if (a3_phys.length) p += ' — physical: ' + a3_phys.join(', ');
+    if (a3_cpsych.length) p += ' — psych: ' + a3_cpsych.join(', ');
+    parts.push(p + '.');
+  }
+  // A4
+  const ace_items = [];
+  if (getRadio('a4_physical_abuse')==='Yes') ace_items.push('physical abuse');
+  if (getRadio('a4_emotional_abuse')==='Yes') ace_items.push('emotional abuse');
+  if (getRadio('a4_sexual_abuse')==='Yes') ace_items.push('sexual abuse');
+  if (getRadio('a4_physical_neglect')==='Yes') ace_items.push('physical neglect');
+  if (getRadio('a4_emotional_neglect')==='Yes') ace_items.push('emotional neglect');
+  if (getRadio('a4_separation')==='Yes') ace_items.push('parental separation');
+  if (getRadio('a4_dv')==='Yes') ace_items.push('witnessed DV');
+  if (getRadio('a4_hh_substance')==='Yes') ace_items.push('HH substance use');
+  if (getRadio('a4_hh_mental')==='Yes') ace_items.push('HH mental illness');
+  if (getRadio('a4_hh_incarcerated')==='Yes') ace_items.push('HH incarceration');
+  const a4_extra = getChecks('a4_extra');
+  if (ace_items.length || a4_extra.length) {
+    let p = 'A4 (ACEs)';
+    p += ' — count ' + (ace_items.length + a4_extra.length) + ': ';
+    p += ace_items.concat(a4_extra).join(', ') + '.';
+    parts.push(p);
+  }
+  // A5
+  const a5_highest = getVal('a5_highest_edu');
+  const a5_decline = getVal('a5_decline');
+  if (a5_highest || a5_decline) {
+    let p = 'A5 (Schooling)';
+    if (a5_highest) p += ' — highest: ' + a5_highest;
+    if (a5_decline) p += ' — trajectory: ' + a5_decline;
+    parts.push(p + '.');
+  }
+  // A6
+  const a6_status = getRadio('a6_current_status');
+  const a6_jobs = getVal('a6_jobs_list');
+  if (a6_status || a6_jobs) {
+    let p = 'A6 (Occupation)';
+    if (a6_status) p += ' — status: ' + a6_status;
+    if (a6_jobs) p += ' — jobs: ' + a6_jobs;
+    parts.push(p + '.');
+  }
+  // A7
+  const a7_menarche = getVal('a7_menarche');
+  const a7_pp = getChecks('a7_perinatal_psych');
+  if (a7_menarche || a7_pp.length) {
+    let p = 'A7 (Menstrual/reproductive)';
+    if (a7_menarche) p += ' — menarche ' + a7_menarche + 'y';
+    if (a7_pp.length) p += ' — perinatal psych: ' + a7_pp.join(', ');
+    parts.push(p + '.');
+  }
+  // A8
+  const a8_orient = getVal('a8_orientation');
+  const a8_trauma = getVal('a8_sexual_trauma');
+  if (a8_orient || a8_trauma) {
+    let p = 'A8 (Sexual history)';
+    if (a8_orient) p += ' — orientation/identity: ' + a8_orient;
+    if (a8_trauma) p += ' — trauma disclosed: ' + a8_trauma;
+    parts.push(p + '.');
+  }
+  // A9
+  const a9_status = getRadio('a9_status');
+  const a9_ipv = getRadio('a9_ipv');
+  if (a9_status || a9_ipv) {
+    let p = 'A9 (Marital)';
+    if (a9_status) p += ' — status: ' + a9_status;
+    if (a9_ipv && a9_ipv !== 'None disclosed') p += ' — IPV: ' + a9_ipv;
+    parts.push(p + '.');
+  }
+  // A10
+  const a10_subs = getChecks('a10_substances');
+  const a10_q6 = getVal('a10_q6');
+  if (a10_subs.length || a10_q6) {
+    let p = 'A10 (Substances)';
+    if (a10_subs.length) p += ' — substances: ' + a10_subs.join(', ');
+    if (a10_q6) p += ' — current pattern: ' + a10_q6;
+    parts.push(p + '.');
+  }
+  // A11
+  const a11_cd = getChecks('a11_cd');
+  const a11_onset = getRadio('a11_onset');
+  if (a11_cd.length || a11_onset) {
+    let p = 'A11 (Forensic)';
+    if (a11_onset) p += ' — onset: ' + a11_onset;
+    if (a11_cd.length) p += ' — conduct symptoms: ' + a11_cd.join(', ');
+    parts.push(p + '.');
+  }
+  // A12
+  const a12_practice = getRadio('a12_practice');
+  const a12_help = getVal('a12_help');
+  if (a12_practice || a12_help) {
+    let p = 'A12 (Religious)';
+    if (a12_practice) p += ' — practice: ' + a12_practice;
+    if (a12_help) p += ' — help-seeking: ' + a12_help;
+    parts.push(p + '.');
+  }
+
+  if (parts.length === 0) return 'Summary will appear as sections are filled. Use the Re-sync button after manual edits.';
+  return parts.join('
+
+');
+}
+
+/* ===== COPY ===== */
+function copySummary() {
+  const s = summaryBox.value;
+  if (!s) { alert('Nothing to copy yet.'); return; }
+  navigator.clipboard.writeText(s).then(() => {
+    const ind = document.getElementById('saveIndicator');
+    ind.textContent = 'Summary copied';
+    ind.classList.add('saved');
+    setTimeout(() => { ind.textContent = lastSavedText; ind.classList.remove('saved'); }, 2000);
+  });
+}
+
+/* ===== PDF EXPORT ===== */
+function exportPDF() {
+  document.querySelectorAll('details.accordion').forEach(d => d.setAttribute('open',''));
+  document.querySelectorAll('details.quickref-bar').forEach(d => d.setAttribute('open',''));
+  window.print();
+}
+
+/* ===== ACE COUNTER ===== */
+function updateAceCount() {
+  let count = 0;
+  ['a4_physical_abuse','a4_emotional_abuse','a4_sexual_abuse','a4_physical_neglect','a4_emotional_neglect','a4_separation','a4_dv','a4_hh_substance','a4_hh_mental','a4_hh_incarcerated'].forEach(name => {
+    const el = document.querySelector('input[data-key="' + name + '"]:checked, input[name="' + name + '"]:checked');
+    if (el && el.value === 'Yes') count++;
+  });
+  const extra = document.querySelectorAll('input[data-key^="a4_extra"]:checked, input[name="a4_extra"]:checked').length;
+  const total = count + extra;
+  const out = document.getElementById('a4_ace_count');
+  if (out) out.value = total;
+}
+document.querySelectorAll('input[data-key^="a4_"], input[name^="a4_"]').forEach(el => {
+  el.addEventListener('change', updateAceCount);
+});
+
+/* ===== LOCALSTORAGE ===== */
+const LS_KEY = 'ch07_personal_history_v1';
+const LS_BACKUP_PREFIX = 'ch07_backup_';
+let saveTimer = null;
+let lastSavedText = 'Ready';
+
+function saveData() {
+  const data = {};
+  // Save all data-key fields
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    if (!key) return;
+    if (el.type === 'checkbox') {
+      if (!data[key]) data[key] = [];
+      if (el.checked) data[key].push(el.value);
+    } else if (el.type === 'radio') {
+      if (el.checked) data[key] = el.value;
+    } else {
+      data[key] = el.value;
+    }
+  });
+  // Save open/closed states
+  const openCards = [];
+  document.querySelectorAll('details.accordion[open], details.quickref-bar[open]').forEach(d => {
+    if (d.id) openCards.push(d.id);
+  });
+  data._openCards = openCards;
+  data._manualEdit = summaryManualEdit;
+  data._timestamp = new Date().toISOString();
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  const ind = document.getElementById('saveIndicator');
+  const t = new Date().toLocaleTimeString();
+  lastSavedText = 'Saved ' + t;
+  ind.textContent = lastSavedText;
+  ind.classList.add('saved');
+  setTimeout(() => ind.classList.remove('saved'), 2000);
+}
+
+function restoreData() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    if (data._manualEdit) summaryManualEdit = true;
+    // Restore field values
+    document.querySelectorAll('textarea[data-key], input[data-key]').forEach(el => {
+      const key = el.getAttribute('data-key');
+      if (!key || data[key] === undefined) return;
+      if (el.type === 'checkbox') {
+        el.checked = Array.isArray(data[key]) && data[key].includes(el.value);
+      } else if (el.type === 'radio') {
+        el.checked = (data[key] === el.value);
+      } else {
+        el.value = data[key];
+      }
+    });
+    // Restore open states
+    if (data._openCards) {
+      data._openCards.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('open', '');
+      });
+    }
+    // Restore summary
+    if (summaryBox) {
+      if (summaryManualEdit && data.summaryBox !== undefined) {
+        summaryBox.value = data.summaryBox;
+      } else if (!summaryManualEdit) {
+        updateSummary();
+      } else {
+        summaryBox.value = data.summaryBox || '';
+      }
+    }
+    updateAceCount();
+    updateChipVisuals();
+    // Resize all textareas after 100ms
+    setTimeout(() => {
+      document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+    }, 100);
+  } catch(e) { console.error('Restore error', e); }
+}
+
+function initAutoSave() {
+  document.addEventListener('input', function(e) {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveData, 800);
+  });
+  document.addEventListener('change', function(e) {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveData, 800);
+  });
+}
+
+/* ===== CLEAR ALL ===== */
+function clearAll() {
+  document.getElementById('clearModal').classList.add('visible');
+}
+function hideModal() {
+  document.getElementById('clearModal').classList.remove('visible');
+}
+function confirmClear() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (raw) {
+    const ts = new Date().toISOString().replace(/[:.]/g,'-');
+    localStorage.setItem(LS_BACKUP_PREFIX + ts, raw);
+  }
+  localStorage.removeItem(LS_KEY);
+  document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea, select').forEach(el => el.value = '');
+  summaryManualEdit = false;
+  updateSummary();
+  hideModal();
+}
+
+/* ===== BEFOREPRINT ===== */
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('details.accordion').forEach(d => d.setAttribute('open',''));
+  document.querySelectorAll('details.quickref-bar').forEach(d => d.setAttribute('open',''));
+  document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+});
+
+/* ===== INIT ===== */
+window.addEventListener('DOMContentLoaded', function() {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  // Final safety resize
+  setTimeout(() => {
+    document.querySelectorAll('textarea').forEach(el => resizeTextarea(el));
+  }, 300);
+});
+</script>
+
+</body>
+</html>

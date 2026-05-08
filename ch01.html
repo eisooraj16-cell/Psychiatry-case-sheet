@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Ch 01: Demographics — Adult Psychiatry Form</title>
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
+  background:#000000;color:#e2e8f0;line-height:1.6;font-size:16px;
+  min-height:100vh;overflow-x:hidden;max-width:100vw;
+}
+input,textarea,select,button{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+input:focus,textarea:focus,select:focus{outline:2px solid #38bdf8;outline-offset:2px}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+
+/* ===== LAYOUT ===== */
+.app{max-width:100%;margin:0 auto}
+.container{padding:12px;max-width:900px;margin:0 auto}
+@media(min-width:768px){.container{padding:20px}}
+
+/* ===== HEADER ===== */
+.header{
+  background:#0a0a0a;border-bottom:1px solid #1e293b;
+  padding:16px 12px;position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.header-inner{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.header h1{font-size:1.05rem;font-weight:700;color:#38bdf8;letter-spacing:-0.02em}
+.header .subtitle{font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.1em}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.save-indicator{font-size:0.75rem;color:#64748b;display:flex;align-items:center;gap:6px}
+.save-dot{width:7px;height:7px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:52px;padding:10px 16px;border-radius:10px;
+  font-weight:600;font-size:0.85rem;transition:all .2s;white-space:nowrap;
+}
+.btn:active{transform:scale(0.96)}
+.btn-primary{background:#38bdf8;color:#0f172a}
+.btn-primary:hover{background:#7dd3fc}
+.btn-success{background:#34d399;color:#064e3b}
+.btn-warning{background:#fbbf24;color:#78350f}
+.btn-danger{background:#f87171;color:#7f1d1d}
+.btn-ghost{background:#1a1a1a;color:#94a3b8;border:1px solid #334155}
+.btn-ghost:hover{background:#252525;color:#e2e8f0}
+.btn-sm{min-height:44px;padding:8px 12px;font-size:0.78rem}
+.btn svg{width:18px;height:18px;flex-shrink:0}
+
+/* ===== SUMMARY SECTION ===== */
+.summary-section{
+  background:#111;border:1px solid #1e293b;border-radius:12px;padding:16px;margin-bottom:16px;
+}
+.summary-section .section-title{font-size:0.9rem;font-weight:700;color:#38bdf8;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.summary-controls{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.summary-toggle{
+  padding:6px 12px;border-radius:8px;font-size:0.78rem;font-weight:600;
+  background:#1a1a1a;border:1px solid #334155;color:#94a3b8;cursor:pointer;transition:all .2s;
+}
+.summary-toggle.active{background:#38bdf8;color:#0f172a;border-color:#38bdf8}
+.summary-sync-status{font-size:0.78rem;color:#64748b;margin-bottom:8px;font-style:italic}
+.summary-textarea{
+  width:100%;min-height:80px;background:#0a0a0a;border:1px solid #334155;border-radius:8px;
+  padding:12px;color:#e2e8f0;font-size:0.95rem;line-height:1.7;resize:none;
+  overflow:hidden;white-space:pre-wrap;word-wrap:break-word;transition:border-color .2s;
+}
+.summary-textarea:focus{border-color:#38bdf8}
+.summary-textarea.auto-sync{border-left:3px solid #38bdf8}
+.summary-textarea.manual{border-left:3px solid #fbbf24}
+.summary-textarea::placeholder{color:#777777;opacity:1}
+.summary-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+/* ===== ACCORDION ===== */
+.section{
+  background:#0f0f0f;border:1px solid #1e293b;border-radius:12px;margin-bottom:12px;overflow:hidden;
+}
+.section-header{
+  padding:14px 16px;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;transition:background .2s;
+}
+.section-header:hover{background:#1a1a1a}
+.section-header-left{display:flex;align-items:center;gap:12px;flex:1}
+.section-number{
+  width:36px;height:36px;border-radius:10px;background:#1a2332;border:1px solid #334155;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;
+  color:#38bdf8;flex-shrink:0;
+}
+.section-title-group{flex:1}
+.section-title{font-weight:600;font-size:0.95rem;color:#e2e8f0}
+.section-subtitle{font-size:0.75rem;color:#94a3b8;margin-top:1px}
+.section-chevron{transition:transform .3s;color:#64748b;flex-shrink:0}
+.section.expanded .section-chevron{transform:rotate(180deg)}
+.section-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.section.expanded .section-body{max-height:6000px}
+.section-content{padding:0 16px 16px}
+
+/* ===== INSTRUCTION BOX ===== */
+.instruction{
+  background:rgba(56,189,248,.06);border-left:3px solid #38bdf8;
+  padding:10px 12px;border-radius:0 8px 8px 0;font-size:0.82rem;
+  color:#94a3b8;margin-bottom:14px;line-height:1.5;
+}
+.instruction strong{color:#7dd3fc}
+
+/* ===== FIELD HINT (permanent dashed box) ===== */
+.field-hint{
+  font-size:0.82rem;color:#94a3b8;margin-bottom:8px;line-height:1.5;
+  border:1px dashed #334155;padding:8px 10px;border-radius:8px;background:#0f0f0f;
+  word-wrap:break-word;
+}
+.field-hint strong{color:#7dd3fc}
+
+/* ===== FIELD GROUP ===== */
+.field-group{margin-bottom:16px}
+.field-label{display:block;font-weight:600;font-size:0.85rem;color:#e2e8f0;margin-bottom:6px}
+
+/* ===== TEXT INPUTS ===== */
+.text-input,.number-input,.date-input,.select-input{
+  width:100%;min-height:52px;padding:12px 14px;background:#0f0f0f;
+  border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:1rem;
+  -webkit-appearance:none;appearance:none;transition:border-color .2s;
+}
+.text-input:focus,.number-input:focus,.date-input:focus,.select-input:focus{border-color:#38bdf8}
+.number-input{font-variant-numeric:tabular-nums}
+
+/* ===== TEXTAREA (auto-expanding) ===== */
+textarea.auto-textarea{
+  width:100%;min-height:56px;padding:12px 14px;background:#0f0f0f;
+  border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:1rem;
+  line-height:1.6;resize:none;overflow:hidden;white-space:pre-wrap;word-wrap:break-word;
+  transition:border-color .2s;
+}
+textarea.auto-textarea:focus{border-color:#38bdf8}
+textarea.auto-textarea::placeholder{color:#777777;opacity:1}
+
+/* ===== OPTION CHIPS ===== */
+.option-group{display:flex;flex-direction:column;gap:6px}
+.option-chip{
+  display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 12px;
+  background:#0f0f0f;border:1px solid #334155;border-radius:10px;cursor:pointer;
+  transition:all .2s;position:0;
+}
+.option-chip:active{transform:scale(.99)}
+.option-chip.checked{
+  border-color:#38bdf8;background:rgba(56,189,248,.08);
+}
+.option-chip input[type="radio"],.option-chip input[type="checkbox"]{
+  width:22px;height:22px;accent-color:#38bdf8;flex-shrink:0;cursor:pointer;
+}
+.option-chip label{flex:1;font-size:0.9rem;color:#e2e8f0;cursor:pointer}
+.option-chip .option-note{font-size:0.78rem;color:#64748b;margin-top:2px}
+
+/* Horizontal option chips */
+.option-group-h{display:flex;flex-wrap:wrap;gap:8px}
+.option-chip-h{
+  display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;
+  background:#0f0f0f;border:1px solid #334155;border-radius:10px;cursor:pointer;
+  transition:all .2s;max-width:100%;overflow-wrap:break-word;
+}
+.option-chip-h.checked{border-color:#38bdf8;background:rgba(56,189,248,.08)}
+.option-chip-h input{width:18px;height:18px;accent-color:#38bdf8}
+.option-chip-h label{font-size:0.85rem;cursor:pointer}
+
+/* ===== GRID ===== */
+.field-row{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:480px){.field-row-2{grid-template-columns:1fr 1fr}.field-row-3{grid-template-columns:1fr 1fr 1fr}}
+
+/* ===== KUPPUSWAMY ===== */
+.kuppuswamy-box{background:#111;border:1px solid #334155;border-radius:12px;padding:16px}
+.kuppuswamy-result{text-align:center;padding:16px;background:#1a1a1a;border-radius:10px;margin-top:12px}
+.kuppuswamy-score{font-size:2.5rem;font-weight:800;color:#38bdf8}
+.kuppuswamy-class{font-size:1.1rem;font-weight:600;color:#34d399;margin-top:4px}
+.kuppuswamy-range{font-size:0.78rem;color:#64748b;margin-top:4px}
+
+/* ===== QUICK REF ===== */
+.quick-ref{margin-bottom:16px}
+.quick-ref-header{
+  padding:12px 16px;background:#0f0f0f;border:1px solid #1e293b;border-radius:12px;
+  display:flex;align-items:center;justify-content:space-between;cursor:pointer;
+}
+.quick-ref-title{font-weight:600;font-size:0.88rem}
+.quick-ref-body{display:none;padding:12px;background:#0f0f0f;border:1px solid #1e293b;border-top:none;border-radius:0 0 12px 12px}
+.quick-ref-body.show{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== DATA TABLE ===== */
+.data-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ref-table{width:100%;border-collapse:collapse;font-size:0.82rem;min-width:480px}
+.ref-table th{background:#1a2332;padding:8px 10px;text-align:left;font-weight:600;color:#7dd3fc;border-bottom:2px solid #334155}
+.ref-table td{padding:8px 10px;border-bottom:1px solid #1e293b;color:#94a3b8}
+.ref-table tr:last-child td{border-bottom:none}
+
+/* ===== PHRASE BOX ===== */
+.phrase-box{background:#111;border-radius:8px;padding:12px;margin-bottom:10px;border-left:3px solid #34d399}
+.phrase-label{font-size:0.78rem;font-weight:600;color:#34d399;margin-bottom:4px}
+.phrase-text{font-size:0.85rem;color:#e2e8f0;font-style:italic;line-height:1.5}
+
+/* ===== PITFALL ITEMS ===== */
+.pitfall-item{
+  display:flex;align-items:flex-start;gap:10px;padding:10px;
+  background:rgba(248,113,113,.06);border-radius:8px;margin-bottom:8px;
+  border-left:3px solid #f87171;
+}
+.pitfall-checkbox{margin-top:2px}
+.pitfall-text{font-size:0.82rem;color:#94a3b8;line-height:1.4}
+.pitfall-text strong{color:#f87171}
+
+/* ===== HELP PANEL ===== */
+.help-trigger{
+  display:inline-flex;align-items:center;gap:4px;color:#38bdf8;
+  font-size:0.8rem;font-weight:500;cursor:pointer;margin-bottom:10px;
+}
+.help-panel{
+  display:none;background:#111;border:1px solid #334155;border-radius:10px;
+  padding:12px;margin-bottom:14px;font-size:0.82rem;color:#94a3b8;line-height:1.6;
+}
+.help-panel.show{display:block;animation:fadeIn .2s ease}
+.help-panel ul{margin-left:18px;margin-top:6px}
+.help-panel li{margin-bottom:4px}
+
+/* ===== STICKY BOTTOM BAR ===== */
+.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;background:#0a0a0a;
+  border-top:1px solid #1e293b;padding:10px 12px;display:flex;
+  gap:8px;justify-content:center;z-index:90;backdrop-filter:blur(12px);
+}
+.bottom-bar .btn{flex:1;max-width:200px}
+.spacer-bottom{height:72px}
+
+/* ===== PRINT ===== */
+@media print{
+  body{background:#fff;color:#000;font-size:11pt;overflow-x:hidden}
+  .header,.bottom-bar,.no-print,.section-chevron{display:none!important}
+  .section{border:1px solid #ccc;margin-bottom:12px;break-inside:avoid}
+  .section-body{max-height:none!important;overflow:visible!important}
+  .section-content{padding:12px}
+  .summary-section{display:block!important;border:2px solid #333;margin-bottom:16px}
+  .text-input,.auto-textarea,.number-input,.select-input{
+    border:1px solid #999;background:#f5f5f5;color:#000;
+    overflow:visible!important;height:auto!important;resize:none!important;
+    white-space:pre-wrap!important;
+  }
+  .option-chip{border:1px solid #ccc;background:#f5f5f5!important;color:#000!important}
+  .option-chip:not(.checked){display:none}
+  .option-chip.checked{background:#e8f4e8!important}
+  .option-chip.checked::after{content:" [SELECTED]";font-weight:bold;color:green}
+  .option-chip-h:not(.checked){display:none}
+  .option-chip-h.checked{background:#e8f4e8!important}
+  .instruction,.help-panel,.help-trigger,.section-number{display:none}
+  .field-hint{border:1px dashed #999;color:#555!important;background:#f5f5f5!important}
+  .quick-ref-body{display:block!important}
+  .quick-ref-header{display:none}
+  .kuppuswamy-box{border:1px solid #333}
+  .print-header{display:block!important;text-align:center;margin-bottom:20px;border-bottom:2px solid #333;padding-bottom:10px}
+  .print-header h1{font-size:16pt;color:#000}
+  .print-header p{font-size:10pt;color:#555}
+}
+.print-header{display:none}
+
+/* ===== UTILITIES ===== */
+.hidden{display:none!important}
+.mb-2{margin-bottom:8px}.mt-2{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="subtitle">The Adult Psychiatry History-Taking Compendium</div>
+      <h1>Chapter 01: Demographics</h1>
+    </div>
+    <div class="header-actions">
+      <div class="save-indicator">
+        <div class="save-dot"></div>
+        <span id="saveStatus">Auto-saving enabled</span>
+      </div>
+      <button class="btn btn-ghost btn-sm no-print" onclick="clearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        Clear
+      </button>
+      <button class="btn btn-primary btn-sm no-print" onclick="exportPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        Export PDF
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Print header -->
+<div class="print-header">
+  <h1>Adult Psychiatry Demographics Form</h1>
+  <p>The Adult Psychiatry History-Taking Compendium — Chapter 01: Demographics</p>
+  <p id="printDate"></p>
+</div>
+
+<div class="container">
+
+<!-- ===== AUTO-GENERATED SUMMARY ===== -->
+<div class="summary-section" id="summarySection">
+  <div class="section-title">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    Auto-Generated Demographic Summary
+  </div>
+  <div class="summary-controls no-print">
+    <button class="summary-toggle active" data-format="full" id="btnFull">Full Sentence (&sect;C3)</button>
+    <button class="summary-toggle" data-format="naf" id="btnNaf">NAGEOMRSLIF Mnemonic</button>
+  </div>
+  <div class="summary-sync-status" id="syncStatus">Auto-sync: Updates as you fill the form</div>
+  <textarea class="summary-textarea auto-sync" data-key="_summary" id="summaryText" placeholder="This summary will auto-generate as you fill the form sections below. You can edit it at any time."></textarea>
+  <div class="summary-actions no-print">
+    <button class="btn btn-ghost btn-sm" onclick="resyncSummary()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      Re-sync from Form
+    </button>
+    <button class="btn btn-success btn-sm" onclick="copySummary()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Copy to Clipboard
+    </button>
+  </div>
+</div>
+
+<!-- ===== AGE-OF-ONSET TABLE ===== -->
+<div class="quick-ref no-print">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <span class="quick-ref-title">Age-of-Onset Differential-Shifting Table (&sect;D)</span>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="quick-ref-body">
+    <div class="data-table-wrap">
+      <table class="ref-table">
+        <thead><tr><th>Disorder</th><th>Typical First-Episode Age</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Schizophrenia</strong></td><td>15-25 (M); 20-35 (F)</td><td>Second peak in women after 45</td></tr>
+          <tr><td><strong>Bipolar I</strong></td><td>15-25</td><td>Late-onset mania after 50 raises organic prior</td></tr>
+          <tr><td><strong>Bipolar II / Cyclothymia</strong></td><td>15-30</td><td>Often missed in early years</td></tr>
+          <tr><td><strong>Major Depression</strong></td><td>20-40 (peak late 20s)</td><td>Late-onset &gt;60: vascular, pseudodementia</td></tr>
+          <tr><td><strong>Alcohol Use</strong></td><td>15-30 (first use); 30-50 (dependence)</td><td>Late-onset &gt;60 raises neurocognitive prior</td></tr>
+          <tr><td><strong>Panic Disorder</strong></td><td>Late 20s-early 30s</td><td>Bimodal; second peak in 40s</td></tr>
+          <tr><td><strong>GAD</strong></td><td>Late childhood onwards; chronic</td><td>Often lifelong</td></tr>
+          <tr><td><strong>OCD</strong></td><td>10-20 or 20-30 (bimodal)</td><td>Late-onset &gt;40: frontal, autoimmune</td></tr>
+          <tr><td><strong>PTSD</strong></td><td>Any age (trauma-dependent)</td><td>No age-of-onset per se</td></tr>
+          <tr><td><strong>Anorexia Nervosa</strong></td><td>14-18</td><td>Later onset increasingly recognised</td></tr>
+          <tr><td><strong>Bulimia Nervosa</strong></td><td>15-25</td><td>Slightly later than AN</td></tr>
+          <tr><td><strong>Dissociative/FND</strong></td><td>15-35 (peak 20s-30s)</td><td>Women &gt; men (~3:1)</td></tr>
+          <tr><td><strong>BPD</strong></td><td>Adolescence features; dx 18-25</td><td>Often remits by middle age</td></tr>
+          <tr><td><strong>ASPD</strong></td><td>CD before 15; adult dx 18+</td><td>First &gt;40 without CD = acquired sociopathy</td></tr>
+          <tr><td><strong>Delirium</strong></td><td>Any age; risk rises sharply 65+</td><td>Acute change over days</td></tr>
+          <tr><td><strong>Alzheimer's</strong></td><td>65+ (late); &lt;65 (early, rare)</td><td>Fam hx in early-onset</td></tr>
+          <tr><td><strong>FTD</strong></td><td>45-65</td><td>Behavioural variant first to psychiatry</td></tr>
+          <tr><td><strong>Lewy Body</strong></td><td>50-85</td><td>Parkinsonism + fluctuation + VHs</td></tr>
+          <tr><td><strong>Vascular Dementia</strong></td><td>60+ (stepwise decline)</td><td>Vascular risk factors</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem;color:#64748b;margin-top:10px;font-style:italic;">EXAM PEARL: A first episode outside the typical window shifts the prior substantially toward a secondary rather than primary psychiatric cause.</p>
+  </div>
+</div>
+
+<!-- ===== PITFALLS CHECKLIST ===== -->
+<div class="quick-ref no-print">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <span class="quick-ref-title">Pitfalls &amp; Exam Traps (&sect;F) — Checklist</span>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="quick-ref-body">
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Skipping informant reliability.</strong> The entire longitudinal history rests on the informant.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Conflating current age with age of illness onset.</strong> Current age lives in Demographics; illness onset lives in HOPI (Ch03).</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Missing occupation-specific risks.</strong> Shift work, healthcare, military, farming pesticides, CSW, migrant labour, student status.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Ignoring language mismatch.</strong> English-only candidate with Kannada patient through family interpreter = filtered interview.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Using English cognitive instrument in non-English-literate patient.</strong> Use HMSE (Ganguli 1995) not MMSE/MoCA.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Documenting "self-referred" without asking about prior contacts.</strong> Many have seen GPs or traditional practitioners.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Defaulting to binary gender slip.</strong> Missing hijra and trans-identified patients has downstream consequences.</div></div>
+    <div class="pitfall-item"><input type="checkbox" class="pitfall-checkbox"><div class="pitfall-text"><strong>Treating the demographic slip as a formality.</strong> It is the first differential-shifting evidence of the case.</div></div>
+  </div>
+</div>
+
+
+<!-- ===== SECTION A1: NAME ===== -->
+<div class="section expanded" data-card="A1" id="sec-A1">
+  <div class="section-header" onclick="toggleSection('sec-A1')">
+    <div class="section-header-left">
+      <div class="section-number">A1</div>
+      <div class="section-title-group">
+        <div class="section-title">Name &amp; Preferred Address</div>
+        <div class="section-subtitle">Full name as patient gives it; anonymise to initials/code (PT-XXX)</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Clinical note:</strong> Record the full name as the patient gives it. The preferred address is asked explicitly and used throughout the interview. Anonymise to initials or PT-XXX in documents leaving the clinical setting.</div>
+    <div class="field-group">
+      <label class="field-label">Full Name</label>
+      <div class="field-hint">Patient's full name as she gives it. Use anonymised code (e.g., PT-001) in any document that leaves the clinical setting. The preferred address is asked explicitly and used throughout the interview.</div>
+      <input type="text" class="text-input" data-key="a1_name" placeholder="e.g., Mrs M / PT-001" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Preferred Form of Address</label>
+      <div class="field-hint">Ask explicitly: "How would you like me to address you?" Use this form throughout the interview. In Indian practice, patients may prefer cultural forms (Bhaiya, Didi) over Western honorifics.</div>
+      <div class="option-group-h">
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Mr" onchange="onFieldChange()"><span>Mr</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Mrs" onchange="onFieldChange()"><span>Mrs</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Ms" onchange="onFieldChange()"><span>Ms</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Dr" onchange="onFieldChange()"><span>Dr</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Bhaiya" onchange="onFieldChange()"><span>Bhaiya</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Didi" onchange="onFieldChange()"><span>Didi</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Aunty" onchange="onFieldChange()"><span>Aunty</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Uncle" onchange="onFieldChange()"><span>Uncle</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="First name" onchange="onFieldChange()"><span>First name</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a1_address" name="a1_address" value="Other" onchange="onFieldChange();toggleOther('a1_address','a1_address_other')"><span>Other</span></label>
+      </div>
+      <input type="text" class="text-input" data-key="a1_address_other" id="a1_address_other" placeholder="Specify other address form" style="margin-top:8px;display:none" oninput="onFieldChange()">
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A2: AGE ===== -->
+<div class="section" data-card="A2" id="sec-A2">
+  <div class="section-header" onclick="toggleSection('sec-A2')">
+    <div class="section-header-left">
+      <div class="section-number">A2</div>
+      <div class="section-title-group">
+        <div class="section-title">Age</div>
+        <div class="section-subtitle">Single largest prior-shifting item in the demographic slip</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Critical distinction:</strong> This is the patient's <em>current age at interview</em>, NOT age at onset of illness, NOT age at first psychiatric contact, NOT age at first hospitalisation. Those live in HOPI (Ch03), past history (Ch05), and treatment history respectively.</div>
+    <div class="instruction">Age is the single strongest prior-shifting item. A first-episode psychosis at 19 is a different case from one at 65. Check the Age-of-Onset table above for reference.</div>
+    <div class="field-row field-row-2">
+      <div class="field-group">
+        <label class="field-label">Age (completed years)</label>
+        <div class="field-hint">Enter age in completed years. If the patient does not know their exact date of birth, estimate and flag as approximate. In Indian rural practice, stated age is sometimes inaccurate in older patients.</div>
+        <input type="number" class="number-input" data-key="a2_age" placeholder="e.g., 42" min="0" max="120" oninput="onFieldChange()">
+      </div>
+      <div class="field-group" style="display:flex;align-items:flex-end;gap:10px;padding-bottom:4px">
+        <label class="option-chip" onclick="selectChip(this)" style="flex:1">
+          <input type="checkbox" data-key="a2_approx" id="a2_approx" onchange="onFieldChange()">
+          <span>Age is approximate (DOB not known)</span>
+        </label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Age Note</label>
+      <div class="field-hint">Flag estimated ages and note any relevant age-of-onset considerations here. Document your reasoning if age is estimated rather than exact.</div>
+      <textarea class="auto-textarea" data-key="a2_note" placeholder="e.g., Age approximately 62, date of birth not known. First-episode psychosis at this age raises organic prior significantly." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A3: SEX & GENDER ===== -->
+<div class="section" data-card="A3" id="sec-A3">
+  <div class="section-header" onclick="toggleSection('sec-A3')">
+    <div class="section-header-left">
+      <div class="section-number">A3</div>
+      <div class="section-title-group">
+        <div class="section-title">Sex &amp; Gender Identity</div>
+        <div class="section-subtitle">NALSA 2014 &amp; Transgender Act 2019 — three-gender recognition</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Legal context:</strong> Indian law recognises three genders: male, female, and third gender (hijra, kinnar, transgender) per NALSA 2014 and Transgender Persons Act 2019. Patients from the hijra community face elevated rates of depression, self-harm, substance use, and HIV.</div>
+    <div class="instruction"><strong>Clinical relevance:</strong> Sex-specific epidemiology shifts the differential (anorexia nervosa, BPD more prevalent in women; AUD, ASPD more prevalent in men). Gender dysphoria and trans-identity are increasingly recognised clinical presentations.</div>
+    <div class="help-trigger" onclick="toggleHelp(this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Sample phrasing for gender identity inquiry
+    </div>
+    <div class="help-panel">
+      <div class="phrase-box"><div class="phrase-label">When relevant</div><div class="phrase-text">"I'd like to ask how you identify, I ask everyone, and I want to make sure I'm addressing you correctly. What pronouns do you use?"</div></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Sex (assigned at birth)</label>
+      <div class="option-group-h">
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_sex" name="a3_sex" value="Male" onchange="onFieldChange()"><span>Male</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_sex" name="a3_sex" value="Female" onchange="onFieldChange()"><span>Female</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_sex" name="a3_sex" value="Intersex" onchange="onFieldChange()"><span>Intersex</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Gender Identity (self-identified)</label>
+      <div class="field-hint">Document separately when it differs from sex assigned at birth. Use patient's chosen pronouns throughout the interview. The Indian legal context recognises third gender as an explicit option.</div>
+      <div class="option-group-h">
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_gender" name="a3_gender" value="Male" onchange="onFieldChange()"><span>Male</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_gender" name="a3_gender" value="Female" onchange="onFieldChange()"><span>Female</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_gender" name="a3_gender" value="Third Gender" onchange="onFieldChange()"><span>Third Gender (Hijra/Kinnar/Transgender)</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_gender" name="a3_gender" value="Other" onchange="onFieldChange();toggleOther('a3_gender','a3_gender_other')"><span>Other (specify)</span></label>
+      </div>
+      <input type="text" class="text-input" data-key="a3_gender_other" id="a3_gender_other" placeholder="Specify gender identity" style="margin-top:8px;display:none" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Preferred Pronouns</label>
+      <div class="option-group-h">
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_pronouns" name="a3_pronouns" value="He/Him" onchange="onFieldChange()"><span>He/Him</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_pronouns" name="a3_pronouns" value="She/Her" onchange="onFieldChange()"><span>She/Her</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_pronouns" name="a3_pronouns" value="They/Them" onchange="onFieldChange()"><span>They/Them</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a3_pronouns" name="a3_pronouns" value="Other" onchange="onFieldChange()"><span>Other</span></label>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A4: EDUCATION ===== -->
+<div class="section" data-card="A4" id="sec-A4">
+  <div class="section-header" onclick="toggleSection('sec-A4')">
+    <div class="section-header-left">
+      <div class="section-number">A4</div>
+      <div class="section-title-group">
+        <div class="section-title">Education</div>
+        <div class="section-subtitle">Highest level completed; component of Kuppuswamy SES scoring</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Three clinical jobs of education:</strong> (1) Component of Kuppuswamy SES calculation, (2) Proxy for cognitive reserve — higher education slows apparent dementia decline, (3) Determines cognitive instrument choice: English MMSE/MoCA is invalid for non-English-literate patients; use Hindi Mental Status Examination (HMSE, Ganguli 1995) instead.</div>
+    <div class="field-group">
+      <label class="field-label">Highest Level of Formal Education Completed</label>
+      <div class="field-hint">Maps onto Kuppuswamy education scoring (Chapter 06 &sect;A8). Select the highest completed level. Education score auto-flows into the Kuppuswamy SES calculator in Section A8.</div>
+      <div class="option-group">
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Profession or Honours" data-kedu="7" onchange="onFieldChange()"><div><span>Profession or Honours (Graduate/Post-graduate: medicine, law, engineering, MBA, PhD)</span><div class="option-note">Kuppuswamy Education Score: 7</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Graduate" data-kedu="6" onchange="onFieldChange()"><div><span>Graduate (BA, BSc, BCom, or any non-professional bachelor's degree)</span><div class="option-note">Kuppuswamy Education Score: 6</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Intermediate or Diploma" data-kedu="5" onchange="onFieldChange()"><div><span>Intermediate or Diploma (12th standard / PUC / ITI / Nursing diploma / Polytechnic)</span><div class="option-note">Kuppuswamy Education Score: 5</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="High School Certificate" data-kedu="4" onchange="onFieldChange()"><div><span>High School Certificate (10th standard / SSLC / Matriculation)</span><div class="option-note">Kuppuswamy Education Score: 4</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Middle School Certificate" data-kedu="3" onchange="onFieldChange()"><div><span>Middle School Certificate (7th-9th standard)</span><div class="option-note">Kuppuswamy Education Score: 3</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Primary School Certificate" data-kedu="2" onchange="onFieldChange()"><div><span>Primary School Certificate (1st-4th / 5th standard)</span><div class="option-note">Kuppuswamy Education Score: 2</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a4_education" name="a4_education" value="Illiterate" data-kedu="1" onchange="onFieldChange()"><div><span>Illiterate (no formal schooling)</span><div class="option-note">Kuppuswamy Education Score: 1</div></div></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Additional Education Notes</label>
+      <div class="field-hint">Note language of literacy (English vs regional), any cognitive instrument implications, or ongoing education that may be relevant to the clinical picture.</div>
+      <textarea class="auto-textarea" data-key="a4_note" placeholder="e.g., Non-English literate; needs HMSE not MMSE. Currently pursuing BA final year." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A5: OCCUPATION ===== -->
+<div class="section" data-card="A5" id="sec-A5">
+  <div class="section-header" onclick="toggleSection('sec-A5')">
+    <div class="section-header-left">
+      <div class="section-number">A5</div>
+      <div class="section-title-group">
+        <div class="section-title">Occupation</div>
+        <div class="section-subtitle">Current occupation; certain occupations carry specific psychiatric risks</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="help-trigger" onclick="toggleHelp(this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Occupation-specific psychiatric risks (expand to review)
+    </div>
+    <div class="help-panel">
+      <ul>
+        <li><strong>Shift workers:</strong> Circadian disruption, mood and sleep disorders, substance use as self-management</li>
+        <li><strong>Healthcare workers:</strong> Elevated rates of depression, suicide, burnout, SUD; access to opioids/sedatives</li>
+        <li><strong>Military and police:</strong> Trauma exposure, PTSD, AUD; access to firearms in suicide risk assessment</li>
+        <li><strong>Farmers:</strong> Organophosphate exposure (cholinergic syndromes), pesticide self-poisoning, economic distress suicide</li>
+        <li><strong>Commercial sex workers:</strong> Elevated rates of depression, PTSD, substance use, HIV; stigma-related barriers</li>
+        <li><strong>Migrant labourers:</strong> Isolation, alcohol use, remittance stress, separation from spouse/children</li>
+        <li><strong>Students:</strong> Examination-related anxiety, suicide around results, substance use, first-episode psychosis age window</li>
+      </ul>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Current Occupation</label>
+      <div class="field-hint">Record current occupation. Ask about prior occupations if current is short-standing. Certain occupations carry specific psychiatric risks that shift the differential at intake (see expandable panel above).</div>
+      <input type="text" class="text-input" data-key="a5_occupation" placeholder="e.g., School teacher / Farmer / Software engineer" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Occupation Category (for Kuppuswamy scoring)</label>
+      <div class="field-hint">Select the category that best matches the patient's occupation for Kuppuswamy SES calculation. The occupation score auto-flows into Section A8.</div>
+      <div class="option-group">
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Professional" data-kocc="10" onchange="onFieldChange()"><div><span>Professional (Doctor, Lawyer, Engineer, Professor, Manager, CA, etc.)</span><div class="option-note">Kuppuswamy Occupation Score: 10</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Semi-professional" data-kocc="6" onchange="onFieldChange()"><div><span>Semi-professional, Clerk, Shop-owner, Farmer (with own land)</span><div class="option-note">Kuppuswamy Occupation Score: 6</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Skilled worker" data-kocc="5" onchange="onFieldChange()"><div><span>Skilled Worker, Self-employed (tailor, mechanic, electrician, driver)</span><div class="option-note">Kuppuswamy Occupation Score: 5</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Semi-skilled worker" data-kocc="4" onchange="onFieldChange()"><div><span>Semi-skilled Worker (factory worker, construction worker, domestic help)</span><div class="option-note">Kuppuswamy Occupation Score: 4</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Unskilled worker" data-kocc="3" onchange="onFieldChange()"><div><span>Unskilled Worker (labourer, porter, sweeper)</span><div class="option-note">Kuppuswamy Occupation Score: 3</div></div></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a5_occ_cat" name="a5_occ_cat" value="Unemployed" data-kocc="0" onchange="onFieldChange()"><div><span>Unemployed / Not gainfully employed / Homemaker / Retired without pension</span><div class="option-note">Kuppuswamy Occupation Score: 0</div></div></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Prior Occupations / Periods of Unemployment</label>
+      <div class="field-hint">Document prior occupations if current is short-standing, and any significant periods of unemployment with durations. Occupational trajectory is relevant for functional assessment.</div>
+      <textarea class="auto-textarea" data-key="a5_prior" placeholder="e.g., Worked as clerk for 10 years before resigning 2 years ago due to illness. Has been unemployed since." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+
+<!-- ===== SECTION A6: MARITAL STATUS ===== -->
+<div class="section" data-card="A6" id="sec-A6">
+  <div class="section-header" onclick="toggleSection('sec-A6')">
+    <div class="section-header-left">
+      <div class="section-number">A6</div>
+      <div class="section-title-group">
+        <div class="section-title">Marital Status</div>
+        <div class="section-subtitle">Current status and duration; never-married adults in 30s-40s may signal schizophrenia</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Diagnostic relevance:</strong> Never-married adults in their 30s-40s with limited social function shifts prior toward schizophrenia spectrum or severe mood disorder. Recently widowed patients present with bereavement-related disorders. Separated/divorced with recent onset shifts toward adjustment, depressive, and BPD presentations. The detailed marital history lives in Chapter 07 (&sect;A9).</div>
+    <div class="field-group">
+      <label class="field-label">Current Marital Status</label>
+      <div class="field-hint">Record the current marital status. Ask about duration of current status. This item carries diagnostic relevance: prolonged never-married status in middle age is a soft sign for schizophrenia spectrum disorders.</div>
+      <div class="option-group">
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Never married" onchange="onFieldChange()"><span>Never married</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Married" onchange="onFieldChange()"><span>Married</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Separated" onchange="onFieldChange()"><span>Separated</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Divorced" onchange="onFieldChange()"><span>Divorced</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Widowed" onchange="onFieldChange()"><span>Widowed</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Remarried" onchange="onFieldChange()"><span>Remarried</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="Cohabiting" onchange="onFieldChange()"><span>Cohabiting</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a6_marital" name="a6_marital" value="In a long-term partnership" onchange="onFieldChange()"><span>In a long-term partnership</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Duration of Current Status</label>
+      <div class="field-hint">Ask how long the patient has been in this marital status. Recent changes (e.g., widowed 2 months ago) carry different diagnostic weight than long-standing states.</div>
+      <input type="text" class="text-input" data-key="a6_duration" placeholder="e.g., Married for 15 years / Widowed since 2 years" oninput="onFieldChange()">
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A7: RELIGION ===== -->
+<div class="section" data-card="A7" id="sec-A7">
+  <div class="section-header" onclick="toggleSection('sec-A7')">
+    <div class="section-header-left">
+      <div class="section-number">A7</div>
+      <div class="section-title-group">
+        <div class="section-title">Religion</div>
+        <div class="section-subtitle">Affiliation by birth and current practice; context for cultural formulation</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Clinical relevance:</strong> Religion provides context for cultural formulation, shapes help-seeking trajectory (Chapter 07 &sect;A12), and is relevant to specific clinical content: scrupulosity in OCD, religious delusions in psychosis, religious coping in bereavement. Keep brief — four or five words in the final slip.</div>
+    <div class="field-row field-row-2">
+      <div class="field-group">
+        <label class="field-label">Religious Affiliation (by birth)</label>
+        <div class="field-hint">The religion the patient was born into. This provides the cultural baseline for the cultural formulation.</div>
+        <input type="text" class="text-input" data-key="a7_birth_religion" placeholder="e.g., Hindu / Muslim / Christian / Sikh" oninput="onFieldChange()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current Practice (if different)</label>
+        <div class="field-hint">Note if the patient has converted, is non-practicing, or follows a different spiritual path than their birth religion.</div>
+        <input type="text" class="text-input" data-key="a7_current_religion" placeholder="e.g., Same / Non-practicing / Converted" oninput="onFieldChange()">
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A8: KUPPUSWAMY SES ===== -->
+<div class="section" data-card="A8" id="sec-A8">
+  <div class="section-header" onclick="toggleSection('sec-A8')">
+    <div class="section-header-left">
+      <div class="section-number">A8</div>
+      <div class="section-title-group">
+        <div class="section-title">Socioeconomic Status — Kuppuswamy Calculator</div>
+        <div class="section-subtitle">Modified Kuppuswamy scale with April 2025 income brackets</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Lower SES</strong> is associated with elevated prior for most psychiatric conditions and with substantial access barriers to treatment. The Modified Kuppuswamy scale scores Education (1-7) + Occupation (1-10) + Income (1-12) = <strong>Total 3-29</strong>.</div>
+    <div class="kuppuswamy-box">
+      <div class="field-row field-row-2">
+        <div class="field-group">
+          <label class="field-label">Education Score (auto from A4)</label>
+          <input type="number" class="number-input" data-key="k_edu" id="k_edu" readonly placeholder="Select education in A4" style="opacity:0.7">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Occupation Score (auto from A5)</label>
+          <input type="number" class="number-input" data-key="k_occ" id="k_occ" readonly placeholder="Select occupation in A5" style="opacity:0.7">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Monthly Family Income (INR)</label>
+        <div class="field-hint">Enter the gross monthly family income in Indian Rupees. The April 2025 income brackets are applied automatically. Income score: &ge;2 lakh=12, 1-2L=10, 75K-1L=9, 50-75K=8, 40-50K=7, 30-40K=6, 20-30K=5, 15-20K=4, 10-15K=3, 5-10K=2, &lt;5K=1.</div>
+        <select class="select-input" data-key="k_income" id="k_income" onchange="calcKuppuswamy()">
+          <option value="">-- Select Monthly Income Range --</option>
+          <option value="12">&ge; 2,00,000 (Rs 2 lakh or more)</option>
+          <option value="10">1,00,000 - 1,99,999</option>
+          <option value="9">75,000 - 99,999</option>
+          <option value="8">50,000 - 74,999</option>
+          <option value="7">40,000 - 49,999</option>
+          <option value="6">30,000 - 39,999</option>
+          <option value="5">20,000 - 29,999</option>
+          <option value="4">15,000 - 19,999</option>
+          <option value="3">10,000 - 14,999</option>
+          <option value="2">5,000 - 9,999</option>
+          <option value="1">&lt; 5,000</option>
+        </select>
+      </div>
+      <div class="kuppuswamy-result">
+        <div style="font-size:0.85rem;color:#94a3b8;margin-bottom:4px">Total Kuppuswamy Score</div>
+        <div class="kuppuswamy-score" id="k_total">--</div>
+        <div class="kuppuswamy-class" id="k_class">Select all components</div>
+        <div class="kuppuswamy-range" id="k_range">Upper I: 26-29 | Upper II: 16-25 | Middle: 11-15 | Lower I: 5-10 | Lower II: &lt;5</div>
+      </div>
+    </div>
+    <div class="field-group mt-2">
+      <label class="field-label">Additional SES Notes</label>
+      <div class="field-hint">Any additional context about socioeconomic status that is not captured by the Kuppuswamy score: recent financial changes, debt, family support systems, etc.</div>
+      <textarea class="auto-textarea" data-key="a8_note" placeholder="e.g., Family recently lost primary income source; relying on extended family support." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A9: RESIDENCE ===== -->
+<div class="section" data-card="A9" id="sec-A9">
+  <div class="section-header" onclick="toggleSection('sec-A9')">
+    <div class="section-header-left">
+      <div class="section-number">A9</div>
+      <div class="section-title-group">
+        <div class="section-title">Residence</div>
+        <div class="section-subtitle">Urban residence elevates prior for schizophrenia; rural = organophosphate risk</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Urban residence</strong> elevates the prior for schizophrenia at population level. <strong>Rural residence</strong> carries organophosphate suicide risk and specific cultural presentations. Migration is itself a stressor with elevated risk for psychosis.</div>
+    <div class="field-row field-row-2">
+      <div class="field-group">
+        <label class="field-label">City / Town</label>
+        <input type="text" class="text-input" data-key="a9_city" placeholder="e.g., Hubli" oninput="onFieldChange()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">State</label>
+        <input type="text" class="text-input" data-key="a9_state" placeholder="e.g., Karnataka" oninput="onFieldChange()">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Specific Locality / Area</label>
+      <input type="text" class="text-input" data-key="a9_locality" placeholder="e.g., Vidyanagar" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Type of Area</label>
+      <div class="field-hint">Document explicitly because presentation patterns, help-seeking pathways, and access barriers differ substantially between urban, semi-urban, and rural settings.</div>
+      <div class="option-group-h">
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a9_area" name="a9_area" value="Urban" onchange="onFieldChange()"><span>Urban</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a9_area" name="a9_area" value="Semi-urban" onchange="onFieldChange()"><span>Semi-urban</span></label>
+        <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a9_area" name="a9_area" value="Rural" onchange="onFieldChange()"><span>Rural</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Native Place (if different from current)</label>
+      <div class="field-hint">The region of origin where it differs from current residence. Relevant for cultural formulation and migration history.</div>
+      <input type="text" class="text-input" data-key="a9_native" placeholder="e.g., Dharwad (if different from Hubli)" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Migration History</label>
+      <div class="field-hint">If the patient has migrated, document when, why, and the duration of the current stay. Migration is itself a stressor and carries elevated risk for several psychiatric conditions, particularly psychosis (the urbanicity and migration findings from schizophrenia epidemiology literature).</div>
+      <textarea class="auto-textarea" data-key="a9_migration" placeholder="e.g., Migrated from Dharwad to Hubli 5 years ago for husband's job transfer." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A10: LANGUAGE ===== -->
+<div class="section" data-card="A10" id="sec-A10">
+  <div class="section-header" onclick="toggleSection('sec-A10')">
+    <div class="section-header-left">
+      <div class="section-number">A10</div>
+      <div class="section-title-group">
+        <div class="section-title">Language</div>
+        <div class="section-subtitle">Interview language determines cognitive instrument choice</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction">In multilingual Indian settings, the candidate often conducts the interview in one language while documenting in another. The translation step is itself a source of clinical information loss — flag this where relevant. Interview language determines cognitive instrument choice (MMSE vs HMSE).</div>
+    <div class="help-trigger" onclick="toggleHelp(this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Sample phrasing for language selection
+    </div>
+    <div class="help-panel">
+      <div class="phrase-box"><div class="phrase-label">Language of interview</div><div class="phrase-text">"Which language would you be most comfortable speaking in today? Kannada, Hindi, English, or something else? We can switch between languages as we go if that helps."</div></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Languages Spoken (in order of fluency)</label>
+      <div class="field-hint">List all languages the patient speaks, in order of fluency. The first-listed language is the primary language of communication.</div>
+      <input type="text" class="text-input" data-key="a10_languages" placeholder="e.g., Kannada (primary), Hindi, English" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Language of Interview</label>
+      <div class="field-hint">The language in which the clinical interview was conducted. This determines which cognitive screening instrument is valid (e.g., English MMSE vs Hindi HMSE).</div>
+      <input type="text" class="text-input" data-key="a10_interview_lang" placeholder="e.g., Kannada" oninput="onFieldChange()">
+    </div>
+    <div class="field-group">
+      <label class="option-chip" onclick="selectChip(this)">
+        <input type="checkbox" data-key="a10_interpreter" id="a10_interpreter" onchange="toggleInterpreter(); onFieldChange()">
+        <span>Interpreter was used during the interview</span>
+      </label>
+    </div>
+    <div class="field-group" id="a10_interpreter_detail_group" style="display:none">
+      <label class="field-label">Interpreter Details</label>
+      <div class="field-hint">Document who served as interpreter. Family-member interpreters may filter sensitive content. Professional or hospital interpreters are preferred for clinical accuracy.</div>
+      <input type="text" class="text-input" data-key="a10_interpreter_detail" id="a10_interpreter_detail" placeholder="e.g., Family member / Ward attendant / Professional interpreter" oninput="onFieldChange()">
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A11: INFORMANT ===== -->
+<div class="section" data-card="A11" id="sec-A11">
+  <div class="section-header" onclick="toggleSection('sec-A11')">
+    <div class="section-header-left">
+      <div class="section-number">A11</div>
+      <div class="section-title-group">
+        <div class="section-title">Informant Details &amp; Reliability</div>
+        <div class="section-subtitle">The entire longitudinal history rests on the informant's quality</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction"><strong>Critical:</strong> Skipping the informant reliability assessment is a major pitfall. The entire longitudinal history rests on the informant. When no informant is available, document this explicitly as a limitation — "no informant available; history is from the patient alone, with the expected limitations of self-report."</div>
+    <div class="field-group">
+      <label class="option-chip" onclick="selectChip(this)" id="a11_no_informant_row">
+        <input type="checkbox" data-key="a11_no_informant" id="a11_no_informant" onchange="toggleNoInformant(); onFieldChange()">
+        <span><strong>No informant available</strong> — history is from patient alone</span>
+      </label>
+    </div>
+    <div id="a11_informant_details">
+      <div class="field-row field-row-2">
+        <div class="field-group">
+          <label class="field-label">Informant Name (anonymised)</label>
+          <div class="field-hint">Use a descriptor rather than the actual name for privacy (e.g., "husband", "elder son"). Anonymise as you would the patient name.</div>
+          <input type="text" class="text-input" data-key="a11_inf_name" placeholder="e.g., Son / Husband / Sister" oninput="onFieldChange()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Relationship to Patient</label>
+          <div class="option-group-h">
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Spouse" onchange="onFieldChange()"><span>Spouse</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Parent" onchange="onFieldChange()"><span>Parent</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Sibling" onchange="onFieldChange()"><span>Sibling</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Adult child" onchange="onFieldChange()"><span>Adult child</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Friend" onchange="onFieldChange()"><span>Friend</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Neighbour" onchange="onFieldChange()"><span>Neighbour</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Employer" onchange="onFieldChange()"><span>Employer</span></label>
+            <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_relationship" name="a11_relationship" value="Other" onchange="onFieldChange()"><span>Other</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Duration of Acquaintance</label>
+        <div class="field-hint">An informant who has known the patient for 20 years is structurally better positioned than one who has known her for 3 months. Duration of acquaintance is the first item of the 3-item reliability quick test.</div>
+        <input type="text" class="text-input" data-key="a11_duration" placeholder="e.g., 15 years / Since birth" oninput="onFieldChange()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Current Contact Frequency</label>
+        <div class="field-hint">An informant who has not seen the patient in 2 months cannot provide a reliable account of the last 2 weeks. This is the second item of the reliability quick test.</div>
+        <div class="option-group-h">
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_frequency" name="a11_frequency" value="Daily" onchange="onFieldChange()"><span>Daily (lives together / sees every day)</span></label>
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_frequency" name="a11_frequency" value="Weekly" onchange="onFieldChange()"><span>Weekly</span></label>
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_frequency" name="a11_frequency" value="Monthly" onchange="onFieldChange()"><span>Monthly</span></label>
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_frequency" name="a11_frequency" value="Rarely" onchange="onFieldChange()"><span>Rarely</span></label>
+        </div>
+      </div>
+      <div class="help-trigger" onclick="toggleHelp(this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        3-item informant reliability quick test (&sect;C2)
+      </div>
+      <div class="help-panel">
+        <p style="margin-bottom:8px">The reliability of the informant is a clinical judgement based on these three items:</p>
+        <ul>
+          <li><strong>Duration of acquaintance:</strong> Longer acquaintance = structurally better positioned</li>
+          <li><strong>Current contact frequency:</strong> Daily contact can speak to current illness; monthly cannot describe last 2 weeks reliably</li>
+          <li><strong>Internal consistency:</strong> Does the informant's spontaneous account match answers to directed questions and match the patient's account on plausible points?</li>
+        </ul>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Internal Consistency Assessment</label>
+        <div class="field-hint">The third item of the reliability quick test. Consistency raises reliability; contradiction lowers it. This is a clinical judgement, not a scored instrument.</div>
+        <div class="option-group">
+          <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a11_consistency" name="a11_consistency" value="Consistent" onchange="onFieldChange()"><span>Spontaneous account matches directed questions AND matches patient's account on plausible points</span></label>
+          <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a11_consistency" name="a11_consistency" value="Minor inconsistencies" onchange="onFieldChange()"><span>Minor inconsistencies noted between spontaneous and directed accounts</span></label>
+          <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a11_consistency" name="a11_consistency" value="Significant contradictions" onchange="onFieldChange()"><span>Significant contradictions present between informant and patient accounts</span></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Reliability Rating</label>
+        <div class="field-hint">Rate based on the three-item quick test above. Document a brief justifying phrase alongside the rating.</div>
+        <div class="option-group-h">
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_reliability" name="a11_reliability" value="Reliable" onchange="onFieldChange()"><span>Reliable</span></label>
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_reliability" name="a11_reliability" value="Moderately reliable" onchange="onFieldChange()"><span>Moderately reliable</span></label>
+          <label class="option-chip-h" onclick="selectChip(this)"><input type="radio" data-key="a11_reliability" name="a11_reliability" value="Unreliable" onchange="onFieldChange()"><span>Unreliable</span></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Reliability Justification</label>
+        <div class="field-hint">Provide a brief justifying phrase that covers the three items: duration, contact frequency, and internal consistency.</div>
+        <textarea class="auto-textarea" data-key="a11_reliability_note" placeholder="e.g., Reliable, spouse of 15 years, daily contact, internally consistent account" oninput="onFieldChange()"></textarea>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A12: SOURCE OF REFERRAL ===== -->
+<div class="section" data-card="A12" id="sec-A12">
+  <div class="section-header" onclick="toggleSection('sec-A12')">
+    <div class="section-header-left">
+      <div class="section-number">A12</div>
+      <div class="section-title-group">
+        <div class="section-title">Source of Referral</div>
+        <div class="section-subtitle">Shapes expectations and is itself clinically informative</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction">A police-brought patient, a court-mandated assessment, and a self-referred patient are three very different clinical contexts. The management plan must acknowledge the referral source. Document "self-referred" only after asking about prior contacts with GPs, traditional practitioners, or other psychiatric services.</div>
+    <div class="field-group">
+      <label class="field-label">Referral Source</label>
+      <div class="field-hint">Where the patient came from to reach psychiatric services. The referral source shapes the expectations the patient brings to the interview and is itself clinically informative.</div>
+      <div class="option-group">
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Self-referral" onchange="onFieldChange()"><span>Self-referral (patient came on own initiative)</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Family referral" onchange="onFieldChange()"><span>Family referral</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="General practitioner" onchange="onFieldChange()"><span>General Practitioner</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Another specialist" onchange="onFieldChange()"><span>Another Specialist (Neurology, Internal Medicine, Cardiology, OBGYN)</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Accident and emergency" onchange="onFieldChange()"><span>Accident and Emergency (Casualty)</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Police" onchange="onFieldChange()"><span>Police-brought</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Court-mandated" onchange="onFieldChange()"><span>Court-mandated assessment</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="School or college counsellor" onchange="onFieldChange()"><span>School or College Counsellor</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Religious or traditional practitioner" onchange="onFieldChange()"><span>Religious or Traditional Practitioner</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Transfer from another psychiatric service" onchange="onFieldChange()"><span>Transfer from Another Psychiatric Service</span></label>
+        <label class="option-chip" onclick="selectChip(this)"><input type="radio" data-key="a12_referral" name="a12_referral" value="Other" onchange="onFieldChange()"><span>Other</span></label>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Referral Details</label>
+      <div class="field-hint">Document any prior contacts with other practitioners, the pathway to psychiatric care, and any relevant context about the referral (e.g., "referred after failed faith-healing attempt").</div>
+      <textarea class="auto-textarea" data-key="a12_details" placeholder="e.g., Referred by local GP after 3 months of untreated symptoms. Prior consultation with faith healer 1 month ago." oninput="onFieldChange()"></textarea>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SECTION A13: DATES ===== -->
+<div class="section" data-card="A13" id="sec-A13">
+  <div class="section-header" onclick="toggleSection('sec-A13')">
+    <div class="section-header-left">
+      <div class="section-number">A13</div>
+      <div class="section-title-group">
+        <div class="section-title">Dates</div>
+        <div class="section-subtitle">Audit trail for first contact, admission, and current assessment</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction">Document the date of first psychiatric contact (or of the current episode's first contact, if the patient has prior history), the date of current admission/referral, and the date the current case file is being written. All three dates are needed for audit trail.</div>
+    <div class="field-row field-row-3">
+      <div class="field-group">
+        <label class="field-label">Date of First Psychiatric Contact</label>
+        <div class="field-hint">First contact for the current episode. If the patient has prior psychiatric history, document the date of first contact for the current episode separately.</div>
+        <input type="date" class="date-input" data-key="a13_first_contact" onchange="onFieldChange()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Date of Current Admission / Referral</label>
+        <div class="field-hint">The date the patient was admitted or referred for the current episode of care.</div>
+        <input type="date" class="date-input" data-key="a13_admission" onchange="onFieldChange()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Date of Current Assessment</label>
+        <div class="field-hint">The date this case file is being written. Defaults to today's date.</div>
+        <input type="date" class="date-input" data-key="a13_assessment" onchange="onFieldChange()">
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ===== SAMPLE PHRASINGS ===== -->
+<div class="quick-ref no-print">
+  <div class="quick-ref-header" onclick="toggleQuickRef(this)">
+    <span class="quick-ref-title">Sample Phrasings &amp; Transitions (&sect;G)</span>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="quick-ref-body">
+    <div class="phrase-box"><div class="phrase-label">G1. Verification of demographic slip</div><div class="phrase-text">"Before we begin, let me just confirm a few details. I have you as [age] years old, [marital status], working as [occupation], living in [residence], and today accompanied by [informant]. Is all of that correct?"</div></div>
+    <div class="phrase-box"><div class="phrase-label">G2. Addressing the patient</div><div class="phrase-text">"How would you like me to address you, by your first name, or would you prefer something more formal?"</div></div>
+    <div class="phrase-box"><div class="phrase-label">G3. Informant verification</div><div class="phrase-text">"[To the informant] And can I just check, how long have you known [patient]? How often do you see her these days? And are you comfortable telling me about what's been going on?"</div></div>
+    <div class="phrase-box"><div class="phrase-label">G4. Gender identity (when relevant)</div><div class="phrase-text">"I'd like to ask how you identify, I ask everyone, and I want to make sure I'm addressing you correctly. What pronouns do you use?"</div></div>
+    <div class="phrase-box"><div class="phrase-label">G5. Language</div><div class="phrase-text">"Which language would you be most comfortable speaking in today? Kannada, Hindi, English, or something else? We can switch as we go."</div></div>
+    <div class="phrase-box"><div class="phrase-label">G6. Transition to chief complaints</div><div class="phrase-text">"Thank you, that gives me the basics. Now I'd like to hear, in your own words, what has brought you to see us today. Take your time."</div></div>
+  </div>
+</div>
+
+<!-- ===== MNEMONIC ===== -->
+<div class="section" data-card="MN" id="sec-mnemonic">
+  <div class="section-header" onclick="toggleSection('sec-mnemonic')">
+    <div class="section-header-left">
+      <div class="section-number">M</div>
+      <div class="section-title-group">
+        <div class="section-title">Mnemonic: NAGEOMRSLIF</div>
+        <div class="section-subtitle">11 letters, 11 items, one line of documentation for viva</div>
+      </div>
+    </div>
+    <svg class="section-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="instruction" style="text-align:center;font-size:0.95rem">
+      <strong style="color:#38bdf8;font-size:1.1rem">N</strong>ame &middot; <strong style="color:#38bdf8;font-size:1.1rem">A</strong>ge &middot; <strong style="color:#38bdf8;font-size:1.1rem">G</strong>ender &middot; <strong style="color:#38bdf8;font-size:1.1rem">E</strong>ducation &middot; <strong style="color:#38bdf8;font-size:1.1rem">O</strong>ccupation &middot; <strong style="color:#38bdf8;font-size:1.1rem">M</strong>arital &middot; <strong style="color:#38bdf8;font-size:1.1rem">R</strong>eligion &middot; <strong style="color:#38bdf8;font-size:1.1rem">S</strong>ES &middot; <strong style="color:#38bdf8;font-size:1.1rem">L</strong>anguage &middot; <strong style="color:#38bdf8;font-size:1.1rem">I</strong>nformant &middot; <strong style="color:#38bdf8;font-size:1.1rem">F</strong>irst contact/date
+    </div>
+  </div></div>
+</div>
+
+<div class="spacer-bottom"></div>
+</div>
+
+<!-- ===== STICKY BOTTOM BAR ===== -->
+<div class="bottom-bar no-print">
+  <button class="btn btn-primary" onclick="exportPDF()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+    Export PDF
+  </button>
+  <button class="btn btn-success" onclick="copySummary()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    Copy Summary
+  </button>
+</div>
+
+</div>
+
+<script>
+// ===== CONSTANTS =====
+const LS_KEY = 'ch01_demographics_v1';
+const BACKUP_PREFIX = 'ch01_backup_';
+
+// ===== STATE =====
+let summaryFormat = 'full';
+let isManualEdit = false;
+let saveTimer = null;
+
+// ===== DOMContentLoaded ORDER =====
+document.addEventListener('DOMContentLoaded', function() {
+  restoreData();
+  initAutoExpand();
+  initChipStyles();
+  initAutoSave();
+  updateSummary();
+  document.getElementById('printDate').textContent = 'Generated: ' + new Date().toLocaleString();
+  if (!document.querySelector('[data-key="a13_assessment"]').value) {
+    document.querySelector('[data-key="a13_assessment"]').valueAsDate = new Date();
+  }
+  // Final safety resize
+  setTimeout(function() {
+    document.querySelectorAll('.auto-textarea').forEach(function(t) { resizeTextarea(t); });
+  }, 300);
+});
+
+// ===== SECTION TOGGLE =====
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('expanded');
+}
+function toggleQuickRef(el) {
+  el.nextElementSibling.classList.toggle('show');
+  el.querySelector('.section-chevron').style.transform = el.nextElementSibling.classList.contains('show') ? 'rotate(180deg)' : '';
+}
+function toggleHelp(el) {
+  el.nextElementSibling.classList.toggle('show');
+}
+
+// ===== CHIP SELECTION =====
+function selectChip(chip) {
+  const input = chip.querySelector('input');
+  if (input.type === 'radio') {
+    const name = input.name;
+    document.querySelectorAll('input[name="' + name + '"]').forEach(function(r) {
+      r.closest('.option-chip, .option-chip-h').classList.remove('checked');
+    });
+    chip.classList.add('checked');
+    input.checked = true;
+  } else if (input.type === 'checkbox') {
+    input.checked = !input.checked;
+    chip.classList.toggle('checked', input.checked);
+  }
+  onFieldChange();
+}
+
+function updateChipVisuals() {
+  document.querySelectorAll('.option-chip input, .option-chip-h input').forEach(function(input) {
+    const chip = input.closest('.option-chip, .option-chip-h');
+    if (chip) chip.classList.toggle('checked', input.checked);
+  });
+}
+
+function initChipStyles() {
+  document.querySelectorAll('.option-chip input, .option-chip-h input').forEach(function(input) {
+    if (input.dataset.chipInit) return;
+    input.dataset.chipInit = '1';
+    input.addEventListener('change', function() {
+      updateChipVisuals();
+    });
+  });
+}
+
+function toggleOther(radioName, otherId) {
+  const selected = document.querySelector('input[name="' + radioName + '"]:checked');
+  const el = document.getElementById(otherId);
+  if (el) el.style.display = (selected && selected.value === 'Other') ? 'block' : 'none';
+}
+
+// ===== AUTO-EXPANDING TEXTAREA =====
+function resizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function initAutoExpand() {
+  setTimeout(function() {
+    document.querySelectorAll('.auto-textarea').forEach(function(el) {
+      resizeTextarea(el);
+    });
+  }, 50);
+  document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('auto-textarea')) {
+      resizeTextarea(e.target);
+    }
+  });
+  document.addEventListener('paste', function(e) {
+    if (e.target.classList.contains('auto-textarea')) {
+      setTimeout(function() { resizeTextarea(e.target); }, 0);
+    }
+  });
+}
+
+// ===== KUPPUSWAMY =====
+function calcKuppuswamy() {
+  let eduScore = 0, occScore = 0;
+  const eduSel = document.querySelector('input[name="a4_education"]:checked');
+  if (eduSel) { eduScore = parseInt(eduSel.dataset.kedu) || 0; document.getElementById('k_edu').value = eduScore; }
+  const occSel = document.querySelector('input[name="a5_occ_cat"]:checked');
+  if (occSel) { occScore = parseInt(occSel.dataset.kocc) || 0; document.getElementById('k_occ').value = occScore; }
+  const incomeScore = parseInt(document.getElementById('k_income').value) || 0;
+  if (eduScore > 0 && occScore >= 0 && incomeScore > 0) {
+    const total = eduScore + occScore + incomeScore;
+    document.getElementById('k_total').textContent = total;
+    let cls = '', clsRange = '';
+    if (total >= 26) { cls = 'Upper I (Upper High)'; clsRange = '26-29'; }
+    else if (total >= 16) { cls = 'Upper II (Lower High)'; clsRange = '16-25'; }
+    else if (total >= 11) { cls = 'Middle'; clsRange = '11-15'; }
+    else if (total >= 5) { cls = 'Lower I (Upper Low)'; clsRange = '5-10'; }
+    else { cls = 'Lower II (Lower Low)'; clsRange = '<5'; }
+    document.getElementById('k_class').textContent = cls;
+    document.getElementById('k_range').textContent = 'Your score falls in the ' + clsRange + ' range: ' + cls;
+  } else {
+    document.getElementById('k_total').textContent = '--';
+    document.getElementById('k_class').textContent = 'Select education (A4), occupation (A5), and income above';
+  }
+  onFieldChange();
+}
+
+// ===== TOGGLES =====
+function toggleNoInformant() {
+  const checked = document.getElementById('a11_no_informant').checked;
+  document.getElementById('a11_informant_details').style.display = checked ? 'none' : 'block';
+}
+
+function toggleInterpreter() {
+  document.getElementById('a10_interpreter_detail_group').style.display = document.getElementById('a10_interpreter').checked ? 'block' : 'none';
+}
+
+// ===== FIELD CHANGE HANDLER =====
+function onFieldChange() {
+  calcKuppuswamy();
+  if (!isManualEdit) updateSummary();
+  scheduleSave();
+}
+
+// ===== SUMMARY GENERATION =====
+function updateSummary() {
+  const v = getFormValues();
+  let text = summaryFormat === 'full' ? generateFull(v) : generateNaf(v);
+  const ta = document.getElementById('summaryText');
+  if (!isManualEdit) { ta.value = text; resizeTextarea(ta); }
+}
+
+function generateFull(v) {
+  const parts = [];
+  const addr = v.a1_address || '';
+  const name = v.a1_name || '[Name]';
+  if (addr && name) parts.push(addr + ' ' + name);
+  else if (name) parts.push(name);
+  let ageStr = v.a2_age ? (v.a2_approx ? 'approximately ' + v.a2_age : v.a2_age) + '-year-old' : '';
+  const gender = v.a3_gender || v.a3_sex || '';
+  const marital = v.a6_marital || '';
+  if (ageStr && marital && gender) parts.push(ageStr + ' ' + marital.toLowerCase() + ' ' + gender.toLowerCase());
+  else if (marital && gender) parts.push(marital + ' ' + gender.toLowerCase());
+  else if (gender) { if (ageStr) parts.push(ageStr + ' ' + gender.toLowerCase()); else parts.push(gender.toLowerCase()); }
+  else if (ageStr) parts.push(ageStr);
+  if (v.a7_current_religion || v.a7_birth_religion) parts.push(v.a7_current_religion || v.a7_birth_religion);
+  const resParts = [];
+  if (v.a9_city) resParts.push(v.a9_city);
+  if (v.a9_state && v.a9_state !== v.a9_city) resParts.push(v.a9_state);
+  if (resParts.length) parts.push('hailing from ' + resParts.join(', '));
+  if (v.a4_education) parts.push(v.a4_education === 'Illiterate' ? 'not formally educated' : v.a4_education.toLowerCase());
+  if (v.a5_occupation) parts.push(v.a5_occupation.toLowerCase());
+  const kTotal = document.getElementById('k_total').textContent;
+  if (kTotal !== '--') parts.push(document.getElementById('k_class').textContent + ' SES family');
+  if (v.a13_admission) parts.push('Date of admission: ' + fmtDate(v.a13_admission));
+  if (v.a11_no_informant) parts.push('Informant: no informant available; history from patient alone');
+  else if (v.a11_relationship) {
+    let inf = 'Informant: ' + v.a11_relationship.toLowerCase();
+    if (v.a11_reliability) { inf += ' (' + v.a11_reliability.toLowerCase(); if (v.a11_reliability_note) inf += '; ' + v.a11_reliability_note; inf += ')'; }
+    parts.push(inf);
+  }
+  if (v.a10_interview_lang) parts.push('Language of interview: ' + v.a10_interview_lang);
+  let result = parts.join(', ') + '.';
+  return result === '.' ? '' : result;
+}
+
+function generateNaf(v) {
+  const p = [];
+  if (v.a1_name) p.push('N-' + v.a1_name);
+  if (v.a2_age) p.push('A-' + v.a2_age + (v.a2_approx ? ' (approx)' : ''));
+  if (v.a3_gender || v.a3_sex) p.push('G-' + (v.a3_gender || v.a3_sex));
+  if (v.a4_education) p.push('E-' + v.a4_education);
+  if (v.a5_occupation) p.push('O-' + v.a5_occupation);
+  if (v.a6_marital) p.push('M-' + v.a6_marital);
+  if (v.a7_current_religion || v.a7_birth_religion) p.push('R-' + (v.a7_current_religion || v.a7_birth_religion));
+  const kt = document.getElementById('k_total').textContent;
+  if (kt !== '--') p.push('S-' + kt + ' (' + document.getElementById('k_class').textContent + ')');
+  if (v.a10_interview_lang) p.push('L-' + v.a10_interview_lang);
+  if (v.a11_no_informant) p.push('I-none');
+  else if (v.a11_relationship) p.push('I-' + v.a11_relationship.toLowerCase());
+  if (v.a13_admission) p.push('F-' + fmtDate(v.a13_admission));
+  return p.join('; ');
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  const p = d.split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : d;
+}
+
+function getFormValues() {
+  return {
+    a1_name: gv('a1_name'), a1_address: gr('a1_address'), a1_address_other: gv('a1_address_other'),
+    a2_age: gv('a2_age'), a2_approx: gc('a2_approx'), a2_note: gv('a2_note'),
+    a3_sex: gr('a3_sex'), a3_gender: gr('a3_gender'), a3_gender_other: gv('a3_gender_other'), a3_pronouns: gr('a3_pronouns'),
+    a4_education: gr('a4_education'), a4_note: gv('a4_note'),
+    a5_occupation: gv('a5_occupation'), a5_occ_cat: gr('a5_occ_cat'), a5_prior: gv('a5_prior'),
+    a6_marital: gr('a6_marital'), a6_duration: gv('a6_duration'),
+    a7_birth_religion: gv('a7_birth_religion'), a7_current_religion: gv('a7_current_religion'),
+    a8_note: gv('a8_note'), k_income: gv('k_income'),
+    a9_city: gv('a9_city'), a9_state: gv('a9_state'), a9_locality: gv('a9_locality'), a9_area: gr('a9_area'),
+    a9_native: gv('a9_native'), a9_migration: gv('a9_migration'),
+    a10_languages: gv('a10_languages'), a10_interview_lang: gv('a10_interview_lang'),
+    a10_interpreter: gc('a10_interpreter'), a10_interpreter_detail: gv('a10_interpreter_detail'),
+    a11_no_informant: gc('a11_no_informant'), a11_inf_name: gv('a11_inf_name'), a11_relationship: gr('a11_relationship'),
+    a11_duration: gv('a11_duration'), a11_frequency: gr('a11_frequency'), a11_consistency: gr('a11_consistency'),
+    a11_reliability: gr('a11_reliability'), a11_reliability_note: gv('a11_reliability_note'),
+    a12_referral: gr('a12_referral'), a12_details: gv('a12_details'),
+    a13_first_contact: gv('a13_first_contact'), a13_admission: gv('a13_admission'), a13_assessment: gv('a13_assessment'),
+    summary: document.getElementById('summaryText').value
+  };
+}
+function gv(k) { const el = document.querySelector('[data-key="' + k + '"]'); return el ? (el.value || '') : ''; }
+function gr(n) { const el = document.querySelector('input[name="' + n + '"]:checked'); return el ? el.value : ''; }
+function gc(k) { const el = document.querySelector('[data-key="' + k + '"]'); return el ? el.checked : false; }
+
+// ===== SUMMARY CONTROLS =====
+function setSummaryFormat(fmt) {
+  summaryFormat = fmt;
+  document.getElementById('btnFull').classList.toggle('active', fmt === 'full');
+  document.getElementById('btnNaf').classList.toggle('active', fmt === 'naf');
+  isManualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: Updates as you fill the form';
+  document.getElementById('summaryText').className = 'summary-textarea auto-sync';
+  updateSummary();
+}
+
+function resyncSummary() {
+  isManualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: Updates as you fill the form';
+  document.getElementById('summaryText').className = 'summary-textarea auto-sync';
+  updateSummary();
+  scheduleSave();
+}
+
+document.getElementById('summaryText').addEventListener('input', function() {
+  isManualEdit = true;
+  document.getElementById('syncStatus').textContent = 'Manual edit mode: Auto-sync paused. Tap "Re-sync" to resume.';
+  document.getElementById('summaryText').className = 'summary-textarea manual';
+  resizeTextarea(this);
+  scheduleSave();
+});
+
+document.getElementById('btnFull').addEventListener('click', function() { setSummaryFormat('full'); });
+document.getElementById('btnNaf').addEventListener('click', function() { setSummaryFormat('naf'); });
+
+// ===== COPY / PDF =====
+function copySummary() {
+  const ta = document.getElementById('summaryText');
+  ta.select();
+  navigator.clipboard.writeText(ta.value).then(function() {
+    const btn = event.target.closest('button');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Copied!';
+    setTimeout(function() { btn.innerHTML = orig; }, 2000);
+  });
+}
+
+function exportPDF() {
+  document.getElementById('printDate').textContent = 'Generated: ' + new Date().toLocaleString();
+  window.print();
+}
+
+// ===== PERSISTENCE =====
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  document.getElementById('saveStatus').textContent = 'Saving...';
+  saveTimer = setTimeout(saveData, 800);
+}
+
+function saveData() {
+  const data = {};
+  document.querySelectorAll('textarea[data-key], input[data-key], select[data-key]').forEach(function(el) {
+    if (el.type === 'checkbox') data[el.dataset.key] = el.checked;
+    else if (el.type === 'radio') { if (el.checked) data[el.dataset.key] = el.value; }
+    else data[el.dataset.key] = el.value;
+  });
+  // Save card open states
+  const openCards = [];
+  document.querySelectorAll('.section.expanded').forEach(function(s) { openCards.push(s.id); });
+  data._openCards = openCards;
+  // Save quick-ref open states
+  const openQR = [];
+  document.querySelectorAll('.quick-ref-body.show').forEach(function(qr, i) { openQR.push(i); });
+  data._openQR = openQR;
+  data._summaryFormat = summaryFormat;
+  data._manualEdit = isManualEdit;
+  data._lastSaved = new Date().toISOString();
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  document.getElementById('saveStatus').textContent = 'Saved ' + new Date().toLocaleTimeString();
+}
+
+function restoreData() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    // Restore field values
+    for (const key in d) {
+      if (key.startsWith('_')) continue;
+      const els = document.querySelectorAll('[data-key="' + key + '"]');
+      els.forEach(function(el) {
+        if (el.type === 'checkbox') el.checked = !!d[key];
+        else if (el.type === 'radio') { if (d[key] === el.value) el.checked = true; }
+        else el.value = d[key] || '';
+      });
+    }
+    // Restore toggles
+    toggleNoInformant();
+    toggleInterpreter();
+    toggleOther('a1_address', 'a1_address_other');
+    toggleOther('a3_gender', 'a3_gender_other');
+    // Restore chip visuals
+    updateChipVisuals();
+    // Restore card states
+    if (d._openCards) {
+      d._openCards.forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('expanded');
+      });
+    }
+    // Restore QR states
+    if (d._openQR) {
+      document.querySelectorAll('.quick-ref-body').forEach(function(qr, i) {
+        if (d._openQR.includes(i)) qr.classList.add('show');
+      });
+    }
+    // Restore summary
+    if (d._summaryFormat) summaryFormat = d._summaryFormat;
+    if (d._manualEdit) {
+      isManualEdit = d._manualEdit;
+      document.getElementById('syncStatus').textContent = 'Manual edit mode: Auto-sync paused. Tap "Re-sync" to resume.';
+      document.getElementById('summaryText').className = 'summary-textarea manual';
+    }
+    document.getElementById('btnFull').classList.toggle('active', summaryFormat === 'full');
+    document.getElementById('btnNaf').classList.toggle('active', summaryFormat === 'naf');
+    // Kuppuswamy
+    calcKuppuswamy();
+    if (d._lastSaved) {
+      document.getElementById('saveStatus').textContent = 'Restored from ' + new Date(d._lastSaved).toLocaleTimeString();
+    }
+  } catch(e) { console.error('Restore failed', e); }
+}
+
+function initAutoSave() {
+  document.addEventListener('visibilitychange', function() { if (document.hidden) saveData(); });
+  window.addEventListener('beforeunload', saveData);
+}
+
+// ===== CLEAR ALL =====
+function clearAll() {
+  if (!confirm('Clear all form data? This cannot be undone. A backup is saved automatically.')) return;
+  const current = localStorage.getItem(LS_KEY);
+  if (current) localStorage.setItem(BACKUP_PREFIX + Date.now(), current);
+  localStorage.removeItem(LS_KEY);
+  document.querySelectorAll('textarea[data-key], input[data-key]').forEach(function(el) {
+    if (el.id === 'k_edu' || el.id === 'k_occ') return;
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else el.value = '';
+  });
+  document.getElementById('a11_informant_details').style.display = 'block';
+  document.getElementById('a10_interpreter_detail_group').style.display = 'none';
+  document.getElementById('k_total').textContent = '--';
+  document.getElementById('k_class').textContent = 'Select all components';
+  document.getElementById('k_edu').value = '';
+  document.getElementById('k_occ').value = '';
+  isManualEdit = false;
+  document.getElementById('syncStatus').textContent = 'Auto-sync: Updates as you fill the form';
+  document.getElementById('summaryText').className = 'summary-textarea auto-sync';
+  updateChipVisuals();
+  updateSummary();
+  document.getElementById('saveStatus').textContent = 'Form cleared. Backup saved.';
+}
+
+// ===== BEFOREPRINT =====
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('.auto-textarea').forEach(function(el) { resizeTextarea(el); });
+  document.querySelectorAll('.section').forEach(function(el) { el.classList.add('expanded'); });
+  document.querySelectorAll('.quick-ref-body').forEach(function(el) { el.classList.add('show'); });
+});
+</script>
+</body>
+</html>

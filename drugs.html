@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Drug Reference</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0a0a0a;color:#e8e8e8;font-size:15px;line-height:1.6;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:16px}
+.header{background:#0a0a0a;border-bottom:1px solid #222;padding:14px 16px;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.header-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.back-btn{width:36px;height:36px;border-radius:50%;background:#1a1a1a;border:1px solid #333;color:#ccc;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+.back-btn:hover{background:#222;color:#fff}
+.header-title{font-size:1.1rem;font-weight:700;color:#4fc3f7}
+.search-wrap{margin:16px 0;position:relative}
+.search-input{width:100%;padding:12px 16px 12px 44px;background:#111;border:1px solid #333;border-radius:12px;color:#e8e8e8;font-size:1rem;outline:none}
+.search-input:focus{border-color:#4fc3f7}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#666;font-size:18px}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{padding:6px 14px;border-radius:20px;background:#1a1a1a;border:1px solid #333;color:#888;font-size:0.8rem;white-space:nowrap;cursor:pointer;transition:all .15s}
+.filter-btn:hover{background:#222;color:#ccc}
+.filter-btn.active{background:#4fc3f7;color:#000;border-color:#4fc3f7;font-weight:600}
+.drug-grid{display:grid;grid-template-columns:1fr;gap:12px;padding-bottom:40px}
+.drug-card{background:#111;border:1px solid #222;border-radius:14px;padding:16px;cursor:pointer;transition:all .15s}
+.drug-card:hover{border-color:#444}
+.drug-card.expanded{border-color:#4fc3f7;background:#0f1a20}
+.drug-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.drug-name{font-size:1.05rem;font-weight:700;color:#e8e8e8}
+.drug-class{font-size:0.75rem;color:#4fc3f7;background:rgba(79,195,247,0.1);padding:3px 10px;border-radius:12px;white-space:nowrap}
+.drug-brief{display:flex;gap:16px;margin-top:10px;font-size:0.82rem;color:#888}
+.drug-brief span{color:#ccc;font-weight:600}
+.drug-detail{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #222}
+.drug-card.expanded .drug-detail{display:block}
+.detail-row{margin:8px 0;display:flex;gap:8px}
+.detail-label{min-width:130px;color:#666;font-size:0.78rem;font-weight:600;flex-shrink:0}
+.detail-value{color:#ccc;font-size:0.82rem;flex:1}
+.se-list{display:flex;flex-wrap:wrap;gap:6px}
+.se-tag{background:#1a1a1a;border:1px solid #333;padding:3px 10px;border-radius:8px;font-size:0.78rem;color:#bbb}
+.warning-box{background:rgba(255,82,82,0.08);border:1px solid rgba(255,82,82,0.3);padding:10px 12px;border-radius:8px;margin-top:10px}
+.warning-title{font-size:0.78rem;font-weight:700;color:#ff5252;margin-bottom:4px}
+.warning-text{font-size:0.8rem;color:#e8a0a0}
+.count-badge{font-size:0.75rem;color:#666;margin-left:auto}
+.empty{text-align:center;padding:40px 20px;color:#666}
+.risk-badge{color:#ff5252;font-size:0.85em}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <button class="back-btn" onclick="history.back()">&#8592;</button>
+    <span class="header-title">&#128138; Psychotropic Drug Reference</span>
+    <span class="count-badge" id="countBadge"></span>
+  </div>
+</div>
+<div class="container">
+  <div class="search-wrap">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search drug or brand (e.g., olanzapine, Serta)...">
+  </div>
+  <div class="filter-bar" id="filterBar"></div>
+  <div class="drug-grid" id="drugGrid"></div>
+</div>
+<script>
+var DRUGS = [{"name":"Sertraline","className":"SSRI","start":"50 mg","range":"50–200 mg","max":"200 mg","se":["GI upset","insomnia","sexual dysfunction","headache","anxiety (initial)"],"interact":"MAOIs (serotonin syndrome), tramadol, warfarin","warn":"Taper on discontinuation; 4–6 weeks for full effect","brands":"Serta, Daxid, Zosert"},{"name":"Fluoxetine","className":"SSRI","start":"20 mg","range":"20–60 mg","max":"80 mg","se":["activation/insomnia","anxiety","sexual dysfunction","GI upset"],"interact":"MAOIs (serotonin syndrome), tramadol, TCAs (raises levels)","warn":"Long half-life (taper easier); activating — give AM","brands":"Prodep, Fludac"},{"name":"Escitalopram","className":"SSRI","start":"10 mg","range":"10–20 mg","max":"20 mg","se":["GI upset","headache","sexual dysfunction","fatigue"],"interact":"MAOIs, tramadol, citalopram (don't combine)","warn":"Most selective SSRI; QT concern at >20 mg","brands":"Stalopam, Nexito"},{"name":"Paroxetine","className":"SSRI","start":"20 mg","range":"20–50 mg","max":"60 mg","se":["sedation","weight gain","sexual dysfunction","anticholinergic"],"interact":"MAOIs, tramadol, codeine (reduces analgesia)","warn":"Most discontinuation syndrome — taper slowly","brands":"Paxidep, Paroxet"},{"name":"Fluvoxamine","className":"SSRI","start":"50 mg","range":"100–300 mg","max":"300 mg","se":["sedation","nausea","sexual dysfunction"],"interact":"MAOIs, theophylline, clozapine (raises levels)","warn":"Preferred for OCD; very sedating","brands":"Fluvoxin, Voxamin"},{"name":"Venlafaxine","className":"SNRI","start":"37.5–75 mg","range":"75–225 mg","max":"375 mg","se":["hypertension","insomnia","nausea","sweating"],"interact":"MAOIs, tramadol, St. John's wort","warn":"Monitor BP; withdrawal can be severe","brands":"Venlor, Daxid"},{"name":"Duloxetine","className":"SNRI","start":"30–60 mg","range":"60–120 mg","max":"120 mg","se":["nausea","dry mouth","constipation","fatigue"],"interact":"MAOIs, tramadol, NSAIDs (bleeding risk)","warn":"Avoid in severe renal/hepatic impairment","brands":"Duzela, Cymbalta"},{"name":"Mirtazapine","className":"NaSSA","start":"15 mg","range":"15–45 mg","max":"45 mg","se":["weight gain","sedation","increased appetite","dry mouth"],"interact":"MAOIs, tramadol, alcohol","warn":"Excellent for insomnia + poor appetite; 15 mg more sedating than 30 mg","brands":"Mirnite, Mirtaz"},{"name":"Amitriptyline","className":"TCA","start":"25–50 mg","range":"75–150 mg","max":"300 mg","se":["sedation","dry mouth","constipation","weight gain","orthostasis"],"interact":"MAOIs, alcohol, anticholinergics","warn":"Fatal in overdose; ECG before starting; avoid in cardiac disease","brands":"Tryptomer, Amiline"},{"name":"Clomipramine","className":"TCA","start":"25 mg","range":"100–250 mg","max":"250 mg","se":["anticholinergic","sedation","weight gain","sexual dysfunction"],"interact":"MAOIs, SSRIs (serotonin syndrome)","warn":"Gold standard for OCD; most serotonergic TCA","brands":"Clofranil, Clonil"},{"name":"Imipramine","className":"TCA","start":"25–50 mg","range":"75–200 mg","max":"300 mg","se":["anticholinergic","orthostasis","sedation","tremor"],"interact":"MAOIs, antihypertensives, alcohol","warn":"Useful for panic disorder + enuresis","brands":"Depsonil, Impranil"},{"name":"Olanzapine","className":"Atypical Antipsychotic","start":"5–10 mg","range":"5–20 mg","max":"20 mg","se":["weight gain","metabolic syndrome","sedation","constipation"],"interact":"Diazepam (respiratory depression), alcohol","warn":"Monitor weight, glucose, lipids; most weight gain of all antipsychotics","brands":"Oleanz, Oliza"},{"name":"Risperidone","className":"Atypical Antipsychotic","start":"1–2 mg","range":"2–6 mg","max":"16 mg","se":["hyperprolactinemia","EPS (dose >6 mg)","weight gain","sedation"],"interact":"Carbamazepine (reduces levels), fluoxetine (raises levels)","warn":"Check prolactin if galactorrhea/sexual SE; metabolic monitoring needed","brands":"Sizodon, Riscon"},{"name":"Quetiapine","className":"Atypical Antipsychotic","start":"25–50 mg","range":"300–800 mg","max":"800 mg","se":["sedation","orthostasis","weight gain","anticholinergic"],"interact":"Carbamazepine, phenytoin, CNS depressants","warn":"Sedating — useful for insomnia in low doses; metabolic monitoring","brands":"Qutipin, Seroquin"},{"name":"Aripiprazole","className":"Atypical Antipsychotic","start":"5–10 mg","range":"10–30 mg","max":"30 mg","se":["akathisia","insomnia","headache","anxiety"],"interact":"Carbamazepine (reduces levels), ketoconazole","warn":"Least metabolic side effects; akathisia is common","brands":"Arpizol, Asprito"},{"name":"Clozapine","className":"Atypical Antipsychotic","start":"12.5–25 mg","range":"200–450 mg","max":"900 mg","se":["agranulocytosis","seizures","hypersalivation","constipation","weight gain"],"interact":"Carbamazepine (contraindicated — both suppress WBC), CYP1A2 inducers/inhibitors","warn":"MANDATORY weekly ANC for 18 weeks, then biweekly; seizure prophylaxis if >600 mg; bowel monitoring","brands":"Clozaril, Sizopin","highRisk":true},{"name":"Haloperidol","className":"Typical Antipsychotic","start":"2–5 mg","range":"5–20 mg","max":"100 mg (severe)","se":["EPS (dystonia, akathisia)","hyperprolactinemia","sedation"],"interact":"Lithium (encephalopathy risk), CNS depressants","warn":"Have inj. promethazine/diphenhydramine ready for acute dystonia; ECG for QT","brands":"Halidace, Serenace"},{"name":"Chlorpromazine","className":"Typical Antipsychotic","start":"25–100 mg","range":"200–600 mg","max":"1000 mg","se":["sedation","orthostasis","anticholinergic","photosensitivity","weight gain"],"interact":"Antihypertensives, anticholinergics, alcohol","warn":"Very sedating; hypotension common; jaundice risk","brands":"Largactil, Chlorprom"},{"name":"Trifluoperazine","className":"Typical Antipsychotic","start":"2–5 mg","range":"5–20 mg","max":"40 mg","se":["EPS","sedation","orthostasis"],"interact":"Anticholinergics, CNS depressants","warn":"Good for anxiety + psychosis; less sedating than chlorpromazine","brands":"Trinicalm, Espazine"},{"name":"Lithium Carbonate","className":"Mood Stabilizer","start":"300 mg BD/TDS","range":"900–1800 mg","max":"2400 mg","se":["tremor","polyuria/polydipsia","hypothyroidism","weight gain","nephrotoxicity"],"interact":"NSAIDs (raise levels), thiazides, ACE inhibitors","warn":"Therapeutic level 0.6–1.0 mEq/L; check renal, thyroid, ECG before start; hydrate well","brands":"Lithosun, Licab","highRisk":true},{"name":"Sodium Valproate","className":"Mood Stabilizer","start":"200–500 mg BD","range":"1000–2000 mg","max":"3000 mg","se":["weight gain","hair loss","tremor","hepatotoxicity","PCOS"],"interact":"Aspirin (raises levels), carbamazepine, lamotrigine","warn":"Level 50–100 mcg/mL; NEVER in pregnancy (neural tube defects); check LFTs","brands":"Valparin, Encorate"},{"name":"Carbamazepine","className":"Mood Stabilizer","start":"200 mg BD","range":"400–1200 mg","max":"1600 mg","se":["hyponatremia (SIADH)","rash","drowsiness","hepatotoxicity","agranulocytosis"],"interact":"Many — CYP3A4 inducer (reduces OCP, antipsychotics, warfarin), erythromycin","warn":"HLA-B*1502 screening in Asian Indians (SJS/TEN risk); check CBC, LFTs, Na+","brands":"Tegretol, Mazetol","highRisk":true},{"name":"Lamotrigine","className":"Mood Stabilizer","start":"25 mg OD","range":"100–200 mg","max":"400 mg","se":["rash (SJS/TEN risk)","headache","insomnia","diplopia"],"interact":"Valproate (raises levels — halve dose), carbamazepine, OCPs","warn":"Slow titration mandatory (rash risk); very effective for bipolar depression","brands":"Lamitor, Lamosyn"},{"name":"Lorazepam","className":"Benzodiazepine","start":"0.5–1 mg","range":"1–4 mg","max":"10 mg","se":["sedation","ataxia","confusion (elderly)","dependence"],"interact":"Alcohol, opioids, other CNS depressants","warn":"Short-term use only; taper slowly to avoid withdrawal seizures","brands":"Ativan, Lorel"},{"name":"Clonazepam","className":"Benzodiazepine","start":"0.25–0.5 mg","range":"1–3 mg","max":"20 mg","se":["sedation","ataxia","memory impairment","depression"],"interact":"Alcohol, opioids, other CNS depressants","warn":"Long half-life — useful for maintenance; taper slowly","brands":"Lonazep, Clonotril"},{"name":"Alprazolam","className":"Benzodiazepine","start":"0.25–0.5 mg","range":"0.5–4 mg","max":"10 mg","se":["sedation","dependence","rebound anxiety","memory impairment"],"interact":"Alcohol, opioids, fluoxetine (raises levels)","warn":"Shortest half-life — most rebound anxiety; avoid long-term use","brands":"Alprax, Restyl"},{"name":"Diazepam","className":"Benzodiazepine","start":"2–5 mg","range":"5–20 mg","max":"60 mg","se":["sedation","confusion","ataxia","dependence"],"interact":"Alcohol, opioids, cimetidine","warn":"Active metabolite — accumulates in elderly; IM absorption erratic","brands":"Calmpose, Valium"},{"name":"Chlordiazepoxide","className":"Benzodiazepine","start":"10–25 mg","range":"25–100 mg","max":"300 mg","se":["sedation","ataxia","confusion","hepatotoxicity (rare)"],"interact":"Alcohol, opioids, CNS depressants","warn":"Drug of choice for alcohol withdrawal; long half-life self-tapers","brands":"Librium"},{"name":"Buspirone","className":"Anxiolytic","start":"5 mg BD","range":"15–30 mg","max":"60 mg","se":["dizziness","headache","nausea","insomnia"],"interact":"MAOIs, erythromycin, ketoconazole","warn":"No dependence; 2–4 weeks to work; NOT for acute anxiety","brands":"Buscalm"},{"name":"Propranolol","className":"Beta Blocker","start":"10–20 mg BD","range":"20–80 mg","max":"240 mg","se":["bradycardia","hypotension","fatigue","bronchospasm"],"interact":"Verapamil, diltiazem, antidiabetic agents","warn":"Avoid in asthma, COPD, bradycardia, heart block; useful for akathisia + performance anxiety","brands":"Inderal, Ciplar"},{"name":"Trazodone","className":"SARI","start":"25–50 mg","range":"100–300 mg","max":"600 mg","se":["sedation","orthostasis","priapism (rare)","dry mouth"],"interact":"MAOIs, other serotonergics","warn":"Excellent for insomnia at low doses; priapism is emergency","brands":"Trazalon, Trazine"},{"name":"Topiramate","className":"Anticonvulsant","start":"25 mg","range":"100–400 mg","max":"400 mg","se":["cognitive slowing","word-finding difficulty","paresthesia","weight loss","kidney stones"],"interact":"Carbamazepine, valproate, OCPs (reduces efficacy)","warn":"Useful for weight loss + binge eating; word-finding cognitive effect common","brands":"Topamax, Topirol"},{"name":"Atomoxetine","className":"NRI","start":"40 mg","range":"60–100 mg","max":"100 mg","se":["appetite suppression","insomnia","GI upset","suicidal ideation (black box)"],"interact":"MAOIs, albuterol, CYP2D6 inhibitors","warn":"Non-stimulant ADHD treatment; monitor for suicidal thoughts in children/adolescents","brands":"Strattera, Axetra"},{"name":"Methylphenidate","className":"Stimulant","start":"5 mg BD","range":"10–60 mg","max":"100 mg (adults)","se":["insomnia","appetite suppression","tachycardia","hypertension","anxiety"],"interact":"MAOIs, antihypertensives, SSRIs","warn":"Schedule X in India; baseline BP/HR; avoid evening dosing; drug holidays on weekends","brands":"Ritalin, Addwize"},{"name":"Modafinil","className":"Wakefulness Promoter","start":"100 mg","range":"200–400 mg","max":"400 mg","se":["headache","insomnia","anxiety","hypertension","rash (SJS rare)"],"interact":"OCPs (reduces efficacy), warfarin, phenytoin","warn":"Not first-line for ADHD; used for narcolepsy, shift work; Schedule H","brands":"Modalert, Modawake"},{"name":"Eszopiclone","className":"Non-Benzodiazepine Hypnotic","start":"1 mg","range":"1–3 mg","max":"3 mg","se":["metallic taste","dizziness","dry mouth","headache"],"interact":"CNS depressants, ketoconazole","warn":"Take immediately before bed; 7–8 hours sleep needed; taper to avoid rebound insomnia","brands":"Fulnite, Zunestar"}];
+
+var CLASSES = ["All","SSRI","SNRI","NaSSA","TCA","Atypical Antipsychotic","Typical Antipsychotic","Mood Stabilizer","Benzodiazepine","Anxiolytic","Beta Blocker","SARI","Anticonvulsant","NRI","Stimulant","Wakefulness Promoter","Non-Benzodiazepine Hypnotic"];
+var HIGH_RISK = {"Clozapine":true,"Lithium Carbonate":true,"Carbamazepine":true};
+var currentFilter = "All";
+var searchTerm = "";
+
+function $(id){return document.getElementById(id)}
+
+function init(){
+  renderFilters();
+  renderDrugs();
+  $("searchInput").addEventListener("input", function(){
+    searchTerm = this.value.toLowerCase();
+    renderDrugs();
+  });
+}
+
+function renderFilters(){
+  $("filterBar").innerHTML = CLASSES.map(function(c){
+    return '<button class="filter-btn' + (c==="All"?" active":"") + '" onclick="setFilter(this,'' + c + '')">' + c + "</button>";
+  }).join("");
+}
+
+function setFilter(btn, cls){
+  currentFilter = cls;
+  document.querySelectorAll(".filter-btn").forEach(function(b){b.classList.remove("active")});
+  btn.classList.add("active");
+  renderDrugs();
+}
+
+function toggleCard(card){card.classList.toggle("expanded")}
+
+function renderDrugs(){
+  var grid = $("drugGrid");
+  var filtered = DRUGS.filter(function(d){
+    var mClass = currentFilter === "All" || d.className === currentFilter;
+    var mSearch = !searchTerm || d.name.toLowerCase().indexOf(searchTerm) !== -1 || d.className.toLowerCase().indexOf(searchTerm) !== -1 || (d.brands && d.brands.toLowerCase().indexOf(searchTerm) !== -1);
+    return mClass && mSearch;
+  });
+  $("countBadge").textContent = filtered.length + " / " + DRUGS.length;
+  if(filtered.length === 0){grid.innerHTML = '<div class="empty">No drugs found.</div>'; return}
+  grid.innerHTML = filtered.map(function(d){
+    var seTags = d.se.map(function(s){return '<span class="se-tag">' + s + "</span>"}).join("");
+    var risk = HIGH_RISK[d.name] ? ' <span class="risk-badge">&#9888;</span>' : "";
+    var extraWarn = "";
+    if(d.name === "Clozapine") extraWarn = '<div class="warning-box"><div class="warning-title">&#9888; MANDATORY MONITORING</div><div class="warning-text">Weekly ANC for 18 weeks, then biweekly. Bowel monitoring. Black box: agranulocytosis, myocarditis, ileus.</div></div>';
+    if(d.name === "Lithium Carbonate") extraWarn = '<div class="warning-box"><div class="warning-title">&#9888; LEVELS REQUIRED</div><div class="warning-text">Therapeutic: 0.6-1.0 mEq/L. Check at 5 days, 2 weeks, then monthly. Pre-treat: renal, thyroid (TSH), ECG.</div></div>';
+    if(d.name === "Carbamazepine") extraWarn = '<div class="warning-box"><div class="warning-title">&#9888; HLA-B*1502 SCREEN</div><div class="warning-text">Screen in Asian Indians before starting (SJS/TEN risk). Check CBC, LFTs, Na+ at baseline and regularly.</div></div>';
+    return '<div class="drug-card" onclick="toggleCard(this)"><div class="drug-top"><span class="drug-name">' + d.name + risk + '</span><span class="drug-class">' + d.className + '</span></div><div class="drug-brief"><div>Start: <span>' + d.start + '</span></div><div>Max: <span>' + d.max + '</span></div></div><div class="drug-detail"><div class="detail-row"><div class="detail-label">Range</div><div class="detail-value">' + d.range + '</div></div><div class="detail-row"><div class="detail-label">Side Effects</div><div class="detail-value"><div class="se-list">' + seTags + '</div></div></div><div class="detail-row"><div class="detail-label">Interactions</div><div class="detail-value">' + d.interact + '</div></div><div class="detail-row"><div class="detail-label">Warnings</div><div class="detail-value">' + d.warn + '</div></div><div class="detail-row"><div class="detail-label">Indian Brands</div><div class="detail-value">' + (d.brands || "N/A") + '</div></div>' + extraWarn + '</div></div>';
+  }).join("");
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
